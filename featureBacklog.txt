@@ -1,0 +1,25 @@
+login page
+login functionality
+register page
+register functionality
+forgot password page
+forgot password functionality
+2-step verification
+request drive
+campus map
+city map
+become driver
+take request as driver
+archive drive information
+get drive history
+review driver
+review passenger
+view driver ratings
+view passenger ratings
+message system
+tutorial page
+payment system
+school boss login
+schedules
+class schedule algorithm
+report issue page
