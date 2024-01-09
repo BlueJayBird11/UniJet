@@ -1,10 +1,14 @@
+import { SelectedPage } from "@/shared/types";
 import { CalendarDaysIcon, UserCircleIcon, ClockIcon, TruckIcon } from "@heroicons/react/24/solid";
 import { Console } from "console";
 import { motion } from "framer-motion";
 
-type Props = {}
+type Props = {
+    selectedPage: SelectedPage;
+    setSelectedPage: (value: SelectedPage) => void;
+}
 
-const Navbar = (props: Props) => {
+const Navbar = ({selectedPage, setSelectedPage}: Props) => {
     const handleButtonClick = () => {
         console.log(`Clicked: {}`);
     };
