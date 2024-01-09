@@ -1,4 +1,3 @@
-
 function App() {
   return (
     <div className='app bg-gray-600'>
