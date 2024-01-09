@@ -11,7 +11,7 @@ const index = (props: Props) => {
         <header className='relative'>
             <div className='flex justify-end p-4'> 
                 <button onClick={handleButtonClick}> 
-                    <Cog6ToothIcon className='w-10 h-10 text-gray-500'/>
+                    <Cog6ToothIcon className='w-10 h-10 text-primary-red'/>
                 </button> 
             </div>
         </header>

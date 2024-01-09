@@ -3,7 +3,7 @@ import NavigationBar from "@/scenes/navigationBar";
 
 function App() {
   return (
-    <div className='app bg-gray-600'>
+    <div className='app bg-primary-blue'>
       <Profile />
       <NavigationBar />
     </div>

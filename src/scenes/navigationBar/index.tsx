@@ -9,11 +9,11 @@ const Navbar = (props: Props) => {
         console.log(`Clicked: {}`);
     };
 
-    const buttonStyle = "bg-white rounded-full p-4 border-solid border-black"
+    const buttonStyle = "rounded-full p-4 border-solid border-black"
     const iconStyle = "h-10 w-10 text-black"
     return (
     <nav>
-        <div className='flex w-full items-center justify-between fixed bottom-0 py-2 bg-slate-300 px-6 gap-2'>
+        <div className='bg-primary-red flex w-full items-center justify-between fixed bottom-0 py-2 px-6 gap-2'>
             <button
                 className={`${buttonStyle}`}
                 onClick={handleButtonClick}
