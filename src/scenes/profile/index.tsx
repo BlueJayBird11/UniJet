@@ -14,6 +14,9 @@ const index = (props: Props) => {
         onlineStatus(!offlineStatus)
     }; 
 
+    const name: string = "Ethan"
+    const rating: number = 4.7
+
     return (
         <header className='relative'>
             <div className='flex justify-end p-4'> 
@@ -23,12 +26,12 @@ const index = (props: Props) => {
             </div>
             <div className='flex justify-center items-start'>
                 <h1 className='text-5xl font-bold text-primary-black mt-16'>
-                    Hello Ethan!
+                    Hello {name}!
                 </h1>
             </div>
             <div className='flex justify-center items-start'>
                 <h2 className='text-4xl font-bold text-primary-black mt-4'>
-                    Rating: 4.7
+                    Rating: {rating}
                 </h2>
             </div>
             <div className='flex justify-center items-start'>
