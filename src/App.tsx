@@ -14,9 +14,10 @@ function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(
     SelectedPage.Profile
   );
-
+  
   // CHANGE THIS TO WORK ON SPECIFIC PAGE WHILE NAVBAR IS BEING FINISHED
   const page = <Profile />;
+  // let currentPageMain: string = "profile";
 
   return (
     <div className='app bg-primary-blue'>
@@ -24,7 +25,6 @@ function App() {
         <NavigationBar 
           selectedPage={selectedPage}
           setSelectedPage={setSelectedPage}
-          page = {page}
         />
         <Routes>
           <Route index element={page} />
