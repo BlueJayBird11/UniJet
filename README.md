@@ -1,15 +1,21 @@
 # UniJet
 On installion run:
-  follow the gym videos directions
-  npm install
-  npm i @heroicons/react
-  npm i -D @types/node
-  npm install -D tailwindcss postcss autoprefixer
-  npx tailwindcss init -p
-  npm i react-router-dom
-  npm i -D @types/react-router-dom
 
-  npm run dev
+npm install
+
+npm i @heroicons/react
+
+npm i -D @types/node
+
+npm install -D tailwindcss postcss autoprefixer
+
+npx tailwindcss init -p
+
+npm i react-router-dom
+
+npm i -D @types/react-router-dom
+
+npm run dev
 
 
 
