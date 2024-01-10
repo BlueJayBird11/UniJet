@@ -14,7 +14,10 @@ function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(
     SelectedPage.Profile
   );
+
+  // CHANGE THIS TO WORK ON SPECIFIC PAGE WHILE NAVBAR IS BEING FINISHED
   const page = <Profile />;
+  
   return (
     <div className='app bg-primary-blue'>
       <NavigationBar 
@@ -26,8 +29,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route index element={page} />
-          <Route path="@/scenes/profile" element={<Profile />}/>
-          <Route path="@/scenes/history" element={<History />}/>
+          <Route path="/" element={<Profile />}/>
+          <Route path="/history" element={<History />}/>
         </Routes>
       </BrowserRouter>
     </div>

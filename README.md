@@ -1,7 +1,7 @@
 # UniJet
 On installion run:
 
-try: npm ci
+npm ci
 
 if this command doesn't work, do the following
 
