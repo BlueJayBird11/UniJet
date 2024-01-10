@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import { Cog6ToothIcon } from "@heroicons/react/20/solid";
+import { Link } from 'react-router-dom';
 
 type Props = {}
 
@@ -20,9 +21,11 @@ const index = (props: Props) => {
     return (
         <header className='relative'>
             <div className='flex justify-end p-4'> 
-                <button onClick={handleButtonClick}> 
-                    <Cog6ToothIcon className='w-10 h-10 text-primary-red'/>
-                </button> 
+                <Link to="/settings">
+                    <button> 
+                        <Cog6ToothIcon className='w-10 h-10 text-primary-red'/>
+                    </button> 
+                </Link>
             </div>
             <div className='flex justify-center items-start'>
                 <h1 className='text-5xl font-bold text-primary-black mt-16'>
@@ -40,8 +43,8 @@ const index = (props: Props) => {
                         onClick={handleStatusClick}
                     >
                         {offlineStatus ? 'Offline' : 'Online'}
-                    </button>
-                </div>
+                </button>
+            </div>
         </header>
     )
 }
