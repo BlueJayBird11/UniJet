@@ -1,4 +1,5 @@
 import { UserCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
+import { motion } from "framer-motion";
 
 type Props = {
     name: string;
@@ -19,7 +20,17 @@ const Person = ({name, rating, distance, location, payMin, payMax}: Props) => {
     let formattedDistance: string = distance.toFixed(1);
   
     return (
-    <div className="px-2 py-2">
+    <motion.div 
+        className="px-2 py-2 x-[-1]"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.5 }}
+        variants={{
+            hidden: { opacity: 0, x:-50 },
+            visible: { opacity: 1, x:0 },
+        }}
+    >
         <div className="bg-gray-600 rounded-[20px] px-2 py-4">
           <div className="flex items-center justify-between px-2">
             {/* PROFILE PICTURE */}
@@ -43,7 +54,7 @@ const Person = ({name, rating, distance, location, payMin, payMax}: Props) => {
             <p className={`${userInfoTextStyle}`}>Pay: ${payMin}-${payMax}</p>
           </div>
         </div>
-      </div>
+      </motion.div>
   )
 }
 

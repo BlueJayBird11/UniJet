@@ -25,7 +25,7 @@ const Navbar = ({selectedPage, setSelectedPage, page}: Props) => {
         {/* <Link to = "/">a</Link>
         <Link to = "/history">a</Link> */}
 
-        <div className='bg-primary-red flex w-full items-center justify-between fixed bottom-0 py-2 px-6 gap-2'>
+        <div className='bg-primary-red flex w-full items-center justify-between fixed bottom-0 py-2 px-6 gap-2 z-50'>
             <Link to ="/schedule">
                 <button className={`${buttonStyle}`} 
                     onClick={() => setSelectedPage(SelectedPage.Schedule)}
