@@ -23,29 +23,40 @@ const Navbar = ({selectedPage, setSelectedPage, page}: Props) => {
     const iconStyle = "h-10 w-10 text-black"
     return (
     <nav>
+        {/* <Link to = "/">a</Link>
+        <Link to = "/history">a</Link> */}
+
         <div className='bg-primary-red flex w-full items-center justify-between fixed bottom-0 py-2 px-6 gap-2'>
-            <button className={`${buttonStyle}`} > 
-            {/* //onClick={() => setSelectedPage(SelectedPage.Schedule)}  */}
-                <CalendarDaysIcon className={`${iconStyle}`}/>
-            </button>
-            <button
-                className={`${buttonStyle}`} 
-                onClick={() => setSelectedPage(SelectedPage.FindDriver)}   
-            >
-                <TruckIcon className={`${iconStyle}`}/>
-            </button>
-            <button
-                className={`${buttonStyle}`}    
-                onClick={() => setSelectedPage(SelectedPage.History)}
-            >
-                <ClockIcon className={`${iconStyle}`}/>
-            </button>
-            <button
-                className={`${buttonStyle}`}    
-                onClick={() => setSelectedPage(SelectedPage.Profile)}
-            >
-                <UserCircleIcon className={`${iconStyle}`}/>
-            </button>
+            <Link to ="/schedule">
+                <button className={`${buttonStyle}`} > 
+                {/* //onClick={() => setSelectedPage(SelectedPage.Schedule)}  */}
+                    <CalendarDaysIcon className={`${iconStyle}`}/>
+                </button>
+            </Link>
+            <Link to ="/findDriver">
+                <button
+                    className={`${buttonStyle}`} 
+                    onClick={() => setSelectedPage(SelectedPage.FindDriver)}   
+                >
+                    <TruckIcon className={`${iconStyle}`}/>
+                </button>
+            </Link>
+            <Link to ="/history">
+                <button
+                    className={`${buttonStyle}`}    
+                    onClick={() => setSelectedPage(SelectedPage.History)}
+                >
+                    <ClockIcon className={`${iconStyle}`}/>
+                </button>
+            </Link>
+            <Link to ="/">
+                <button
+                    className={`${buttonStyle}`}    
+                    onClick={() => setSelectedPage(SelectedPage.Profile)}
+                >
+                    <UserCircleIcon className={`${iconStyle}`}/>
+                </button>
+            </Link>
         </div>
     </nav>
   )

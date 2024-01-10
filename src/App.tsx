@@ -8,7 +8,7 @@ import Settings from "@/scenes/settings";
 import { useState } from "react";
 import { SelectedPage } from "./shared/types";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(
@@ -17,20 +17,25 @@ function App() {
 
   // CHANGE THIS TO WORK ON SPECIFIC PAGE WHILE NAVBAR IS BEING FINISHED
   const page = <Profile />;
-  
+
   return (
     <div className='app bg-primary-blue'>
-      <NavigationBar 
-        selectedPage={selectedPage}
-        setSelectedPage={setSelectedPage}
-        page = {page}
-      />
+      
       
       <BrowserRouter>
+        <NavigationBar 
+          selectedPage={selectedPage}
+          setSelectedPage={setSelectedPage}
+          page = {page}
+        />
         <Routes>
           <Route index element={page} />
           <Route path="/" element={<Profile />}/>
           <Route path="/history" element={<History />}/>
+          <Route path="/settings" element={<Settings />}/>
+          <Route path="/findDriver" element={<FindDriver />}/>
+          <Route path="/findRider" element={<FindRider />}/>
+          <Route path="/schedule" element={<Schedule />}/>
         </Routes>
       </BrowserRouter>
     </div>
