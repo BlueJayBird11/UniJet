@@ -1,4 +1,5 @@
 import { AdjustmentsHorizontalIcon, SparklesIcon, UserCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
+import Person from "./person";
 
 type Props = {}
 
@@ -16,7 +17,7 @@ const FindDriver = (props: Props) => {
   const userInfoTextStyle = "text-black text-2xl text-left font-bold";
 
   return (
-    <section>
+    <section className="bg-primary-blue">
       {/* HEADER SECTION */}
       <div className="w-full py-6">
         {/* ITEMS FOR HEADER */}
@@ -52,31 +53,11 @@ const FindDriver = (props: Props) => {
       </div>
 
       {/* PEOPLE */}
-      <div className="px-2">
-        <div className="bg-gray-600 rounded-[20px] px-2 py-4">
-          <div className="flex items-center justify-between px-2">
-            {/* PROFILE PICTURE */}
-            <UserCircleIcon className={`${userIconStyle}`}/>
-            {/* NAME AND RATING */}
-            <div className="pr-16">
-              <p className={`${userTextStyle}`}>Ash</p>
-              <p className={`${userTextStyle}`}>Rating: 5.0 Stars</p>
-            </div>
-          </div>
-          <div className={`${styleToCenterTxt}`}>
-            <p className={`${userInfoTextStyle}`}>Distance away: 1.5 mi</p>
-            {/* <p className={`${userInfoTextStyle}`}>Distance away: 1.5 mi <br/>Drop off: Nethken <br/>Pay: $9-$11</p> */}
-            {/* <p className={`${userInfoTextStyle}`}></p>
-            <p className={`${userInfoTextStyle}`}></p> */}
-          </div>
-          <div className={`${styleToCenterTxt}`}>
-            <p className={`${userInfoTextStyle}`}>Drop off: Nethken</p>
-          </div>
-          <div className={`${styleToCenterTxt}`}>
-            <p className={`${userInfoTextStyle}`}>Pay: $9-$11</p>
-          </div>
-        </div>
-      </div>
+      <Person name="Ash" rating={5.0} distance={1.5} location="Nethken" payMin={9} payMax={11} />
+      <Person name="Henry" rating={4.1} distance={1.2} location="IESB" payMin={5} payMax={6} />
+      <Person name="Asta" rating={4.8} distance={2.5} location="IESB" payMin={7} payMax={13} />
+
+      <div className="py-14"></div>
     </section>
   )
 }
