@@ -1,10 +1,14 @@
 import React, {useState} from 'react'
 import { Cog6ToothIcon } from "@heroicons/react/20/solid";
 import { Link } from 'react-router-dom';
+import { SelectedPage } from '@/shared/types';
 
-type Props = {}
+type Props = {
+    selectedPage: SelectedPage;
+    setSelectedPage: (value: SelectedPage) => void;
+}
 
-const index = (props: Props) => {
+const index = ({selectedPage, setSelectedPage}: Props) => {
     const handleButtonClick = () => {
         console.log('hit');
       };
@@ -22,7 +26,9 @@ const index = (props: Props) => {
         <header className='relative'>
             <div className='flex justify-end p-4'> 
                 <Link to="/settings">
-                    <button> 
+                    <button
+                        onClick={() => setSelectedPage(SelectedPage.FindDriver)}
+                    > 
                         <Cog6ToothIcon className='w-10 h-10 text-primary-red'/>
                     </button> 
                 </Link>
