@@ -1,12 +1,12 @@
 import { AdjustmentsHorizontalIcon, SparklesIcon, UserCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
 import Person from "./person";
+import { useState } from "react";
 
 type Props = {}
 
 const FindDriver = (props: Props) => {
-  const filterButtonClickEvent = () => {
-    console.log(`Clicked: {}`);
-  };
+  const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
+  
   const iconStyle = "h-8 w-8 text-black";
   const iconTextStyle = "flex items-center justify-between";
   const headerTextStyle = "text-black text-xs";
@@ -25,7 +25,7 @@ const FindDriver = (props: Props) => {
           {/* FILTER BUTTON */}
           <button
             className="pl-4"
-            onClick={filterButtonClickEvent}
+            onClick={() => setIsMenuToggled(!isMenuToggled)}
           >
             <div className={`${iconTextStyle}`}>
               <AdjustmentsHorizontalIcon className={`${iconStyle}`} />
@@ -56,8 +56,14 @@ const FindDriver = (props: Props) => {
       <Person name="Ash" rating={5.0} distance={1.5} location="Nethken" payMin={9} payMax={11} />
       <Person name="Henry" rating={4.1} distance={1.2} location="IESB" payMin={5} payMax={6} />
       <Person name="Asta" rating={4.8} distance={2.5} location="IESB" payMin={7} payMax={13} />
-
-      <div className="py-14"></div>
+      
+      {/* FILTER MODAL */}
+      { isMenuToggled && (
+            <div className="fixed left-0 top-20 z-40 h-80 w-[300px] bg-primary-green-500 drop-shadow-xl rounded-md">
+                <p>Filter options will go here</p>
+            </div>
+        )}
+      <div className="py-14 bottom-0"></div>
     </section>
   )
 }

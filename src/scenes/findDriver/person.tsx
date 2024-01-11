@@ -41,15 +41,15 @@ const Person = ({name, rating, distance, location, payMin, payMax}: Props) => {
               <p className={`${userTextStyle}`}>Rating: {formattedRating} Stars</p>
             </div>
           </div>
+          {/* DISTANCE */}
           <div className={`${styleToCenterTxt}`}>
             <p className={`${userInfoTextStyle}`}>Distance away: {formattedDistance} mi</p>
-            {/* <p className={`${userInfoTextStyle}`}>Distance away: 1.5 mi <br/>Drop off: Nethken <br/>Pay: $9-$11</p> */}
-            {/* <p className={`${userInfoTextStyle}`}></p>
-            <p className={`${userInfoTextStyle}`}></p> */}
           </div>
+          {/* LOCTION */}
           <div className={`${styleToCenterTxt}`}>
             <p className={`${userInfoTextStyle}`}>Drop off: {location}</p>
           </div>
+          {/* PAY */}
           <div className={`${styleToCenterTxt}`}>
             <p className={`${userInfoTextStyle}`}>Pay: ${payMin}-${payMax}</p>
           </div>

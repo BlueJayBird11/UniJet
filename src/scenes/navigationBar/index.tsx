@@ -1,5 +1,6 @@
 import { SelectedPage } from "@/shared/types";
 import { CalendarDaysIcon, UserCircleIcon, ClockIcon, TruckIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 type Props = {
@@ -8,7 +9,6 @@ type Props = {
 }
 
 const Navbar = ({selectedPage, setSelectedPage}: Props) => {    
-    
     const checkIfIsSelectedPage = (testPage: SelectedPage) => {
         if (testPage === selectedPage) {
             return "bg-primary-green-500"
@@ -20,9 +20,6 @@ const Navbar = ({selectedPage, setSelectedPage}: Props) => {
     const iconStyle = "h-10 w-10 text-black";
     return (
     <nav>
-        {/* <Link to = "/">a</Link>
-        <Link to = "/history">a</Link> */}
-
         <div className='bg-primary-red flex w-full items-center justify-between fixed bottom-0 py-2 px-6 gap-2 z-50'>
             <Link to ="/schedule">
                 <button className={`${buttonStyle} ${checkIfIsSelectedPage(SelectedPage.Schedule)}`} 
