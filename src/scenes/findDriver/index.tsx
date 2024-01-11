@@ -1,6 +1,7 @@
 import { AdjustmentsHorizontalIcon, SparklesIcon, UserCircleIcon, CheckCircleIcon } from "@heroicons/react/24/solid";
-import Person from "./person";
+import Person from "./Person";
 import { useState } from "react";
+import { DriverType } from "@/shared/types";
 
 type Props = {}
 
@@ -11,10 +12,32 @@ const FindDriver = (props: Props) => {
   const iconTextStyle = "flex items-center justify-between";
   const headerTextStyle = "text-black text-xs";
   
-  const userIconStyle = "h-20 w-20 text-black";
-  const userTextStyle = "text-black text-xl font-bold";
-  const styleToCenterTxt = "flex items-center h-full pl-2"
-  const userInfoTextStyle = "text-black text-2xl text-left font-bold";
+  const drivers: Array<DriverType> = [
+    {
+      name: "Ash",
+      rating: 5.0,
+      distance: 1.5,
+      location: "Nethken",
+      payMin: 9,
+      payMax: 11
+    },
+    {
+      name: "Henry",
+      rating: 4.1,
+      distance: 1.2,
+      location: "IESB",
+      payMin: 5,
+      payMax: 6
+    },
+    {
+      name: "Asta",
+      rating: 4.8,
+      distance: 2.5,
+      location: "IESB",
+      payMin: 7,
+      payMax: 13
+    }
+  ]
 
   return (
     <section className="bg-primary-blue">
@@ -53,10 +76,16 @@ const FindDriver = (props: Props) => {
       </div>
 
       {/* PEOPLE */}
-      <Person name="Ash" rating={5.0} distance={1.5} location="Nethken" payMin={9} payMax={11} />
-      <Person name="Henry" rating={4.1} distance={1.2} location="IESB" payMin={5} payMax={6} />
-      <Person name="Asta" rating={4.8} distance={2.5} location="IESB" payMin={7} payMax={13} />
-      
+      {drivers.map((driver: DriverType) => (
+        <Person 
+          name={driver.name}
+          rating={driver.rating} 
+          distance={driver.distance} 
+          location={driver.location} 
+          payMin={driver.payMin} 
+          payMax={driver.payMax} 
+        />
+      ))}
       {/* FILTER MODAL */}
       { isMenuToggled && (
             <div className="fixed left-0 top-20 z-40 h-80 w-[300px] bg-primary-green-500 drop-shadow-xl rounded-md">

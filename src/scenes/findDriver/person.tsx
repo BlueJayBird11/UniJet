@@ -7,7 +7,7 @@ type Props = {
     distance: number;
     location: string;
     payMin: number;
-    payMax: number
+    payMax: number;
 }
 
 const Person = ({name, rating, distance, location, payMin, payMax}: Props) => {
