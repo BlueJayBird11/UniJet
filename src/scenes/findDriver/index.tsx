@@ -49,7 +49,7 @@ const FindDriver = (props: Props) => {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    // You can filter the boxValues based on the search term here
+    // You can filter the drivers based on the search term here
     const filteredBoxes = initalDrivers.filter(value =>
       value.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
