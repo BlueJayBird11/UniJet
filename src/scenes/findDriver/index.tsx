@@ -7,12 +7,13 @@ type Props = {}
 
 const FindDriver = (props: Props) => {
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
-  
+  const [searchTerm, setSearchTerm] = useState('');
+
   const iconStyle = "h-8 w-8 text-black";
   const iconTextStyle = "flex items-center justify-between";
   const headerTextStyle = "text-black text-xs";
-  
-  const drivers: Array<DriverType> = [
+
+  const initalDrivers: Array<DriverType> = [
     {
       name: "Ash",
       rating: 5.0,
@@ -38,6 +39,22 @@ const FindDriver = (props: Props) => {
       payMax: 13
     }
   ]
+  // drivers = drivers.sort(() => Math.random() - 0.5);
+  const [drivers, setDrivers] = useState(initalDrivers);
+  
+  const shuffleDrivers = () => {
+    const shuffledBoxes = [...drivers].sort(() => Math.random() - 0.5);
+    setDrivers(shuffledBoxes);
+  };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    // You can filter the boxValues based on the search term here
+    const filteredBoxes = initalDrivers.filter(value =>
+      value.name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setDrivers(filteredBoxes);
+  };
 
   return (
     <section className="bg-primary-blue">
@@ -61,10 +78,14 @@ const FindDriver = (props: Props) => {
           <input 
             title="driverSearch" 
             type="text" 
-            placeholder="Search"  
+            placeholder="Search"
+            value={searchTerm}
+            onChange={handleSearch}
           />
           {/* OPTIMIZE BUTTON */}
-          <button className="pr-4">
+          <button className="pr-4"
+            onClick={shuffleDrivers}
+          >
             <div className={`${iconTextStyle}`}>
               <SparklesIcon className={`${iconStyle}`} />
               <div className="flex items-center">
@@ -88,7 +109,9 @@ const FindDriver = (props: Props) => {
       ))}
       {/* FILTER MODAL */}
       { isMenuToggled && (
-            <div className="fixed left-0 top-20 z-40 h-80 w-[300px] bg-primary-green-500 drop-shadow-xl rounded-md">
+            <div 
+              className="fixed left-0 top-20 z-40 h-80 w-[300px] bg-primary-green-500 drop-shadow-xl rounded-md"
+            >
                 <p>Filter options will go here</p>
             </div>
         )}
