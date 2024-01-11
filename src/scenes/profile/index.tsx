@@ -39,7 +39,7 @@ const index = (props: Props) => {
             </div>
             <div className='flex justify-center items-start'>
                 <button
-                        className={`text-3xl p-5 font-bold text-primary-black  rounded-full focus:outline-none mt-24 ${offlineStatus ? 'bg-primary-red' : 'bg-primary-green'}`}
+                        className={`text-3xl p-5 font-bold text-primary-black  rounded-full focus:outline-none mt-24 ${offlineStatus ? 'bg-primary-red' : 'bg-primary-green-500'}`}
                         onClick={handleStatusClick}
                     >
                         {offlineStatus ? 'Offline' : 'Online'}
