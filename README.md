@@ -1,10 +1,11 @@
 # UniJet
 On installion run:
 
-npm ci
+`npm ci`
 
 if this command doesn't work, do the following
 
+```
 npm install
 
 npm i @heroicons/react
@@ -18,8 +19,11 @@ npx tailwindcss init -p
 npm i react-router-dom
 
 npm i -D @types/react-router-dom
+```
 
-to run: npm run dev
+to run: 
+
+`npm run dev`
 
 
 
