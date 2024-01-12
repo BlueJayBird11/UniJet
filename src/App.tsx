@@ -40,7 +40,7 @@ function App() {
                                       selectedPage={selectedPage}
                                       setSelectedPage={setSelectedPage}
                                     />}/>
-          <Route path="/history" element={<History />}/>
+          <Route path="/history" element={<History userRole="driver" />} /> {/* "driver" or "passenger" */}
           <Route path="/settings" element={<Settings />}/>
           <Route path="/findDriver" element={<FindDriver />}/>
           <Route path="/findRider" element={<FindRider />}/>
