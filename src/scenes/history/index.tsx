@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
+
 
 // Define the props for a single history entry
 type HistoryEntryProps = {
@@ -64,10 +65,24 @@ const History = ({ userRole }: { userRole: 'driver' | 'passenger' }) => {
     { date: "2024-01-29", name: userRole === 'driver' ? "George Clooney" : "Julia Roberts", totalTime: 2.6, amount: 47.00 },
   ];
 
+  const [searchDate, setSearchDate] = useState('');
+
+  // Filter function
+  const filteredEntries = historyEntries.filter(entry => {
+    return entry.date.includes(searchDate);
+  });
+
   return (
     <div className="bg-primary-blue">
       <div className="pt-4">
-        {historyEntries.map((entry, index) => (
+      <input 
+          type="date" 
+          value={searchDate}
+          onChange={(e) => setSearchDate(e.target.value)}
+          className="mb-4 p-2"
+          placeholder="Search by Date"
+        />
+        {filteredEntries.map((entry, index) => (
           <HistoryEntry
             key={index}
             date={entry.date}
@@ -81,6 +96,5 @@ const History = ({ userRole }: { userRole: 'driver' | 'passenger' }) => {
     </div>
   );
 };
-
 
 export default History;
