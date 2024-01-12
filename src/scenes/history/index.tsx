@@ -102,6 +102,7 @@ const History = ({ userRole }: { userRole: 'driver' | 'passenger' }) => {
           />
         ))}
       </div>
+      <div className="py-14 bottom-0"></div>
     </div>
   );
 };
