@@ -45,31 +45,39 @@ const HistoryEntry = ({ date, name, totalTime, amount, userRole }: HistoryEntryP
 const History = ({ userRole }: { userRole: 'driver' | 'passenger' }) => {
   const historyEntries = [
     // Sample data, replace with actual data fetching logic
-    { date: "2024-01-12", name: userRole === 'driver' ? "Taylor Swift" : "Chris Hemsworth", totalTime: 3, amount: 50.00 },
-    { date: "2024-01-13", name: userRole === 'driver' ? "Chris Evans" : "Natalie Portman", totalTime: 2.5, amount: 45.00 },
-    { date: "2024-01-14", name: userRole === 'driver' ? "Scarlett Johansson" : "Tom Hiddleston", totalTime: 2, amount: 40.00 },
-    { date: "2024-01-15", name: userRole === 'driver' ? "Ryan Reynolds" : "Benedict Cumberbatch", totalTime: 1.75, amount: 30.00 },
-    { date: "2024-01-16", name: userRole === 'driver' ? "Emma Watson" : "Tom Holland", totalTime: 2.25, amount: 37.50 },
-    { date: "2024-01-17", name: userRole === 'driver' ? "Tom Holland" : "Zendaya", totalTime: 3, amount: 55.00 },
-    { date: "2024-01-18", name: userRole === 'driver' ? "Zendaya" : "Keanu Reeves", totalTime: 1.5, amount: 25.00 },
-    { date: "2024-01-19", name: userRole === 'driver' ? "Keanu Reeves" : "Dwayne Johnson", totalTime: 3.5, amount: 60.00 },
-    { date: "2024-01-20", name: userRole === 'driver' ? "Leonardo DiCaprio" : "Brad Pitt", totalTime: 2.0, amount: 42.00 },
-    { date: "2024-01-21", name: userRole === 'driver' ? "Margot Robbie" : "Sandra Bullock", totalTime: 2.1, amount: 38.00 },
-    { date: "2024-01-22", name: userRole === 'driver' ? "Hugh Jackman" : "Jennifer Lawrence", totalTime: 2.2, amount: 39.00 },
-    { date: "2024-01-23", name: userRole === 'driver' ? "Meryl Streep" : "Anne Hathaway", totalTime: 1.8, amount: 28.00 },
-    { date: "2024-01-24", name: userRole === 'driver' ? "Tom Cruise" : "Will Smith", totalTime: 3.3, amount: 52.00 },
-    { date: "2024-01-25", name: userRole === 'driver' ? "Angelina Jolie" : "Johnny Depp", totalTime: 2.5, amount: 45.00 },
-    { date: "2024-01-26", name: userRole === 'driver' ? "Bradley Cooper" : "Lady Gaga", totalTime: 1.9, amount: 31.00 },
-    { date: "2024-01-27", name: userRole === 'driver' ? "Samuel L. Jackson" : "Charlize Theron", totalTime: 2.3, amount: 41.00 },
-    { date: "2024-01-28", name: userRole === 'driver' ? "Emma Stone" : "Ryan Gosling", totalTime: 2.4, amount: 44.00 },
-    { date: "2024-01-29", name: userRole === 'driver' ? "George Clooney" : "Julia Roberts", totalTime: 2.6, amount: 47.00 },
-  ];
+    { date: "01/10/2024", name: userRole === 'driver' ? "Taylor Swift" : "Chris Hemsworth", totalTime: 3, amount: 50.00 },
+    { date: "01/06/2024", name: userRole === 'driver' ? "Ryan Reynolds" : "Benedict Cumberbatch", totalTime: 1.75, amount: 30.00 },
+    { date: "01/04/2024", name: userRole === 'driver' ? "George Clooney" : "Julia Roberts", totalTime: 2.6, amount: 47.00 },
+    { date: "01/04/2024", name: userRole === 'driver' ? "Bradley Cooper" : "Lady Gaga", totalTime: 1.9, amount: 31.00 },
+    { date: "01/03/2024", name: userRole === 'driver' ? "Emma Stone" : "Ryan Gosling", totalTime: 2.4, amount: 44.00 },
+    { date: "01/03/2024", name: userRole === 'driver' ? "Angelina Jolie" : "Johnny Depp", totalTime: 2.5, amount: 45.00 },
+    { date: "01/02/2024", name: userRole === 'driver' ? "Keanu Reeves" : "Dwayne Johnson", totalTime: 3.5, amount: 60.00 },
+    { date: "01/02/2024", name: userRole === 'driver' ? "Samuel L. Jackson" : "Charlize Theron", totalTime: 2.3, amount: 41.00 },
+    { date: "01/01/2024", name: userRole === 'driver' ? "Leonardo DiCaprio" : "Brad Pitt", totalTime: 2.0, amount: 42.00 },
+    { date: "12/31/2023", name: userRole === 'driver' ? "Emma Watson" : "Tom Holland", totalTime: 2.25, amount: 37.50 },
+    { date: "12/30/2023", name: userRole === 'driver' ? "Hugh Jackman" : "Jennifer Lawrence", totalTime: 2.2, amount: 39.00 },
+    { date: "12/29/2023", name: userRole === 'driver' ? "Tom Holland" : "Zendaya", totalTime: 3, amount: 55.00 },
+    { date: "12/29/2023", name: userRole === 'driver' ? "Meryl Streep" : "Anne Hathaway", totalTime: 1.8, amount: 28.00 },
+    { date: "12/28/2023", name: userRole === 'driver' ? "Chris Evans" : "Natalie Portman", totalTime: 2.5, amount: 45.00 },
+    { date: "12/28/2023", name: userRole === 'driver' ? "Zendaya" : "Keanu Reeves", totalTime: 1.5, amount: 25.00 },
+    { date: "12/27/2023", name: userRole === 'driver' ? "Scarlett Johansson" : "Tom Hiddleston", totalTime: 2, amount: 40.00 },
+    { date: "12/27/2023", name: userRole === 'driver' ? "Margot Robbie" : "Sandra Bullock", totalTime: 2.1, amount: 38.00 },
+    { date: "12/25/2023", name: userRole === 'driver' ? "Tom Cruise" : "Will Smith", totalTime: 3.3, amount: 52.00 },
+    ];
 
   const [searchDate, setSearchDate] = useState('');
 
   // Filter function
   const filteredEntries = historyEntries.filter(entry => {
-    return entry.date.includes(searchDate);
+    // Convert search date format from YYYY-MM-DD to MM/DD/YYYY
+    const convertDateFormat = (dateStr: string) => {
+      if (!dateStr) return '';
+      const [year, month, day] = dateStr.split('-');
+      return `${month}/${day}/${year}`;
+    };
+
+    const convertedSearchDate = convertDateFormat(searchDate);
+    return entry.date.includes(convertedSearchDate);
   });
 
   return (
