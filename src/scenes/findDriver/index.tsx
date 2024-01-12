@@ -39,7 +39,7 @@ const FindDriver = (props: Props) => {
       payMax: 13
     }
   ]
-  // drivers = drivers.sort(() => Math.random() - 0.5);
+
   const [drivers, setDrivers] = useState(initalDrivers);
   
   const shuffleDrivers = () => {
@@ -107,6 +107,7 @@ const FindDriver = (props: Props) => {
           payMax={driver.payMax} 
         />
       ))}
+
       {/* FILTER MODAL */}
       { isMenuToggled && (
             <div 
@@ -115,6 +116,8 @@ const FindDriver = (props: Props) => {
                 <p>Filter options will go here</p>
             </div>
         )}
+
+      {/* SPACING */}
       <div className="py-14 bottom-0"></div>
     </section>
   )
