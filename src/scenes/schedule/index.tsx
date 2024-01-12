@@ -14,7 +14,7 @@ const Schedule = (props: Props) => {
       <div className="flex-grow text-2xl bg-primary-white p-8">
           <Calendar />
       </div>
-      <div className="bg-primary-blue py-60">
+      <div className="bg-primary-blue py-30">
 
       </div>
     </div>
