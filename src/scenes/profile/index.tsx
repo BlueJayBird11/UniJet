@@ -1,10 +1,14 @@
 import React, {useState} from 'react'
 import { Cog6ToothIcon } from "@heroicons/react/20/solid";
 import { Link } from 'react-router-dom';
+import { SelectedPage } from '@/shared/types';
 
-type Props = {}
+type Props = {
+    selectedPage: SelectedPage;
+    setSelectedPage: (value: SelectedPage) => void;
+}
 
-const index = (props: Props) => {
+const index = ({selectedPage, setSelectedPage}: Props) => {
     const handleButtonClick = () => {
         console.log('hit');
       };
@@ -22,7 +26,9 @@ const index = (props: Props) => {
         <header className='relative'>
             <div className='flex justify-end p-4'> 
                 <Link to="/settings">
-                    <button> 
+                    <button
+                        onClick={() => setSelectedPage(SelectedPage.Settings)}
+                    > 
                         <Cog6ToothIcon className='w-10 h-10 text-primary-red'/>
                     </button> 
                 </Link>
@@ -39,7 +45,7 @@ const index = (props: Props) => {
             </div>
             <div className='flex justify-center items-start'>
                 <button
-                        className={`text-3xl p-5 font-bold text-primary-black  rounded-full focus:outline-none mt-24 ${offlineStatus ? 'bg-primary-red' : 'bg-primary-green'}`}
+                        className={`text-3xl p-5 font-bold text-primary-black  rounded-full focus:outline-none mt-24 ${offlineStatus ? 'bg-primary-red' : 'bg-primary-green-500'}`}
                         onClick={handleStatusClick}
                     >
                         {offlineStatus ? 'Offline' : 'Online'}

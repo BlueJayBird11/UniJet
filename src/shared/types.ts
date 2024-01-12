@@ -6,3 +6,12 @@ export enum SelectedPage {
     Schedule = "schedule",
     Settings = "settings",
   }
+
+export interface DriverType {
+  name: string;
+  rating: number;
+  distance: number;
+  location: string;
+  payMin: number;
+  payMax: number;
+}

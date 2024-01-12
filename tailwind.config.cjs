@@ -13,7 +13,8 @@ export default {
         "gray-500": "#5E0000",
         "primary-blue": "#003085",
         "primary-red": "#CA333A",
-        "primary-green": "#92D36E",
+        "primary-green-500": "#92D36E",
+        "primary-green-300": "#b1e098",
         "secondary-400": "#FFCD5B",
         "secondary-500": "#FFC132",
         "primary-white": "#FFFFFF",
@@ -25,7 +26,7 @@ export default {
       },
     },
     screens: {
-      xs: "480px",
+      xs: "320px", //480
       sm: "768px",
       md: "1060px",
     },
