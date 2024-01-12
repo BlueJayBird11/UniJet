@@ -4,18 +4,22 @@ import { motion } from "framer-motion";
 
 // Define the props for a single history entry
 type HistoryEntryProps = {
-  riderName: string;
   date: string;
-  totalTime: number; // assuming total time is in hours
-  earnings: number;
+  name: string; // Name of the passenger or driver
+  totalTime: number; // Assuming total time is in hours
+  amount: number; // Earnings or payment
+  userRole: 'driver' | 'passenger';
 };
 
 
 // Define the component for a single history entry
-const HistoryEntry = ({ riderName, date, totalTime, earnings }: HistoryEntryProps) => {
+const HistoryEntry = ({ date, name, totalTime, amount, userRole }: HistoryEntryProps) => {
   const entryStyle = "bg-gray-600 rounded-[20px] px-2 py-4 mb-4";
   const textStyle = "text-black text-xl font-bold";
   const detailTextStyle = "text-black text-lg";  
+
+  const roleSpecificText = userRole === 'driver' ? 'Passenger: ' : 'Driver: ';
+  const amountText = userRole === 'driver' ? 'Earnings: ' : 'Payment: ';
 
   return (
     <motion.div 
@@ -25,51 +29,56 @@ const HistoryEntry = ({ riderName, date, totalTime, earnings }: HistoryEntryProp
         transition={{ duration: 0.5 }}
     >
         <div className="flex items-center justify-between px-2">
-          {/* Left side: Rider Name */}
-          <p className={textStyle}>{riderName}</p>
-
-          {/* Right side: Date */}
+          <p className={textStyle}>{roleSpecificText + name}</p>
           <p className={textStyle}>{date}</p>
         </div>
         <div className="mt-2">
-          {/* Total Ride Time */}
           <p className={detailTextStyle}>Total Ride Time: {totalTime} hrs</p>
-
-          {/* Earnings */}
-          <p className={detailTextStyle}>Earnings: ${earnings.toFixed(2)}</p>
+          <p className={detailTextStyle}>{amountText + `$${amount.toFixed(2)}`}</p>
         </div>
     </motion.div>
   );
 };
 
 // Define the parent component that will render the list of history entries
-const History = () => {
+const History = ({ userRole }: { userRole: 'driver' | 'passenger' }) => {
   const historyEntries = [
-    { riderName: "Taylor Swift", date: "2024-01-12", totalTime: 3, earnings: 50.00 },
-    { riderName: "Chris Evans", date: "2024-01-13", totalTime: 2.5, earnings: 45.00 },
-    { riderName: "Scarlett Johansson", date: "2024-01-14", totalTime: 2, earnings: 40.00 },
-    { riderName: "Ryan Reynolds", date: "2024-01-15", totalTime: 1.75, earnings: 30.00 },
-    { riderName: "Emma Watson", date: "2024-01-16", totalTime: 2.25, earnings: 37.50 },
-    { riderName: "Tom Holland", date: "2024-01-17", totalTime: 3, earnings: 55.00 },
-    { riderName: "Zendaya", date: "2024-01-18", totalTime: 1.5, earnings: 25.00 },
-    { riderName: "Keanu Reeves", date: "2024-01-19", totalTime: 3.5, earnings: 60.00 },
-    
+    // Sample data, replace with actual data fetching logic
+    { date: "2024-01-12", name: userRole === 'driver' ? "Taylor Swift" : "Chris Hemsworth", totalTime: 3, amount: 50.00 },
+    { date: "2024-01-13", name: userRole === 'driver' ? "Chris Evans" : "Natalie Portman", totalTime: 2.5, amount: 45.00 },
+    { date: "2024-01-14", name: userRole === 'driver' ? "Scarlett Johansson" : "Tom Hiddleston", totalTime: 2, amount: 40.00 },
+    { date: "2024-01-15", name: userRole === 'driver' ? "Ryan Reynolds" : "Benedict Cumberbatch", totalTime: 1.75, amount: 30.00 },
+    { date: "2024-01-16", name: userRole === 'driver' ? "Emma Watson" : "Tom Holland", totalTime: 2.25, amount: 37.50 },
+    { date: "2024-01-17", name: userRole === 'driver' ? "Tom Holland" : "Zendaya", totalTime: 3, amount: 55.00 },
+    { date: "2024-01-18", name: userRole === 'driver' ? "Zendaya" : "Keanu Reeves", totalTime: 1.5, amount: 25.00 },
+    { date: "2024-01-19", name: userRole === 'driver' ? "Keanu Reeves" : "Dwayne Johnson", totalTime: 3.5, amount: 60.00 },
+    { date: "2024-01-20", name: userRole === 'driver' ? "Leonardo DiCaprio" : "Brad Pitt", totalTime: 2.0, amount: 42.00 },
+    { date: "2024-01-21", name: userRole === 'driver' ? "Margot Robbie" : "Sandra Bullock", totalTime: 2.1, amount: 38.00 },
+    { date: "2024-01-22", name: userRole === 'driver' ? "Hugh Jackman" : "Jennifer Lawrence", totalTime: 2.2, amount: 39.00 },
+    { date: "2024-01-23", name: userRole === 'driver' ? "Meryl Streep" : "Anne Hathaway", totalTime: 1.8, amount: 28.00 },
+    { date: "2024-01-24", name: userRole === 'driver' ? "Tom Cruise" : "Will Smith", totalTime: 3.3, amount: 52.00 },
+    { date: "2024-01-25", name: userRole === 'driver' ? "Angelina Jolie" : "Johnny Depp", totalTime: 2.5, amount: 45.00 },
+    { date: "2024-01-26", name: userRole === 'driver' ? "Bradley Cooper" : "Lady Gaga", totalTime: 1.9, amount: 31.00 },
+    { date: "2024-01-27", name: userRole === 'driver' ? "Samuel L. Jackson" : "Charlize Theron", totalTime: 2.3, amount: 41.00 },
+    { date: "2024-01-28", name: userRole === 'driver' ? "Emma Stone" : "Ryan Gosling", totalTime: 2.4, amount: 44.00 },
+    { date: "2024-01-29", name: userRole === 'driver' ? "George Clooney" : "Julia Roberts", totalTime: 2.6, amount: 47.00 },
   ];
 
   return (
-    <div className="bg-primary-blue"> {/* Blue background */}
-    <div className="pt-4"> {/* Top padding */}
-      {historyEntries.map((entry, index) => (
-        <HistoryEntry
-          key={index}
-          riderName={entry.riderName}
-          date={entry.date}
-          totalTime={entry.totalTime}
-          earnings={entry.earnings}
-        />
-      ))}
+    <div className="bg-primary-blue">
+      <div className="pt-4">
+        {historyEntries.map((entry, index) => (
+          <HistoryEntry
+            key={index}
+            date={entry.date}
+            name={entry.name}
+            totalTime={entry.totalTime}
+            amount={entry.amount}
+            userRole={userRole}
+          />
+        ))}
+      </div>
     </div>
-  </div>
   );
 };
 
