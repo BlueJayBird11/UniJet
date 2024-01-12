@@ -74,13 +74,14 @@ const History = ({ userRole }: { userRole: 'driver' | 'passenger' }) => {
 
   return (
     <div className="bg-primary-blue">
-      <div className="pt-4">
+      <div className="pt-4 px-4">
       <input 
           type="date" 
           value={searchDate}
           onChange={(e) => setSearchDate(e.target.value)}
-          className="mb-4 p-2"
+          className="mb-4 p-2 w-full max-w-2xl mx-auto bg-gray-400 text-white" // Changed to bg-gray-400 and text-white
           placeholder="Search by Date"
+          style={{ display: 'block' }}
         />
         {filteredEntries.map((entry, index) => (
           <HistoryEntry

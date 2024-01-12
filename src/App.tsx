@@ -29,7 +29,7 @@ function App() {
         <Routes>
           <Route index element={page} />
           <Route path="/" element={<Profile />}/>
-          <Route path="/history" element={<History userRole="passenger" />} /> {/* "driver" or "passenger" */}
+          <Route path="/history" element={<History userRole="driver" />} /> {/* "driver" or "passenger" */}
           <Route path="/settings" element={<Settings />}/>
           <Route path="/findDriver" element={<FindDriver />}/>
           <Route path="/findRider" element={<FindRider />}/>
