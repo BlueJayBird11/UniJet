@@ -27,7 +27,7 @@ const index = ({selectedPage, setSelectedPage}: Props) => {
             <div className='flex justify-end p-4'> 
                 <Link to="/settings">
                     <button
-                        onClick={() => setSelectedPage(SelectedPage.FindDriver)}
+                        onClick={() => setSelectedPage(SelectedPage.Settings)}
                     > 
                         <Cog6ToothIcon className='w-10 h-10 text-primary-red'/>
                     </button> 

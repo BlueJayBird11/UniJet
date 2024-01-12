@@ -20,7 +20,6 @@ function App() {
                   selectedPage={selectedPage}
                   setSelectedPage={setSelectedPage}
                 />;
-  // let currentPageMain: string = "profile";
 
   return (
     <div className='app bg-primary-blue'>
