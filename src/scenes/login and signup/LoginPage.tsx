@@ -27,6 +27,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
   return (
     <div className="center-container">
+       <div className="background-pattern"></div>
       <div className="auth-form">
         <h2>Login</h2>
         <form onSubmit={handleLogin}>
