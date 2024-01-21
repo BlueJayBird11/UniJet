@@ -1,5 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import './LoginSignup.css';
+import { Link } from 'react-router-dom';
 
 const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -22,6 +23,7 @@ const SignupPage: React.FC = () => {
 
   return (
     <div className="center-container">
+      <div className="background-pattern"></div>
       <div className="auth-form">
         <h2>Sign Up</h2>
         <form onSubmit={handleSignup}>
@@ -64,6 +66,11 @@ const SignupPage: React.FC = () => {
           />
           <button type="submit">Sign Up</button>
         </form>
+        <div className="form-footer">
+          <p>
+            Already have an account? <Link to="/login">Login</Link>
+          </p>
+        </div>      
       </div>
     </div>
   );
