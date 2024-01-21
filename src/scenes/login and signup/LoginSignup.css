@@ -14,6 +14,13 @@
   100% { background-position: 0% 50%; }
 }
 
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-size: 1rem;
+}
+
 .background-pattern {
   position: absolute;
   top: 0;
@@ -40,12 +47,13 @@
 }
 
 input[type="email"], input[type="password"], input[type="text"], input[type="date"] {
-  width: calc(100% - 20px); /* Full width minus padding */
-  padding: 12px 10px; /* Increased padding */
-  margin-bottom: 1rem; /* Increased margin */
+  width: 100%; /* Updated to 100% width */
+  padding: 12px 10px;
+  margin-bottom: 1rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   transition: border-color 0.3s;
+  font-size: 1rem; /* Match font size to label for consistency */
 }
 
 input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, input[type="date"]:focus {
@@ -80,3 +88,5 @@ button:hover {
     padding: 1.5rem;
   }
 }
+
+

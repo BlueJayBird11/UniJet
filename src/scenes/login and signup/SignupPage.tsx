@@ -1,24 +1,27 @@
 import React, { FormEvent, useState } from 'react';
-import './LoginSignup.css';
 import { Link } from 'react-router-dom';
+import './LoginSignup.css';
 
 const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [dob, setDob] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [dob, setDob] = useState(''); // dob for date of birth
   const [campusId, setCampusId] = useState('');
 
   const handleSignup = (e: FormEvent) => {
     e.preventDefault();
     // Here you would normally send this data to the backend
-    console.log(email, password, username, dob, campusId);
-    // For now we'll just clear the form
-    setEmail('');
-    setPassword('');
-    setUsername('');
-    setDob('');
-    setCampusId('');
+    console.log({
+      email,
+      password,
+      confirmPassword,
+      fullName,
+      dob,
+      campusId
+    });
+    // Clear the form (or handle as needed)
   };
 
   return (
@@ -27,50 +30,55 @@ const SignupPage: React.FC = () => {
       <div className="auth-form">
         <h2>Sign Up</h2>
         <form onSubmit={handleSignup}>
-          <input 
+          <input
             type="email"
-            placeholder="Email"
+            placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            pattern=".+@latech\.edu$"
-            title="Email must end with @latech.edu"
           />
-          <input 
+          <input
             type="password"
-            placeholder="Password"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required 
+            required
           />
-          <input 
+          <input
+            type="password"
+            placeholder="Confirm your password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <input
             type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required 
+            placeholder="Enter your Full-Name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            required
           />
-          <input 
+          <label htmlFor="dob" className="label">Enter your date of birth here: </label>
+          <input
             type="date"
-            placeholder="Date of Birth"
+            id="dob"
+            className="dob-input"
             value={dob}
             onChange={(e) => setDob(e.target.value)}
-            required 
+            required
           />
-          <input 
+          <input
             type="text"
-            placeholder="Campus ID"
+            placeholder="Enter your campus ID"
             value={campusId}
             onChange={(e) => setCampusId(e.target.value)}
-            required 
+            required
           />
           <button type="submit">Sign Up</button>
         </form>
-        <div className="form-footer">
-          <p>
-            Already have an account? <Link to="/login">Login</Link>
-          </p>
-        </div>      
+        <p>
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
       </div>
     </div>
   );
