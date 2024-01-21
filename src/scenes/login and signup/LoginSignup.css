@@ -1,0 +1,31 @@
+/* LoginSignup.css */
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Use 100% of the viewport height */
+    padding: 1rem;
+  }
+  
+  .auth-form {
+    width: 100%;
+    max-width: 400px; /* Set a max-width for larger screens */
+    margin: auto;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+  }
+  
+  @media (max-width: 768px) {
+    .auth-form {
+      padding: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .auth-form {
+      padding: 0.5rem;
+    }
+  }
+  
