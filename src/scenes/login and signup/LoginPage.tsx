@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LoginSignup.css';
 
@@ -15,6 +15,14 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     // Here you would normally authenticate against the backend
     console.log(email, password);
     onLogin();
+  };
+
+  const loginPageStyle = {
+    height: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    background: 'linear-gradient(to right, red, blue)', // Gradient background
   };
 
   return (
