@@ -26,7 +26,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="center-container">
+    <div className="center-container"> 
+      <h1 className="unijet-title">UNIJET</h1>
        <div className="background-pattern"></div>
       <div className="auth-form">
         <h2>Login</h2>

@@ -21,11 +21,11 @@ const SignupPage: React.FC = () => {
       dob,
       campusId
     });
-    // Clear the form (or handle as needed)
   };
 
   return (
     <div className="center-container">
+      <h1 className="unijet-title">UNIJET</h1>
       <div className="background-pattern"></div>
       <div className="auth-form">
         <h2>Sign Up</h2>

@@ -1,4 +1,19 @@
+.unijet-title {
+  text-align: center;
+  font-size: 4rem; /* Increased size */
+  font-weight: bold;
+  color: #fff; /* White color for contrast */
+  margin-bottom: 2rem;
+  position: absolute;
+  top: 20%; /* Adjust as necessary */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10; /* Make sure it's above the background pattern */
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5); /* Stronger text shadow for legibility */
+}
+
 .center-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -44,6 +59,8 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   backdrop-filter: blur(10px); /* For a frosted glass effect */
+  position: relative; /* Make it relative to position it below the title */
+  top: 20%; /* Adjust this value to move the form down */
 }
 
 input[type="email"], input[type="password"], input[type="text"], input[type="date"] {
