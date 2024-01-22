@@ -34,7 +34,7 @@ function App() {
   const renderContent = () => {
     if (isLoggedIn) {
       return (
-        <>
+        <div>
           <NavigationBar selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
           <Routes>
             <Route path="/profile" element={<Profile selectedPage={selectedPage} setSelectedPage={setSelectedPage} />} />
@@ -51,7 +51,7 @@ function App() {
             <Route path="/logout" element={<button onClick={handleLogout}>Logout</button>} />
             <Route path="*" element={<Navigate to="/profile" replace />} />
           </Routes>
-        </>
+        </div>
       );
     } else {
       return (
