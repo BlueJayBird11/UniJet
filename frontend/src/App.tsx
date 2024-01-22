@@ -16,8 +16,8 @@ import EditName from './scenes/settings/editName';
 import EditPaymentMethod from './scenes/settings/editPaymentMethod';
 import EditUniversity from './scenes/settings/editUniversity';
 import Logout from './scenes/settings/logout';
-import LoginPage from './scenes/login and signup/LoginPage';
-import SignupPage from './scenes/login and signup/SignupPage';
+import LoginPage from './scenes/loginAndSignup/LoginPage';
+import SignupPage from './scenes/loginAndSignup/SignupPage';
 
 function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.Profile);
