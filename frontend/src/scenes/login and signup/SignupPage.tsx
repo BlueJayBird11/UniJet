@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
-import './LoginSignup.css';
+// import './LoginSignup.css';
 
 const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
