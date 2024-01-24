@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import background from './background.png'
 
 interface LoginPageProps {
   onLogin: () => void;
@@ -17,10 +17,10 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-no-repeat bg-cover" style={{ backgroundImage: `url(background.png)` }}> 
-    <div className="w-full max-w-lg">
-      <h1 className="text-6xl font-bold text-white text-center mb-10">UNIJET</h1>
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className="flex justify-center items-center h-screen bg-no-repeat bg-cover" style={{ backgroundImage: `url(${background})` }}>
+      <div className="w-full max-w-lg">
+      <h1 className="text-6xl font-bold text-center mb-2 text-white shadow-lg bg-opacity-50 bg-black px-3 py-1 rounded">UNIJET</h1>
+        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-xl font-semibold text-center mb-6">Login</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <input 
