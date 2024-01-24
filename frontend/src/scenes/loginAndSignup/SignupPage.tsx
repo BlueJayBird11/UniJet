@@ -7,11 +7,17 @@ const SignupPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [dob, setDob] = useState(''); // dob for date of birth
+  const [dob, setDob] = useState(''); 
   const [campusId, setCampusId] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const handleSignup = (e: FormEvent) => {
     e.preventDefault();
+    setPasswordError('');
+    if (password !== confirmPassword) {
+      setPasswordError("Passwords do not match.");
+      return;
+    }
     console.log({
       email,
       password,
@@ -55,6 +61,8 @@ const SignupPage: React.FC = () => {
                 required
                 className="w-full p-2 border rounded"
               />
+              {passwordError && <div className="text-red-500 text-sm">{passwordError}</div>}
+              
               <input
                 type="text"
                 placeholder="Enter your Full-Name"
