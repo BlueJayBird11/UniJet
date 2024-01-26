@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from "framer-motion";
-
+import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 
 // Define the props for a single history entry
 type HistoryEntryProps = {
@@ -41,7 +41,8 @@ const HistoryEntry = ({ date, name, totalTime, amount, userRole }: HistoryEntryP
 };
 
 // Define the parent component that will render the list of history entries
-const History = ({ userRole }: { userRole: 'driver' | 'passenger' }) => {
+const History: React.FC = () => {
+  const { userRole } = useUserRole();
   const historyEntries = [
     // Sample data, replace with actual data fetching logic
     { date: "01/10/2024", name: userRole === 'driver' ? "Taylor Swift" : "Chris Hemsworth", totalTime: 3, amount: 50.00 },

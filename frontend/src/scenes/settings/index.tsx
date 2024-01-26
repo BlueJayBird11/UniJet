@@ -6,16 +6,16 @@ import EditPaymentMethodButton from "@/assets/edit_payment_method.png";
 import EditUniversityButton from "@/assets/edit_university.png";
 import LogoutButton from "@/assets/logout.png";
 import DeleteAccountButton from "@/assets/delete_account.png";
+import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 
 type SettingsProps = {}
 
 const Settings = (props: SettingsProps) => {
-    const [userRole, setUserRole] = useState('driver');
-    const handleRoleChange = (newRole: string) => {
+    const { userRole, setUserRole } = useUserRole();
+    const handleRoleChange = (newRole: 'driver' | 'passenger') => {
         setUserRole(newRole);
-        /*userRole backend here*/
-
       }
+      
  const images = [EditNameButton, EditEmailButton, EditPaymentMethodButton, EditUniversityButton, LogoutButton, DeleteAccountButton];
  const routes = ["/edit-name", "/edit-email", "/edit-payment-method", "/edit-university", "/logout", "/delete-account"];
 
