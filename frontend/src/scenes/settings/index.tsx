@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import EditNameButton from "@/assets/edit_name.png";
 import EditEmailButton from "@/assets/edit_email.png";
@@ -10,14 +10,40 @@ import DeleteAccountButton from "@/assets/delete_account.png";
 type SettingsProps = {}
 
 const Settings = (props: SettingsProps) => {
+    const [userRole, setUserRole] = useState('driver');
+    const handleRoleChange = (newRole: string) => {
+        setUserRole(newRole);
+        /*userRole backend here*/
+
+      }
  const images = [EditNameButton, EditEmailButton, EditPaymentMethodButton, EditUniversityButton, LogoutButton, DeleteAccountButton];
  const routes = ["/edit-name", "/edit-email", "/edit-payment-method", "/edit-university", "/logout", "/delete-account"];
 
  return (
      <div className='flex flex-col items-center bg-primary-blue-100'>
-        <h1 className='text=4xl font-bold text-primary-black mt-12'>
+        <h1 className='text=lg font-bold text-primary-black mt-12'>
             Settings
         </h1> 
+
+            {/* User Role Selection */}
+            <div className='my-8'>
+                <h2 className='text-2xl font-bold text-primary-black'>Your Role: {userRole}</h2>
+                <div className='flex mt-4'>
+                    <button 
+                        onClick={() => handleRoleChange('driver')} 
+                        className={`mx-2 px-4 py-2 ${userRole === 'driver' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                    >
+                        Driver
+                    </button>
+                    <button 
+                        onClick={() => handleRoleChange('passenger')} 
+                        className={`mx-2 px-4 py-2 ${userRole === 'passenger' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                    >
+                        Passenger
+                    </button>
+                </div>
+            </div>
+            
         {images.map((image, index) => (
              <Link key={index} to={routes[index]}>
                <button>
