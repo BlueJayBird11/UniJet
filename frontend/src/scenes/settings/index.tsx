@@ -21,13 +21,9 @@ const Settings = (props: SettingsProps) => {
 
  return (
      <div className='flex flex-col items-center bg-primary-blue-100'>
-        <h1 className='text=lg font-bold text-primary-black mt-12'>
-            Settings
-        </h1> 
-
             {/* User Role Selection */}
             <div className='my-8'>
-                <h2 className='text-2xl font-bold text-primary-black'>Your Role: {userRole}</h2>
+                <h2 className='text-2xl font-bold text-primary-black'>Your role is {userRole}</h2>
                 <div className='flex mt-4'>
                     <button 
                         onClick={() => handleRoleChange('driver')} 
