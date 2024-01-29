@@ -1,30 +1,23 @@
 # UniJet
-On installion run:
-
-`npm ci`
-
-if this command doesn't work, do the following
+To run the frontend:
 
 ```
-npm install
-
-npm i @heroicons/react
-
-npm i -D @types/node
-
-npm install -D tailwindcss postcss autoprefixer
-
-npx tailwindcss init -p
-
-npm i react-router-dom
-
-npm i -D @types/react-router-dom
+cd frontend
+npm ci
+npm run dev
 ```
 
-to run: 
+To run the backend:
+```
+cd server
+npm run
+```
 
-`npm run dev`
-
+To make the database:
+```
+cd db
+// fill out later
+```
 
 
 # React + TypeScript + Vite
