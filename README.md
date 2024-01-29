@@ -10,6 +10,7 @@ npm run dev
 To run the backend:
 ```
 cd server
+npm ci
 npm run
 ```
 
