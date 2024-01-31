@@ -13,15 +13,15 @@ CREATE TABLE passengers (
 );
 
 CREATE TABLE drivers (
-    id BIGSERIAL NOT NULL PRIMARY,
+    id BIGSERIAL NOT NULL PRIMARY KEY,
     licencePlate VARCHAR(10) NOT NULL,
     registeredState CHAR(2) NOT NULL,
-    availableSeats INT NOT NULL check(dAvailableSeats >= 1 and dAvailableSeats <= 8),
+    availableSeats INT NOT NULL check(availableSeats >= 1 and availableSeats <= 8),
     rating FLOAT
 );
 
 CREATE TABLE vehicles (
-    id BIGSERIAL NOT NULL PRIMARY,
+    id BIGSERIAL NOT NULL PRIMARY KEY,
     make VARCHAR(20) NOT NULL,
     model VARCHAR(20) NOT NULL,
     color VARCHAR(20) NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE vehicles (
 );
 
 CREATE TABLE university (
-    id BIGSERIAL NOT NULL PRIMARY,
+    id BIGSERIAL NOT NULL PRIMARY KEY,
     uniName VARCHAR(40) NOT NULL,
     primaryColor CHAR(7) NOT NULL,
     secondaryColor CHAR(7) NOT NULL,
@@ -41,36 +41,36 @@ CREATE TABLE university (
 );
 
 CREATE TABLE classes (
-    id BIGSERIAL NOT NULL PRIMARY,
+    id BIGSERIAL NOT NULL PRIMARY KEY,
     classSubject VARCHAR(30) NOT NULL, 
     courseNumber INT NOT NULL,
     className VARCHAR(40) NOT NULL
 );
 
 CREATE TABLE timeInformation (
-    id BIGSERIAL NOT NULL PRIMARY,
+    id BIGSERIAL NOT NULL PRIMARY KEY,
     startTime TIME NOT NULL,
     endTime TIME NOT NULL
 );
 
 CREATE TABLE term (
-    id BIGSERIAL NOT NULL PRIMARY,
+    id BIGSERIAL NOT NULL PRIMARY KEY,
     startDate DATE NOT NULL,
-    endDate DATE NOT NULL,
+    endDate DATE NOT NULL
 );
 
 CREATE TABLE section (
-    id BIGSERIAL NOT NULL PRIMARY,
+    id BIGSERIAL NOT NULL PRIMARY KEY,
     section VARCHAR(5)
 );
 
-CREATE TABLE dayOfWeek (
-    id BIGSERIAL NOT NULL PRIMARY,
+CREATE TABLE daysOfWeek (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
     daysOfWeek VARCHAR(5)
 );
 
 CREATE TABLE trip (
-    id BIGSERIAL NOT NULL PRIMARY,
+    id BIGSERIAL NOT NULL PRIMARY KEY,
     startTime TIMESTAMP WITH TIME ZONE NOT NULL,
     endTime TIMESTAMP WITH TIME ZONE NOT NULL,
     startLoction VARCHAR(100) NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE trip (
 );
 
 CREATE TABLE buildings (
-    id BIGSERIAL NOT NULL PRIMARY,
+    id BIGSERIAL NOT NULL PRIMARY KEY,
     buildingAddress VARCHAR(50) NOT NULL,
     buildingName VARCHAR(40) NOT NULL
 );
