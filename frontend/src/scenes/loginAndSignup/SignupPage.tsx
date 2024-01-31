@@ -7,9 +7,9 @@ const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [FirstName, setFirstName] = useState('');
+  const [LastName, setLastName] = useState('');
   const [dob, setDob] = useState(''); 
-  const [campusId, setCampusId] = useState('');
   const [phone, setPhone] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -31,9 +31,9 @@ const SignupPage: React.FC = () => {
       email,
       password,
       confirmPassword,
-      fullName,
+      FirstName,
+      LastName,
       dob,
-      campusId,
       phone
     });
   };
@@ -82,9 +82,17 @@ const SignupPage: React.FC = () => {
               
               <input
                 type="text"
-                placeholder="Enter your Full-Name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Your First Name"
+                value={FirstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+                className="w-full p-2 border rounded"
+              />
+                            <input
+                type="text"
+                placeholder="Your Last Name"
+                value={LastName}
+                onChange={(e) => setLastName(e.target.value)}
                 required
                 className="w-full p-2 border rounded"
               />
@@ -102,14 +110,6 @@ const SignupPage: React.FC = () => {
                 placeholder="Enter your phone number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                required
-                className="w-full p-2 border rounded"
-              />
-              <input
-                type="text"
-                placeholder="Enter your campus ID"
-                value={campusId}
-                onChange={(e) => setCampusId(e.target.value)}
                 required
                 className="w-full p-2 border rounded"
               />
