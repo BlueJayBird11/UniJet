@@ -9,6 +9,7 @@ const SignupPage: React.FC = () => {
   const [fullName, setFullName] = useState('');
   const [dob, setDob] = useState(''); 
   const [campusId, setCampusId] = useState('');
+  const [phone, setPhone] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
   const handleSignup = (e: FormEvent) => {
@@ -24,7 +25,8 @@ const SignupPage: React.FC = () => {
       confirmPassword,
       fullName,
       dob,
-      campusId
+      campusId,
+      phone
     });
   };
 
@@ -79,7 +81,15 @@ const SignupPage: React.FC = () => {
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
                 required
-                />
+              />
+              <input
+                type="tel"
+                placeholder="Enter your phone number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                className="w-full p-2 border rounded"
+              />
               <input
                 type="text"
                 placeholder="Enter your campus ID"
