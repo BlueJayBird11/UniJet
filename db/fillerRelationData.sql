@@ -40,11 +40,11 @@ INSERT INTO history (passengerID, driverID, tripID) VALUES (1, 1, 1);
 -- Connecting passenger 2 and driver 2 to trip 2
 INSERT INTO history (passengerID, driverID, tripID) VALUES (2, 2, 2);
 
--- Example: Class 1 (Capstone), Time Information 1, Section 1, Days of Week 1, Building 1, Term 1
+-- Example: Class 1 (Capstone)
 INSERT INTO classInfo (classID, timeInfoID, sectionID, daysOfWeekID, buildingID, termID) VALUES (1, 1, 1, 1, 1, 1);
 
--- Example: Class 2 (Reverse), Time Information 2, Section 2, Days of Week 2, Building 2, Term 2
+-- Example: Class 2 (Reverse)
 INSERT INTO classInfo (classID, timeInfoID, sectionID, daysOfWeekID, buildingID, termID) VALUES (2, 2, 2, 1, 2, 1);
 
--- Example: Class 2 (Mathematics), Time Information 2, Section 2, Days of Week 2, Building 2, Term 2
+-- Example: Class 2 (Mathematics)
 INSERT INTO classInfo (classID, timeInfoID, sectionID, daysOfWeekID, buildingID, termID) VALUES (3, 3, 1, 1, 3, 1);
