@@ -92,40 +92,50 @@ CREATE TABLE registeredAs (
     passengerID INT NOT NULL,
     driverID INT NOT NULL,
     PRIMARY KEY (passengerID, driverID),
-    CONSTRAINT fk_passenger FOREIGN KEY(passengerID) REFERENCES passengers(id),
+    CONSTRAINT fk_passenger FOREIGN KEY(passengerID) REFERENCES passengers(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_driver FOREIGN KEY(driverID) REFERENCES drivers(id)
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE ownsA (
     driverID INT NOT NULL,
     vehicleID INT NOT NULL,
     PRIMARY KEY (driverID, vehicleID),
-    CONSTRAINT fk_driver FOREIGN KEY(driverID) REFERENCES drivers(id),
+    CONSTRAINT fk_driver FOREIGN KEY(driverID) REFERENCES drivers(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_vehicle FOREIGN KEY(vehicleID) REFERENCES vehicles(id)
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE attends (
     passengerID INT NOT NULL,
     universityID INT NOT NULL,
     PRIMARY KEY (passengerID, universityID),
-    CONSTRAINT fk_passenger FOREIGN KEY(passengerID) REFERENCES passengers(id),
+    CONSTRAINT fk_passenger FOREIGN KEY(passengerID) REFERENCES passengers(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_university FOREIGN KEY(universityID) REFERENCES university(id)
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE offeredBy (
     classID INT NOT NULL,
     universityID INT NOT NULL,
     PRIMARY KEY (classID, universityID),
-    CONSTRAINT fk_class FOREIGN KEY(classID) REFERENCES classes(id),
+    CONSTRAINT fk_class FOREIGN KEY(classID) REFERENCES classes(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_university FOREIGN KEY(universityID) REFERENCES university(id)
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE locatedIn (
     buildingID INT NOT NULL,
     universityID INT NOT NULL,
     PRIMARY KEY (buildingID, universityID),
-    CONSTRAINT fk_building FOREIGN KEY(buildingID) REFERENCES buildings(id),
+    CONSTRAINT fk_building FOREIGN KEY(buildingID) REFERENCES buildings(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_university FOREIGN KEY(universityID) REFERENCES university(id)
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE history (
@@ -133,9 +143,12 @@ CREATE TABLE history (
     driverID INT NOT NULL,
     tripID INT NOT NULL,
     PRIMARY KEY (passengerID, driverID, tripID),
-    CONSTRAINT fk_passenger FOREIGN KEY(passengerID) REFERENCES passengers(id),
-    CONSTRAINT fk_driver FOREIGN KEY(driverID) REFERENCES drivers(id),
+    CONSTRAINT fk_passenger FOREIGN KEY(passengerID) REFERENCES passengers(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_driver FOREIGN KEY(driverID) REFERENCES drivers(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_trip FOREIGN KEY(tripID) REFERENCES trip(id)
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE classInfo (
@@ -146,10 +159,16 @@ CREATE TABLE classInfo (
     buildingID INT NOT NULL,
     termID INT NOT NULL,
     PRIMARY KEY (classID, timeInfoID, sectionID, daysOfWeekID, buildingID, termID),
-    CONSTRAINT fk_class FOREIGN KEY(classID) REFERENCES classes(id),
-    CONSTRAINT fk_timeInformation FOREIGN KEY(timeInfoID) REFERENCES timeInformation(id),
-    CONSTRAINT fk_section FOREIGN KEY(sectionID) REFERENCES section(id),
-    CONSTRAINT fk_daysOfWeek FOREIGN KEY(daysOfWeekID) REFERENCES daysOfWeek(id),
-    CONSTRAINT fk_building FOREIGN KEY(buildingID) REFERENCES buildings(id),
+    CONSTRAINT fk_class FOREIGN KEY(classID) REFERENCES classes(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_timeInformation FOREIGN KEY(timeInfoID) REFERENCES timeInformation(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_section FOREIGN KEY(sectionID) REFERENCES section(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_daysOfWeek FOREIGN KEY(daysOfWeekID) REFERENCES daysOfWeek(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_building FOREIGN KEY(buildingID) REFERENCES buildings(id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_term FOREIGN KEY(termID) REFERENCES term(id)
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
