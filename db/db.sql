@@ -81,8 +81,9 @@ CREATE TABLE trip (
 
 CREATE TABLE buildings (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    buildingAddress VARCHAR(50) NOT NULL,
-    buildingName VARCHAR(40) NOT NULL
+    buildingAddress VARCHAR(50),
+    buildingName VARCHAR(40) NOT NULL,
+    buildingFullName VARCHAR(40)
 );
 
 -- RELATIONSHIPS --
