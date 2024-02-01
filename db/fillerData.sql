@@ -1,5 +1,5 @@
 INSERT INTO passengers (birthDate, email, passwordHash, phoneNumber, firstName, lastName, userStatus, carPool, rating, schedule) VALUES
-('1990-05-15', 'jfr021@latech.edu', 1234567890, '1234567890', 'Jay', 'Reich', 1, TRUE, 4.5, '{"monday": ["09:00", "17:00"]}'),
+('1990-05-15', 'jfr021@latech.edu', 1234567890, '1234567890', 'Jay', 'Reich', 1, TRUE, 4.5, '{"monday": [["09:30", "10:45"], ["12:30", "13:45"], ["14:00", "15:15"]],"tuesday": [["09:30", "10:45"], ["12:30", "13:45"], ["14:00", "15:15"]],"wednesday": [["09:30", "10:45"], ["12:30", "13:45"], ["14:00", "15:15"]]}'),
 ('1985-08-25', 'jms512@latech.edu', 987654321, '0987654321', 'Jane', 'Smith', 0, FALSE, 4.7, '{"friday": ["10:00", "15:00"]}');
 
 INSERT INTO drivers (licencePlate, registeredState, availableSeats, rating) VALUES

@@ -6,16 +6,16 @@ SELECT
     ti.starttime,
     ti.endtime
 FROM 
-    classInfo c
+    classInfo ci
 JOIN 
-    classes cl ON cl.id = c.classid
+    classes cl ON cl.id = ci.classid
 JOIN
-    daysofweek d ON d.id = c.daysofweekid
+    daysofweek d ON d.id = ci.daysofweekid
 JOIN
-    buildings b ON b.id = c.buildingid
+    buildings b ON b.id = ci.buildingid
 JOIN
-    section s ON s.id = c.sectionid
+    section s ON s.id = ci.sectionid
 JOIN
-    term t ON t.id = c.termid
+    term t ON t.id = ci.termid
 JOIN 
-    timeinformation ti ON ti.id = c.timeinfoid;
+    timeinformation ti ON ti.id = ci.timeinfoid;
