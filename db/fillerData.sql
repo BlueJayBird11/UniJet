@@ -24,8 +24,8 @@ INSERT INTO timeInformation (startTime, endTime) VALUES
 ('9:30:00', '10:45:00'),
 ('12:30:00', '13:45:00');
 
-INSERT INTO term (startDate, endDate) VALUES
-('2023-11-29', '2024-02-27');
+INSERT INTO term (startDate, endDate, termName) VALUES
+('2023-11-29', '2024-02-27', "WINTER2024");
 
 INSERT INTO section (section) VALUES
 ('001'),

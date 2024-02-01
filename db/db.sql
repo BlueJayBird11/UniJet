@@ -56,7 +56,8 @@ CREATE TABLE timeInformation (
 CREATE TABLE term (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     startDate DATE NOT NULL,
-    endDate DATE NOT NULL
+    endDate DATE NOT NULL,
+    termName VARCHAR(20)
 );
 
 CREATE TABLE section (
