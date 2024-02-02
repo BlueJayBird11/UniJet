@@ -15,11 +15,27 @@ npm run
 ```
 
 To make the database:
+
+If not installed, download PostgreSQL:
+
+https://www.postgresql.org/download/
+
+After installed, open psql, 
+
+when making an account, leave everything default except use this as your password: 
+
+`n3rFg3nG1.`
+
+Then, run these commands:
+
 ```
-cd db
-// fill out later
+CREATE DATABASE unijet;
+\c unijet
 ```
 
+In the terminal, copy and paste all the data from the db folder in this order: 
+
+[db, fillerData, fillerRelationData]
 
 # React + TypeScript + Vite
 
