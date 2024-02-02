@@ -1,15 +1,21 @@
 import React, { FormEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import background from './background.png';
+import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 
 const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [FirstName, setFirstName] = useState('');
+  const [LastName, setLastName] = useState('');
   const [dob, setDob] = useState(''); 
-  const [campusId, setCampusId] = useState('');
+  const [phone, setPhone] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  
+  const { setUserRole } = useUserRole();
+  const navigate = useNavigate();
 
   const handleSignup = (e: FormEvent) => {
     e.preventDefault();
@@ -18,14 +24,25 @@ const SignupPage: React.FC = () => {
       setPasswordError("Passwords do not match.");
       return;
     }
+
+    setShowModal(true);
+
     console.log({
       email,
       password,
       confirmPassword,
-      fullName,
+      FirstName,
+      LastName,
       dob,
-      campusId
+      phone
     });
+  };
+
+  
+  const handleRoleSelection = (role: 'driver' | 'passenger') => {
+    setUserRole(role);
+    setShowModal(false);
+    navigate('/dashboard'); // Navigate to dashboard or another page as needed
   };
 
   return (
@@ -65,9 +82,17 @@ const SignupPage: React.FC = () => {
               
               <input
                 type="text"
-                placeholder="Enter your Full-Name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Your First Name"
+                value={FirstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+                className="w-full p-2 border rounded"
+              />
+                            <input
+                type="text"
+                placeholder="Your Last Name"
+                value={LastName}
+                onChange={(e) => setLastName(e.target.value)}
                 required
                 className="w-full p-2 border rounded"
               />
@@ -79,12 +104,12 @@ const SignupPage: React.FC = () => {
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
                 required
-                />
+              />
               <input
-                type="text"
-                placeholder="Enter your campus ID"
-                value={campusId}
-                onChange={(e) => setCampusId(e.target.value)}
+                type="tel"
+                placeholder="Enter your phone number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 required
                 className="w-full p-2 border rounded"
               />
@@ -95,7 +120,29 @@ const SignupPage: React.FC = () => {
             </p>
           </div>
         </div>
-      </div>
+        {/* Modal for role selection */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded">
+              <h2 className="text-xl font-semibold mb-4"> Do you wish to be a Driver?</h2>
+              <div className="flex justify-center">
+                <button 
+                  onClick={() => handleRoleSelection('passenger')}
+                  className="bg-gray-200 mx-2 px-4 py-2 rounded"
+                >
+                  No, Passenger Only
+                </button>
+                <button 
+                  onClick={() => handleRoleSelection('driver')}
+                  className="bg-blue-500 text-white mx-2 px-4 py-2 rounded"
+                >
+                  Yes, as a Driver
+                </button>
+              </div>
+            </div>
+        </div>
+      )}
+    </div>
   );
 };
 

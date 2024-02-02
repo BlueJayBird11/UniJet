@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { SelectedPage } from './shared/types';
 
-// Import your components
+
 import Profile from '@/scenes/profile';
 import NavigationBar from '@/scenes/navigationBar';
 import FindRider from '@/scenes/findRider';
@@ -18,6 +18,7 @@ import EditUniversity from './scenes/settings/editUniversity';
 import Logout from './scenes/settings/logout';
 import LoginPage from './scenes/loginAndSignup/LoginPage';
 import SignupPage from './scenes/loginAndSignup/SignupPage';
+import { UserRoleProvider } from './scenes/settings/userRole/UserRoleContext'; 
 
 function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.Profile);
@@ -38,7 +39,7 @@ function App() {
           <NavigationBar selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
           <Routes>
             <Route path="/profile" element={<Profile selectedPage={selectedPage} setSelectedPage={setSelectedPage} />} />
-            <Route path="/history" element={<History userRole="driver" />} /> {/*for driver set driver/ for passenger set passenger*/}
+            <Route path="/history" element={<History />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/findDriver" element={<FindDriver />} />
             <Route path="/findRider" element={<FindRider />} />
@@ -66,9 +67,11 @@ function App() {
 
   return (
     <div className='app bg-primary-blue'>
-      <BrowserRouter>
-        {renderContent()}
-      </BrowserRouter>
+      <UserRoleProvider> 
+        <BrowserRouter>
+          {renderContent()}
+        </BrowserRouter>
+      </UserRoleProvider>
     </div>
   );
 }
