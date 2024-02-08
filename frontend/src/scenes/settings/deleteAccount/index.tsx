@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const DeleteAccount: React.FC = () => {
+const DeleteAccount = () => {
   const [confirmation, setConfirmation] = useState('')
 
   const handleDeleteAccount = () => {
