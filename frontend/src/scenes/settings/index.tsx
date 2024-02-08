@@ -11,18 +11,35 @@ import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 const Settings = () => {
     const { userRole, setUserRole } = useUserRole();
     const [showReportModal, setShowReportModal] = useState(false);
-    const [reportText, setReportText] = useState('');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
 
     const handleRoleChange = (newRole: 'driver' | 'passenger') => {
         setUserRole(newRole);
     };
 
-    const handleReportSubmit = (e: React.FormEvent) => {
+    const handleReportSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Report Submitted:", reportText);
-        // Send reportText to your backend server
+        const formData = {
+            name,
+            email,
+            message,
+            _captcha: "false"
+        };
+
+        const response = await fetch('https://formspree.io/f/mkndjyno', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+        setName('');
+        setEmail('');
+        setMessage('');
         setShowReportModal(false);
-        setReportText(''); // Clear the form
     };
 
     const images = [EditNameButton, EditEmailButton, EditPaymentMethodButton, EditUniversityButton, LogoutButton, DeleteAccountButton];
@@ -30,7 +47,6 @@ const Settings = () => {
 
     return (
         <div className='flex flex-col items-center bg-primary-blue-100 relative px-4 py-6'>
-            {/* User Role Selection */}
             <div className='my-8'>
                 <h2 className='text-2xl font-bold text-primary-black'>Your role is {userRole}</h2>
                 <div className='flex mt-4'>
@@ -57,38 +73,23 @@ const Settings = () => {
                 </Link>
             ))}
 
-            {/* Report Issue Button */}
-            <button 
-                onClick={() => setShowReportModal(true)} 
-                className="absolute top-0 right-0 mt-4 mr-4 bg-red-500 text-white px-4 py-2 rounded md:mt-6 md:mr-6"
-            >
+            <button onClick={() => setShowReportModal(true)} className="absolute top-0 right-0 mt-4 mr-4 bg-red-500 text-white px-4 py-2 rounded md:mt-6 md:mr-6">
                 Report Issue
             </button>
 
-            {/* Report Issue Modal */}
             {showReportModal && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center p-4">
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
                     <div className="bg-white p-4 rounded w-full max-w-md">
                         <h3 className="text-lg font-bold mb-2">Report an Issue</h3>
                         <form onSubmit={handleReportSubmit}>
-                            <textarea 
-                                className="w-full p-2 border rounded"
-                                value={reportText}
-                                onChange={(e) => setReportText(e.target.value)}
-                                placeholder="Describe the issue..."
-                            ></textarea>
+                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full p-2 border rounded mb-2" placeholder="Your Name" required />
+                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-2 border rounded mb-2" placeholder="Your Email" required />
+                            <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="w-full p-2 border rounded" placeholder="Describe the issue..." required></textarea>
                             <div className="flex justify-end mt-2">
-                                <button 
-                                    type="button" 
-                                    onClick={() => setShowReportModal(false)}
-                                    className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mr-2"
-                                >
+                                <button type="button" onClick={() => setShowReportModal(false)} className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mr-2">
                                     Cancel
                                 </button>
-                                <button 
-                                    type="submit" 
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                >
+                                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                     Submit
                                 </button>
                             </div>
@@ -98,6 +99,6 @@ const Settings = () => {
             )}
         </div>
     );
-}
+};
 
 export default Settings;
