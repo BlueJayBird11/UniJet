@@ -20,12 +20,12 @@ class App {
     }
     routes() {
         this.app.route("/").get((req, res) => {
-            res.send("welcom home");
+            res.send("welcome home");
         });
     }
 }
 const port = 8000;
 const app = new App().app;
 app.listen(port, () => {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
+    console.log(`[server]: ✅ Server is running at http://localhost:${port}`);
 });

@@ -6,6 +6,11 @@ import {
   PrimaryKey,
   AutoIncrement,
 } from "sequelize-typescript";
+import Driver from "./Driver";
+import RegisteredAs from "./RegistaredAs";
+import University from "./University";
+import Attends from "./Attends";
+import TripHistory from "./History";
 
 @Table({
   tableName: "passengers"
@@ -76,6 +81,10 @@ export class Passenger extends Model {
   })
   schedule?: object;
 }
+
+Passenger.belongsToMany(Driver, { through: RegisteredAs });
+Passenger.belongsToMany(University, { through: Attends });
+Passenger.hasMany(TripHistory, { foreignKey: 'passengerID' });
 
 export default Passenger;
 

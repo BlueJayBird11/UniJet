@@ -28,11 +28,14 @@ class Database {
       .authenticate()
       .then(() => {
         console.log(
-          "✅ Postgres Connection has been established successfully."
+          "[server]: ✅ Postgres Connection has been established successfully."
         );
       })
       .catch((err) => {
-        console.log("❌ Unable to connect to the postgresql database", err);
+        console.log(
+          "[server]: ❌ Unable to connect to the postgresql database",
+          err
+        );
       });
   }
 }
