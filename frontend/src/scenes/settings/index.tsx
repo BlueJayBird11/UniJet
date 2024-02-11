@@ -24,10 +24,9 @@ const Settings = () => {
             name,
             email,
             message,
-            _captcha: "false"
         };
 
-        const response = await fetch('https://formspree.io/f/mkndjyno', {
+        const response = await fetch('https://formspree.io/f/xdoqgnoq', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
