@@ -18,6 +18,8 @@ import EditUniversity from './scenes/settings/editUniversity';
 import Logout from './scenes/settings/logout';
 import LoginPage from './scenes/loginAndSignup/LoginPage';
 import ForgotPasswordPage from './scenes/loginAndSignup/ForgotPasswordPage';
+import OTPVerificationPage from './scenes/loginAndSignup/OTPVerification';
+import ResetPasswordPage from './scenes/loginAndSignup/ResetPasswordPage';
 import SignupPage from './scenes/loginAndSignup/SignupPage';
 import { UserRoleProvider } from './scenes/settings/userRole/UserRoleContext'; 
 
@@ -61,6 +63,10 @@ function App() {
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/signup" element={<SignupPage />} />
+
+          <Route path="/otp-verification" element={<OTPVerificationPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       );
