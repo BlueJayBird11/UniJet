@@ -42,10 +42,14 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               className="w-full p-2 border rounded"
             />
             <div className="flex justify-between items-center">
-              <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Login</button>
-              <Link to="/forgot-password" className="text-sm text-blue-500 hover:text-blue-700">Forgot Password?</Link>
-            </div>
+              <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-40 rounded">Login</button>
+              </div>
           </form>
+
+          <p className="text-center mt-4">
+            Forgot your password? <Link to="/forgot-password" className="text-blue-500 hover:text-blue-700">Reset it</Link>
+          </p>
+
           <p className="text-center mt-4">
             Don't have an account? <Link to="/signup" className="text-blue-500 hover:text-blue-700">Sign up</Link>
           </p>
