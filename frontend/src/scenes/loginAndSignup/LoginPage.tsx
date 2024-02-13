@@ -42,7 +42,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               className="w-full p-2 border rounded"
             />
             <div className="flex justify-between items-center">
-              <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-40 rounded">Login</button>
+              <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full p-2 border rounded">Login</button>
               </div>
           </form>
 
