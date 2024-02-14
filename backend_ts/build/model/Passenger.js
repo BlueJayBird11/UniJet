@@ -26,7 +26,7 @@ __decorate([
         allowNull: false,
     }),
     __metadata("design:type", Date)
-], Passenger.prototype, "birthDate", void 0);
+], Passenger.prototype, "birthdate", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING(30),
@@ -40,42 +40,42 @@ __decorate([
         allowNull: false,
     }),
     __metadata("design:type", Number)
-], Passenger.prototype, "passwordHash", void 0);
+], Passenger.prototype, "passwordhash", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.CHAR(10),
         allowNull: false,
     }),
     __metadata("design:type", String)
-], Passenger.prototype, "phoneNumber", void 0);
+], Passenger.prototype, "phonenumber", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING(25),
         allowNull: false,
     }),
     __metadata("design:type", String)
-], Passenger.prototype, "firstName", void 0);
+], Passenger.prototype, "firstname", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING(40),
         allowNull: false,
     }),
     __metadata("design:type", String)
-], Passenger.prototype, "lastName", void 0);
+], Passenger.prototype, "lastname", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
         allowNull: false,
     }),
     __metadata("design:type", Number)
-], Passenger.prototype, "userStatus", void 0);
+], Passenger.prototype, "userstatus", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.BOOLEAN,
         allowNull: false,
     }),
     __metadata("design:type", Boolean)
-], Passenger.prototype, "carPool", void 0);
+], Passenger.prototype, "carpool", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.FLOAT,
@@ -92,7 +92,8 @@ __decorate([
 ], Passenger.prototype, "schedule", void 0);
 exports.Passenger = Passenger = __decorate([
     (0, sequelize_typescript_1.Table)({
-        tableName: "passengers"
+        tableName: "passengers",
+        timestamps: false
     }) //   timestamps: false, // Assuming you don't have created_at and updated_at columns
 ], Passenger);
 // Passenger.belongsToMany(Driver, { through: RegisteredAs });

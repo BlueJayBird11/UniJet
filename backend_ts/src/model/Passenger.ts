@@ -13,7 +13,8 @@ import Attends from "./Attends";
 import TripHistory from "./History";
 
 @Table({
-  tableName: "passengers"
+  tableName: "passengers",
+  timestamps: false
 }) //   timestamps: false, // Assuming you don't have created_at and updated_at columns
 export class Passenger extends Model {
   @PrimaryKey
@@ -25,7 +26,7 @@ export class Passenger extends Model {
     type: DataType.DATE,
     allowNull: false,
   })
-  birthDate!: Date;
+  birthdate!: Date;
 
   @Column({
     type: DataType.STRING(30),
@@ -37,37 +38,37 @@ export class Passenger extends Model {
     type: DataType.INTEGER,
     allowNull: false,
   })
-  passwordHash!: number;
+  passwordhash!: number;
 
   @Column({
     type: DataType.CHAR(10),
     allowNull: false,
   })
-  phoneNumber!: string;
+  phonenumber!: string;
 
   @Column({
     type: DataType.STRING(25),
     allowNull: false,
   })
-  firstName!: string;
+  firstname!: string;
 
   @Column({
     type: DataType.STRING(40),
     allowNull: false,
   })
-  lastName!: string;
+  lastname!: string;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
-  userStatus!: number;
+  userstatus!: number;
 
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
   })
-  carPool!: boolean;
+  carpool!: boolean;
 
   @Column({
     type: DataType.FLOAT,

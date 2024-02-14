@@ -6,14 +6,14 @@ class PassengerController {
   async create(req: Request, res: Response) {
     try {
       const new_passenger = new Passenger();
-      new_passenger.birthDate = req.body.birthDate;
+      new_passenger.birthdate = req.body.birthdate;
       new_passenger.email = req.body.email;
-      new_passenger.passwordHash = req.body.passwordHash;
-      new_passenger.phoneNumber = req.body.phoneNumber;
-      new_passenger.firstName = req.body.firstName;
-      new_passenger.lastName = req.body.lastName;
-      new_passenger.userStatus = req.body.userStatus;
-      new_passenger.carPool = req.body.carPool;
+      new_passenger.passwordhash = req.body.passwordhash;
+      new_passenger.phonenumber = req.body.phonenumber;
+      new_passenger.firstname = req.body.firstname;
+      new_passenger.lastname = req.body.lastname;
+      new_passenger.userstatus = req.body.userstatus;
+      new_passenger.carpool = req.body.carpool;
       new_passenger.rating = req.body.rating;
       new_passenger.schedule = req.body.schedule;
 
@@ -70,6 +70,7 @@ class PassengerController {
     try {
       console.log("Before");
       const new_passenger = await new PassengerRepo().retrieveAll();
+      // const new_passenger = await Passenger.findAll();
       console.log("After");
       res.status(200).json({
         status: "OK!",
@@ -77,6 +78,7 @@ class PassengerController {
         data: new_passenger,
       });
     } catch (error) {
+      console.log(error);
       res.status(500).json({
         status: "Internal Server Error.",
         message: "Internal Server Error.",
@@ -90,14 +92,14 @@ class PassengerController {
       const new_passenger = new Passenger();
 
       new_passenger.id = id;
-      new_passenger.birthDate = req.body.birthDate;
+      new_passenger.birthdate = req.body.birthdate;
       new_passenger.email = req.body.email;
-      new_passenger.passwordHash = req.body.passwordHash;
-      new_passenger.phoneNumber = req.body.phoneNumber;
-      new_passenger.firstName = req.body.firstName;
-      new_passenger.lastName = req.body.lastName;
-      new_passenger.userStatus = req.body.userStatus;
-      new_passenger.carPool = req.body.carPool;
+      new_passenger.passwordhash = req.body.passwordhash;
+      new_passenger.phonenumber = req.body.phonenumber;
+      new_passenger.firstname = req.body.firstname;
+      new_passenger.lastname = req.body.lastname;
+      new_passenger.userstatus = req.body.userstatus;
+      new_passenger.carpool = req.body.carpool;
       new_passenger.rating = req.body.rating;
       new_passenger.schedule = req.body.schedule;
 

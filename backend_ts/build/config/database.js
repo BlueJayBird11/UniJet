@@ -57,6 +57,7 @@ class Database {
                 host: this.POSTGRES_HOST,
                 port: this.POSTGRES_PORT,
                 dialect: "postgres",
+                models: [Passenger_1.default],
             });
             this.sequelize
                 .authenticate()
@@ -66,7 +67,6 @@ class Database {
                 .catch((err) => {
                 console.log("[server]: ❌ Unable to connect to the postgresql database", err);
             });
-            this.sequelize.addModels([Passenger_1.default]);
         });
     }
 }

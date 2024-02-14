@@ -12,14 +12,14 @@ export class PassengerRepo implements IPassengerRepo {
   async save(passenger: Passenger): Promise<void> {
     try {
       await Passenger.create({
-        birthDate: passenger.birthDate,
+        birthdate: passenger.birthdate,
         email: passenger.email,
-        passwordHash: passenger.passwordHash,
-        phoneNumber: passenger.phoneNumber,
-        firstName: passenger.firstName,
-        lastName: passenger.lastName,
-        userStatus: 0,
-        carPool: false,
+        passwordhash: passenger.passwordhash,
+        phonenumber: passenger.phonenumber,
+        firstname: passenger.firstname,
+        lastname: passenger.lastname,
+        userstatus: 0,
+        carpool: false,
         rating: null,
         schedule: null,
       });
@@ -37,14 +37,14 @@ export class PassengerRepo implements IPassengerRepo {
       if (!new_passenger) {
         throw new Error("Passenger not found.");
       }
-      new_passenger.birthDate = passenger.birthDate;
+      new_passenger.birthdate = passenger.birthdate;
       new_passenger.email = passenger.email;
-      new_passenger.passwordHash = passenger.passwordHash;
-      new_passenger.phoneNumber = passenger.phoneNumber;
-      new_passenger.firstName = passenger.firstName;
-      new_passenger.lastName = passenger.lastName;
-      new_passenger.userStatus = passenger.userStatus;
-      new_passenger.carPool = passenger.carPool;
+      new_passenger.passwordhash = passenger.passwordhash;
+      new_passenger.phonenumber = passenger.phonenumber;
+      new_passenger.firstname = passenger.firstname;
+      new_passenger.lastname = passenger.lastname;
+      new_passenger.userstatus = passenger.userstatus;
+      new_passenger.carpool = passenger.carpool;
       new_passenger.rating = passenger.rating;
       new_passenger.schedule = passenger.schedule;
 

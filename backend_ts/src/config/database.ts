@@ -24,6 +24,7 @@ class Database {
       host: this.POSTGRES_HOST,
       port: this.POSTGRES_PORT,
       dialect: "postgres",
+      models: [Passenger],
     });
     this.sequelize
       .authenticate()
@@ -38,7 +39,6 @@ class Database {
           err
         );
       });
-      this.sequelize.addModels([Passenger]);
   }
 }
 

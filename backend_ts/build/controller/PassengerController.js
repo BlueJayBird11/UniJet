@@ -19,14 +19,14 @@ class PassengerController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const new_passenger = new Passenger_1.default();
-                new_passenger.birthDate = req.body.birthDate;
+                new_passenger.birthdate = req.body.birthdate;
                 new_passenger.email = req.body.email;
-                new_passenger.passwordHash = req.body.passwordHash;
-                new_passenger.phoneNumber = req.body.phoneNumber;
-                new_passenger.firstName = req.body.firstName;
-                new_passenger.lastName = req.body.lastName;
-                new_passenger.userStatus = req.body.userStatus;
-                new_passenger.carPool = req.body.carPool;
+                new_passenger.passwordhash = req.body.passwordhash;
+                new_passenger.phonenumber = req.body.phonenumber;
+                new_passenger.firstname = req.body.firstname;
+                new_passenger.lastname = req.body.lastname;
+                new_passenger.userstatus = req.body.userstatus;
+                new_passenger.carpool = req.body.carpool;
                 new_passenger.rating = req.body.rating;
                 new_passenger.schedule = req.body.schedule;
                 yield new PassengerRepo_1.PassengerRepo().save(new_passenger);
@@ -85,6 +85,7 @@ class PassengerController {
             try {
                 console.log("Before");
                 const new_passenger = yield new PassengerRepo_1.PassengerRepo().retrieveAll();
+                // const new_passenger = await Passenger.findAll();
                 console.log("After");
                 res.status(200).json({
                     status: "OK!",
@@ -93,6 +94,7 @@ class PassengerController {
                 });
             }
             catch (error) {
+                console.log(error);
                 res.status(500).json({
                     status: "Internal Server Error.",
                     message: "Internal Server Error.",
@@ -106,14 +108,14 @@ class PassengerController {
                 let id = parseInt(req.params["id"]);
                 const new_passenger = new Passenger_1.default();
                 new_passenger.id = id;
-                new_passenger.birthDate = req.body.birthDate;
+                new_passenger.birthdate = req.body.birthdate;
                 new_passenger.email = req.body.email;
-                new_passenger.passwordHash = req.body.passwordHash;
-                new_passenger.phoneNumber = req.body.phoneNumber;
-                new_passenger.firstName = req.body.firstName;
-                new_passenger.lastName = req.body.lastName;
-                new_passenger.userStatus = req.body.userStatus;
-                new_passenger.carPool = req.body.carPool;
+                new_passenger.passwordhash = req.body.passwordhash;
+                new_passenger.phonenumber = req.body.phonenumber;
+                new_passenger.firstname = req.body.firstname;
+                new_passenger.lastname = req.body.lastname;
+                new_passenger.userstatus = req.body.userstatus;
+                new_passenger.carpool = req.body.carpool;
                 new_passenger.rating = req.body.rating;
                 new_passenger.schedule = req.body.schedule;
                 yield new PassengerRepo_1.PassengerRepo().update(new_passenger);
