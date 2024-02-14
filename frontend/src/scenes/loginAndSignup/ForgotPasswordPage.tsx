@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import background from './background.png';
+import axios from 'axios';
 
 
 const ForgotPasswordPage: React.FC = () => {
@@ -9,14 +10,21 @@ const ForgotPasswordPage: React.FC = () => {
   
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      console.log("Reset password link sent to:", email);
-      
-      // Simulate sending the email
-      setTimeout(() => {
-        alert("If the email is registered with us, you will receive a password reset link.");
-        navigate('/login'); // Use navigate('/path') instead of history.push('/path')
-      }, 1000);
-    };
+
+      // Call backend API to send OTP
+      axios.post('http://localhost:4000/api/send-otp', { email })
+          .then((response) => {
+              // Assuming the backend sends a success message
+              console.log(response.data.message);
+              alert("If the email is registered with us, you will receive an OTP.");
+              // Navigate to OTP verification page
+              navigate('/otpverificationpage');
+          })
+          .catch((error) => {
+              console.error("Error sending OTP:", error);
+              alert("Failed to send OTP. Please try again.");
+          });
+  };
 
 
     return (
@@ -36,7 +44,7 @@ const ForgotPasswordPage: React.FC = () => {
                 />
                 <div className="flex justify-between items-center mt-4">
                   <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full p-2 border rounded">
-                    Send Reset Link
+                    SEND
                   </button>
                 </div>
               </form>
