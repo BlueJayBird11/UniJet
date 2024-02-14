@@ -33,7 +33,7 @@ export class Building extends Model {
   buildingFullName?: string;
 }
 
-Building.hasMany(ClassInfo, { foreignKey: 'buildingID' });
-Building.belongsToMany(University, { through: LocatedIn });
+// Building.hasMany(ClassInfo, { foreignKey: 'buildingID' });
+// Building.belongsToMany(University, { through: LocatedIn });
 
 export default Building;

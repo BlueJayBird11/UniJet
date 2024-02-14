@@ -51,9 +51,9 @@ export class Driver extends Model {
   rating?: number;
 }
 
-Driver.belongsToMany(Passenger, { through: RegisteredAs });
-Driver.belongsToMany(Vehicle, { through: OwnsA });
-Driver.hasMany(TripHistory, { foreignKey: 'driverID' });
+// Driver.belongsToMany(Passenger, { through: RegisteredAs });
+// Driver.belongsToMany(Vehicle, { through: OwnsA });
+// Driver.hasMany(TripHistory, { foreignKey: 'driverID' });
 
 
 export default Driver;

@@ -82,9 +82,9 @@ export class Passenger extends Model {
   schedule?: object;
 }
 
-Passenger.belongsToMany(Driver, { through: RegisteredAs });
-Passenger.belongsToMany(University, { through: Attends });
-Passenger.hasMany(TripHistory, { foreignKey: 'passengerID' });
+// Passenger.belongsToMany(Driver, { through: RegisteredAs });
+// Passenger.belongsToMany(University, { through: Attends });
+// Passenger.hasMany(TripHistory, { foreignKey: 'passengerID' });
 
 export default Passenger;
 

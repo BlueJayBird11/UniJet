@@ -39,7 +39,7 @@ export class Class extends Model {
   className!: string;
 }
 
-Class.hasMany(ClassInfo, { foreignKey: 'classID' });
-Class.belongsToMany(University, {through: OfferedBy});
+// Class.hasMany(ClassInfo, { foreignKey: 'classID' });
+// Class.belongsToMany(University, {through: OfferedBy});
 
 export default Class;

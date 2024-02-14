@@ -44,6 +44,6 @@ export class Vehicle extends Model {
   registeredYear!: string;
 }
 
-Vehicle.belongsToMany(Driver, { through: OwnsA });
+// Vehicle.belongsToMany(Driver, { through: OwnsA });
 
 export default Vehicle;

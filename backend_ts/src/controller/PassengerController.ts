@@ -68,8 +68,9 @@ class PassengerController {
 
   async findAll(req: Request, res: Response) {
     try {
+      console.log("Before");
       const new_passenger = await new PassengerRepo().retrieveAll();
-
+      console.log("After");
       res.status(200).json({
         status: "OK!",
         message: "Successfully fetched all passengers data!",
@@ -114,3 +115,5 @@ class PassengerController {
     }
   }
 }
+
+export default new PassengerController();

@@ -25,6 +25,6 @@ export class DaysOfWeek extends Model {
   daysOfWeek!: string;
 }
 
-DaysOfWeek.hasMany(ClassInfo, { foreignKey: "daysOfWeekID" });
+// DaysOfWeek.hasMany(ClassInfo, { foreignKey: "daysOfWeekID" });
 
 export default DaysOfWeek;

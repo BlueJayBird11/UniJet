@@ -25,6 +25,6 @@ export class Section extends Model {
   section!: string;
 }
 
-Section.hasMany(ClassInfo, { foreignKey: 'sectionID' });
+// Section.hasMany(ClassInfo, { foreignKey: 'sectionID' });
 
 export default Section;

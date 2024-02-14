@@ -65,8 +65,8 @@ export class University extends Model {
   timeZone!: string;
 }
 
-University.belongsToMany(Passenger, { through: Attends });
-University.belongsToMany(Building, { through: LocatedIn });
-University.belongsToMany(Class, { through: OfferedBy });
+// University.belongsToMany(Passenger, { through: Attends });
+// University.belongsToMany(Building, { through: LocatedIn });
+// University.belongsToMany(Class, { through: OfferedBy });
 
 export default University;

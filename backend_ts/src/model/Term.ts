@@ -34,6 +34,6 @@ export class Term extends Model {
   termName?: string;
 }
 
-Term.hasMany(ClassInfo, { foreignKey: 'termID' });
+// Term.hasMany(ClassInfo, { foreignKey: 'termID' });
 
 export default Term;

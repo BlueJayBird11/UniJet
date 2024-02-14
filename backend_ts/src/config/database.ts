@@ -1,5 +1,6 @@
-import { Sequelize } from "sequelize";
+import { Sequelize } from "sequelize-typescript";
 import * as dotenv from "dotenv";
+import Passenger from "../model/Passenger";
 dotenv.config();
 
 class Database {
@@ -37,6 +38,7 @@ class Database {
           err
         );
       });
+      this.sequelize.addModels([Passenger]);
   }
 }
 

@@ -52,6 +52,6 @@ export class Trip extends Model {
   earnings?: number;
 }
 
-Trip.hasMany(TripHistory, { foreignKey: 'tripID' });
+// Trip.hasMany(TripHistory, { foreignKey: 'tripID' });
 
 export default Trip;

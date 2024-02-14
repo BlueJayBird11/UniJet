@@ -3,6 +3,7 @@
 
 import express, { Application, Request, Response } from "express";
 import Database from "./config/database";
+import PassengerRouter from "./router/PassengerRouter";
 
 class App {
   public app: Application;
@@ -11,6 +12,11 @@ class App {
     this.app = express();
     this.databaseSync();
     this.routes();
+  }
+
+  protected plugins(): void {
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
   }
 
   protected databaseSync(): void {
@@ -22,6 +28,7 @@ class App {
     this.app.route("/").get((req: Request, res: Response) => {
       res.send("welcome home");
     });
+    this.app.use("/api/v1/passengers", PassengerRouter);
   }
 }
 

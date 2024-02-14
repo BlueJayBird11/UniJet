@@ -31,9 +31,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const sequelize_1 = require("sequelize");
+const sequelize_typescript_1 = require("sequelize-typescript");
 const dotenv = __importStar(require("dotenv"));
+const Passenger_1 = __importDefault(require("../model/Passenger"));
 dotenv.config();
 class Database {
     constructor() {
@@ -46,7 +50,7 @@ class Database {
     }
     connectToPostgreSQL() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.sequelize = new sequelize_1.Sequelize({
+            this.sequelize = new sequelize_typescript_1.Sequelize({
                 database: this.POSTGRES_DB,
                 username: this.POSTGRES_USER,
                 password: this.POSTGRES_PASSWORD,
@@ -62,6 +66,7 @@ class Database {
                 .catch((err) => {
                 console.log("[server]: ❌ Unable to connect to the postgresql database", err);
             });
+            this.sequelize.addModels([Passenger_1.default]);
         });
     }
 }

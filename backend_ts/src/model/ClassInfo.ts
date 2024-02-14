@@ -49,11 +49,11 @@ export class ClassInfo extends Model {
   termID!: number;
 }
 
-ClassInfo.belongsTo(Class, { foreignKey: 'classID' });
-ClassInfo.belongsTo(TimeInformation, { foreignKey: 'timeInfoID' });
-ClassInfo.belongsTo(Section, { foreignKey: 'sectionID' });
-ClassInfo.belongsTo(DaysOfWeek, { foreignKey: 'daysOfWeekID' });
-ClassInfo.belongsTo(Building, { foreignKey: 'buildingID' });
-ClassInfo.belongsTo(Term, { foreignKey: 'termID' });
+// ClassInfo.belongsTo(Class, { foreignKey: 'classID' });
+// ClassInfo.belongsTo(TimeInformation, { foreignKey: 'timeInfoID' });
+// ClassInfo.belongsTo(Section, { foreignKey: 'sectionID' });
+// ClassInfo.belongsTo(DaysOfWeek, { foreignKey: 'daysOfWeekID' });
+// ClassInfo.belongsTo(Building, { foreignKey: 'buildingID' });
+// ClassInfo.belongsTo(Term, { foreignKey: 'termID' });
 
 export default ClassInfo;

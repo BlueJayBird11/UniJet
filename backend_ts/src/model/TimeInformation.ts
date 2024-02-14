@@ -31,6 +31,6 @@ export class TimeInformation extends Model {
   endTime!: string;
 }
 
-TimeInformation.hasMany(ClassInfo, { foreignKey: "timeInfoID" });
+// TimeInformation.hasMany(ClassInfo, { foreignKey: "timeInfoID" });
 
 export default TimeInformation;

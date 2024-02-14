@@ -86,8 +86,11 @@ export class PassengerRepo implements IPassengerRepo {
   }
   async retrieveAll(): Promise<Passenger[]> {
     try {
+      console.log("Before2");
       return await Passenger.findAll();
     } catch (error) {
+      console.log("❌ After2 - Failed");
+      console.log(error);
       throw new Error("Failed to retrive passengers.");
     }
   }
