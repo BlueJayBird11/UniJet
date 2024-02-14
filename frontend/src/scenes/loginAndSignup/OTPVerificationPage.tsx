@@ -1,42 +1,55 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import background from './background.png'; // Assuming you have a similar background for consistency
 
 const OTPVerificationPage: React.FC = () => {
-    const [email, setEmail] = useState('');
-    const [otp, setOtp] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [otp, setOtp] = useState<string>('');
     const navigate = useNavigate();
 
     const verifyOtp = async () => {
-        // Replace with your actual verification endpoint
         axios.post('http://localhost:4000/api/verify-otp', { email, otp })
             .then((response) => {
+                // Handle successful OTP verification
                 alert("OTP verified successfully.");
-                // Navigate to the password change page/mockup
-                navigate('/change-password'); // This path should match your route setup
+                navigate('/change-password'); // Adjust this as necessary
             })
             .catch((error) => {
+                // Handle error in OTP verification
                 console.error("Error verifying OTP:", error);
                 alert("Failed to verify OTP. Please try again.");
             });
     };
 
     return (
-        <div>
-            <h2>OTP Verification</h2>
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-                type="text"
-                placeholder="OTP"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-            />
-            <button onClick={verifyOtp}>Verify OTP</button>
+        <div className="flex justify-center items-center h-screen bg-no-repeat bg-cover" style={{ backgroundImage: `url(${background})` }}>
+            <div className="w-full max-w-md">
+                <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <h2 className="text-xl font-semibold text-center mb-6">Verify OTP</h2>
+                    <div>
+                        <input
+                            type="email"
+                            placeholder="Enter your email address"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            className="w-full p-2 border rounded mb-4"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Enter OTP"
+                            value={otp}
+                            onChange={(e) => setOtp(e.target.value)}
+                            required
+                            className="w-full p-2 border rounded mb-4"
+                        />
+                        <button onClick={verifyOtp} className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full p-2 border rounded">
+                            VERIFY OTP
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

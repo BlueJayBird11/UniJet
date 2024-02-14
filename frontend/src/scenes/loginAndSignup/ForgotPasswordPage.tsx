@@ -11,6 +11,11 @@ const ForgotPasswordPage: React.FC = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
+      if (!email.endsWith("@email.latech.edu")) {
+        alert("Your email format should be in format <abc000>@email.latech.edu.");
+        return;
+    }
+
       // Call backend API to send OTP
       axios.post('http://localhost:4000/api/send-otp', { email })
           .then((response) => {

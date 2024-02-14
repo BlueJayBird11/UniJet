@@ -29,8 +29,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              pattern=".+@latech\.edu$"
-              title="Email must end with @latech.edu"
+              pattern=".+@email.latech\.edu$"
+              title=" abc000@email.latech.edu"
               className="w-full p-2 border rounded"
             />
             <input 
