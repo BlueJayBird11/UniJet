@@ -15,7 +15,7 @@ import TripHistory from "./History";
 @Table({
   tableName: "passengers",
   timestamps: false
-}) //   timestamps: false, // Assuming you don't have created_at and updated_at columns
+})
 export class Passenger extends Model {
   @PrimaryKey
   @AutoIncrement

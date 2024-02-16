@@ -28,21 +28,21 @@ export class Driver extends Model {
     type: DataType.STRING(10),
     allowNull: false,
   })
-  licencePlate!: string;
+  licenceplate!: string;
 
   @Column({
     type: DataType.CHAR(2),
     allowNull: false,
   })
-  registeredState!: string;
+  registeredstate!: string;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
-  @Min(1)
-  @Max(8)
-  availableSeats!: number;
+  // @Min(1)
+  // @Max(8)
+  availableseats!: number;
 
   @Column({
     type: DataType.FLOAT,

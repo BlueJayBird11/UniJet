@@ -38,6 +38,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_typescript_1 = require("sequelize-typescript");
 const dotenv = __importStar(require("dotenv"));
 const Passenger_1 = __importDefault(require("../model/Passenger"));
+const Driver_1 = __importDefault(require("../model/Driver"));
+const RegistaredAs_1 = __importDefault(require("../model/RegistaredAs"));
 dotenv.config();
 class Database {
     constructor() {
@@ -57,7 +59,7 @@ class Database {
                 host: this.POSTGRES_HOST,
                 port: this.POSTGRES_PORT,
                 dialect: "postgres",
-                models: [Passenger_1.default],
+                models: [Driver_1.default, Passenger_1.default, RegistaredAs_1.default],
             });
             this.sequelize
                 .authenticate()

@@ -1,6 +1,8 @@
 import { Sequelize } from "sequelize-typescript";
 import * as dotenv from "dotenv";
 import Passenger from "../model/Passenger";
+import Driver from "../model/Driver";
+import RegisteredAs from "../model/RegistaredAs";
 dotenv.config();
 
 class Database {
@@ -24,7 +26,7 @@ class Database {
       host: this.POSTGRES_HOST,
       port: this.POSTGRES_PORT,
       dialect: "postgres",
-      models: [Passenger],
+      models: [Passenger, Driver, RegisteredAs],
     });
     this.sequelize
       .authenticate()
