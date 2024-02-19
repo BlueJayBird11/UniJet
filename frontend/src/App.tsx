@@ -17,6 +17,9 @@ import EditPaymentMethod from './scenes/settings/editPaymentMethod';
 import EditUniversity from './scenes/settings/editUniversity';
 import Logout from './scenes/settings/logout';
 import LoginPage from './scenes/loginAndSignup/LoginPage';
+import ForgotPasswordPage from './scenes/loginAndSignup/ForgotPasswordPage';
+import OTPVerificationPage from './scenes/loginAndSignup/OTPVerificationPage';
+import ChangePasswordPage from './scenes/loginAndSignup/ChangePasswordPage';
 import SignupPage from './scenes/loginAndSignup/SignupPage';
 import { UserRoleProvider } from './scenes/settings/userRole/UserRoleContext'; 
 
@@ -58,7 +61,10 @@ function App() {
       return (
         <Routes>
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/otpverificationpage" element={<OTPVerificationPage />} />
+          <Route path="/change-password" element={<ChangePasswordPage />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       );
