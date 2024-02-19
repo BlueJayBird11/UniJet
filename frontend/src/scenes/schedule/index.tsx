@@ -36,22 +36,21 @@ function getData(startTimes:string[], endTimes:string[], days:string[]) {
         if (hour >= Number(startTimes[i].substring(0,2)) && hour <= Number(endTimes[i].substring(0,2))) {
           if (minute >= Number(startTimes[i].substring(2)) && minute <= Number(endTimes[i].substring(2))) { 
             value = 1
-            //console.log(days[i].split(''))
-            //console.log(time, value, days[i].split(''))
+            console.log(startTimes[i],time,endTimes[i], value, days[i].split(''))
           }
         }
-        createSchedule(time, days[i].split(''))
+        createSchedule(time, value, days[i].split(''))
       }
     }
   }
 
-  function createSchedule(time: string, days:string[]) { 
+  function createSchedule(time: string, value: number, days:string[]) { 
     timeSlots.push(time)
     timeSlots.forEach((time) => {
       data[time] = {};
       daysOfWeek.forEach(day => {
         if (days.includes(day)) { 
-          data[time][day] = 1;
+          data[time][day] = value;
         }
         else { 
           data[time][day] = 0;
@@ -59,7 +58,7 @@ function getData(startTimes:string[], endTimes:string[], days:string[]) {
       });
     });
   }
-  console.log(data);
+  //console.log(data);
 
   // Convert the data object to JSON format
   const jsonData: string = JSON.stringify(data, null, 2);
