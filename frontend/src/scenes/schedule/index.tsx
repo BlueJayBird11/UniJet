@@ -32,7 +32,8 @@ function getData(startTimes:string[], endTimes:string[], days:string[]) {
       const time = `${hour.toString().padStart(2, '0')}${minute.toString().padStart(2, '0')}`;
       for (let i = 0; i < startTimes.length; i++) { 
         let value = 0
-        if (hour >= Number(startTimes[i]) && minute >= Number(startTimes[i]) && hour <= Number(endTimes[i]) && minute <= Number(endTimes[i])) {
+        if (hour >= Number(startTimes[i].substring(0,2)) && minute >= Number(startTimes[i].substring(2)) && 
+            hour <= Number(endTimes[i].substring(0,2)) && minute <= Number(endTimes[i].substring(2))) {
           value = 1
           console.log("Hit")
         }
