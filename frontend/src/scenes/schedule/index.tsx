@@ -19,9 +19,10 @@ const dayOfWeekDict: { [key: string]: string } = {
 };
 
 function getData(startTimes:string[], endTimes:string[], days:string[]) { 
+  let num: number = 0
   // Define the days of the week as two-letter abbreviations
-  const daysOfWeek: string[] = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-
+  const daysOfWeek: string[] = ["U", "M", "T", "W", "R", "F", "S"];
+  
   // Initialize an empty object to hold the data
   const data: { [key: string]: { [key: string]: number } } = {};
 
@@ -32,28 +33,38 @@ function getData(startTimes:string[], endTimes:string[], days:string[]) {
       const time = `${hour.toString().padStart(2, '0')}${minute.toString().padStart(2, '0')}`;
       for (let i = 0; i < startTimes.length; i++) { 
         let value = 0
-        if (hour >= Number(startTimes[i].substring(0,2)) && minute >= Number(startTimes[i].substring(2)) && 
-            hour <= Number(endTimes[i].substring(0,2)) && minute <= Number(endTimes[i].substring(2))) {
-          value = 1
-          console.log("Hit")
+        if (hour >= Number(startTimes[i].substring(0,2)) && hour <= Number(endTimes[i].substring(0,2))) {
+          if (minute >= Number(startTimes[i].substring(2)) && minute <= Number(endTimes[i].substring(2))) { 
+            value = 1
+            //console.log(days[i].split(''))
+            //console.log(time, value, days[i].split(''))
+          }
         }
-        createSchedule(time, value, days[i].split(''))
+        createSchedule(time, days[i].split(''))
       }
     }
   }
-  function createSchedule(time: string, value:number, days:string[]) { 
+
+  function createSchedule(time: string, days:string[]) { 
     timeSlots.push(time)
     timeSlots.forEach((time) => {
       data[time] = {};
       daysOfWeek.forEach(day => {
-        data[time][day] = value;
+        if (days.includes(day)) { 
+          data[time][day] = 1;
+        }
+        else { 
+          data[time][day] = 0;
+        }
       });
     });
   }
+  console.log(data);
 
   // Convert the data object to JSON format
   const jsonData: string = JSON.stringify(data, null, 2);
 
+  
   // Print or use the JSON data as needed
   //console.log(jsonData);
 

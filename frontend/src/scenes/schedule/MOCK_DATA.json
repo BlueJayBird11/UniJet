@@ -2,6 +2,5 @@
     {"type":"class","days":"MWF","name":"Seinor Capstone 1", "location":"NETH", "startTime":"1400","endTime":"1515" },
     {"type":"class","days":"MWF","name":"Computer Graphics", "location":"NETH", "startTime":"0930","endTime":"1045"},
     {"type":"class","days":"TR","name":"Database Management Systems", "location":"IESB", "startTime":"1000","endTime":"1150"},
-    {"type":"class","days":"MWF","name":"Operating Systems", "location":"IESB", "startTime":"0800","endTime":"0915"},
-    {"type":"class","days":"MWF","name":"Operating Systems", "location":"IESB", "startTime":"0000","endTime":"0100"}
+    {"type":"class","days":"MWF","name":"Operating Systems", "location":"IESB", "startTime":"0800","endTime":"0915"}
 ]
