@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@types/leaflet": "^1.9.8",
+    "@types/leaflet-draw": "^1.0.11",
+    "draw": "^0.0.0",
+    "leaflet": "^1.9.4",
+    "leaflet-draw": "^1.0.4"
+  }
+}

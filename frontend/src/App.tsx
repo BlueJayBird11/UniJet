@@ -9,6 +9,7 @@ import FindRider from '@/scenes/findRider';
 import FindDriver from '@/scenes/findDriver';
 import History from '@/scenes/history';
 import Schedule from '@/scenes/schedule';
+import Map from '@/scenes/map';
 import Settings from '@/scenes/settings';
 import DeleteAccount from './scenes/settings/deleteAccount';
 import EditEmail from './scenes/settings/editEmail';
@@ -43,6 +44,7 @@ function App() {
             <Route path="/findDriver" element={<FindDriver />} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
+            <Route path="/map" element={<Map />} />
             <Route path="/delete-account" element={<DeleteAccount />} />
             <Route path="/edit-email" element={<EditEmail />} />
             <Route path="/edit-name" element={<EditName />} />
