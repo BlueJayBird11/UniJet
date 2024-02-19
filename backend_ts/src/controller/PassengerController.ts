@@ -5,6 +5,7 @@ import { PassengerRepo } from "../repository/PassengerRepo";
 class PassengerController {
   async create(req: Request, res: Response) {
     try {
+      console.log("Before1");
       const new_passenger = new Passenger();
       new_passenger.birthdate = req.body.birthdate;
       new_passenger.email = req.body.email;
@@ -24,6 +25,9 @@ class PassengerController {
         message: "Successfully created passenger!",
       });
     } catch (error) {
+      console.log("❌ After1 - Failed");
+      console.log(error);
+      
       res.status(500).json({
         status: "Internal Server Error.",
         message: "Internal Server Error.",
@@ -68,17 +72,15 @@ class PassengerController {
 
   async findAll(req: Request, res: Response) {
     try {
-      console.log("Before");
       const new_passenger = await new PassengerRepo().retrieveAll();
       // const new_passenger = await Passenger.findAll();
-      console.log("After");
       res.status(200).json({
         status: "OK!",
         message: "Successfully fetched all passengers data!",
         data: new_passenger,
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       res.status(500).json({
         status: "Internal Server Error.",
         message: "Internal Server Error.",

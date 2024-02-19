@@ -11,6 +11,7 @@ interface IPassengerRepo {
 export class PassengerRepo implements IPassengerRepo {
   async save(passenger: Passenger): Promise<void> {
     try {
+      console.log("Before2");
       await Passenger.create({
         birthdate: passenger.birthdate,
         email: passenger.email,
@@ -24,6 +25,8 @@ export class PassengerRepo implements IPassengerRepo {
         schedule: null,
       });
     } catch (error) {
+      console.log("❌ After2 - Failed");
+      console.log(error);
       throw new Error("Failed to create passenger.");
     }
   }
@@ -86,11 +89,8 @@ export class PassengerRepo implements IPassengerRepo {
   }
   async retrieveAll(): Promise<Passenger[]> {
     try {
-      console.log("Before2");
       return await Passenger.findAll();
     } catch (error) {
-      console.log("❌ After2 - Failed");
-      console.log(error);
       throw new Error("Failed to retrive passengers.");
     }
   }

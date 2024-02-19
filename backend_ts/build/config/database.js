@@ -59,7 +59,7 @@ class Database {
                 host: this.POSTGRES_HOST,
                 port: this.POSTGRES_PORT,
                 dialect: "postgres",
-                models: [Driver_1.default, Passenger_1.default, RegistaredAs_1.default],
+                models: [Passenger_1.default, Driver_1.default, RegistaredAs_1.default],
             });
             this.sequelize
                 .authenticate()

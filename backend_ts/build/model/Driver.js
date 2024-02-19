@@ -8,14 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Driver = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
-const Passenger_1 = __importDefault(require("./Passenger"));
-const RegistaredAs_1 = __importDefault(require("./RegistaredAs"));
 let Driver = class Driver extends sequelize_typescript_1.Model {
 };
 exports.Driver = Driver;
@@ -62,7 +57,7 @@ exports.Driver = Driver = __decorate([
         timestamps: false, // Assuming you don't have created_at and updated_at columns
     })
 ], Driver);
-Driver.belongsToMany(Passenger_1.default, { through: RegistaredAs_1.default });
+// Driver.belongsToMany(Passenger, { through: RegisteredAs });
 // Driver.belongsToMany(Vehicle, { through: OwnsA });
 // Driver.hasMany(TripHistory, { foreignKey: 'driverID' });
 exports.default = Driver;
