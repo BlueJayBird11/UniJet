@@ -8,66 +8,72 @@ interface DataEntry {
   // Other properties as needed
 }
 
-const dayOfWeekDict: { [key: string]: string } = {
-  "U": "Sunday",
-  "M": "Monday",
-  "T": "Tuesday",
-  "W": "Wednesday",
-  "R": "Thursday",
-  "F": "Friday",
-  "S": "Saturday"
-};
-
 function getData(startTimes:string[], endTimes:string[], days:string[]) { 
-  let num: number = 0
   // Define the days of the week as two-letter abbreviations
   const daysOfWeek: string[] = ["U", "M", "T", "W", "R", "F", "S"];
   
   // Initialize an empty object to hold the data
   const data: { [key: string]: { [key: string]: number } } = {};
+  const resultList: {slot: {} }[] = [];
 
   // Define an array to represent time slots from 12:00 am to 11:45 pm
   const timeSlots: string[] = [];
   for (let hour = 0; hour < 24; hour++) {
     for (let minute = 0; minute < 60; minute += 15) {
       const time = `${hour.toString().padStart(2, '0')}${minute.toString().padStart(2, '0')}`;
+      let slot = {};
       for (let i = 0; i < startTimes.length; i++) { 
-        let value = 0
-        if (hour >= Number(startTimes[i].substring(0,2)) && hour <= Number(endTimes[i].substring(0,2))) {
-          if (minute >= Number(startTimes[i].substring(2)) && minute <= Number(endTimes[i].substring(2))) { 
-            value = 1
-            console.log(startTimes[i],time,endTimes[i], value, days[i].split(''))
+        if (hour >= Number(startTimes[i].substring(0,2)) && hour < Number(endTimes[i].substring(0,2))) {
+          slot = createSchedule(time, days[i].split(''), slot)
+        }
+        else if (hour === Number(endTimes[i].substring(0,2))) { 
+          if (minute <= Number(endTimes[i].substring(2))) {
+            slot = createSchedule(time, days[i].split(''), slot)
           }
         }
-        createSchedule(time, value, days[i].split(''))
       }
+      if (isEmpty(slot)) { 
+        slot = {
+          "U": 0,
+          "M": 0,
+          "T": 0,
+          "W": 0,
+          "R": 0,
+          "F": 0,
+          "S": 0
+        };
+      }
+      resultList.push({slot: slot });
     }
   }
+  return resultList
 
-  function createSchedule(time: string, value: number, days:string[]) { 
+  function createSchedule(time: string, days:string[], slot:{}): object { 
     timeSlots.push(time)
     timeSlots.forEach((time) => {
-      data[time] = {};
+      data[time] = slot;
       daysOfWeek.forEach(day => {
         if (days.includes(day)) { 
-          data[time][day] = value;
+          data[time][day] = 1;
+        }
+        else if (data[time][day] === 1) { 
+          data[time][day] = 1;
         }
         else { 
           data[time][day] = 0;
         }
       });
     });
+    return data[time]
   }
-  //console.log(data);
+}
 
-  // Convert the data object to JSON format
-  const jsonData: string = JSON.stringify(data, null, 2);
-
-  
-  // Print or use the JSON data as needed
-  //console.log(jsonData);
-
-
+function isEmpty(obj: object) {
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key))
+      return false;
+  }
+  return true;
 }
 
 function calculateStartAndEndTime(data: DataEntry[]): {startTime: string, endTime: string} | null {
@@ -109,9 +115,10 @@ function Schedule() {
   //console.log('Days:', days)
   
   const generatedData = getData(startTimes, endTimes, days);
+  console.log(generatedData)
 
   const data = React.useMemo(() => placeholderData, []);
-  //console.log(data)
+  console.log(data)
   const columns = React.useMemo(() => [
     {
       Header: "Type",
