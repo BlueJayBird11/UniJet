@@ -1,6 +1,6 @@
 import React from 'react'
 import placeholderData from "./MOCK_DATA.json"
-import {useTable} from "react-table"
+import {useTable, Column} from "react-table"
 
 interface DataEntry {
   startTime: string;
@@ -14,7 +14,7 @@ function getData(startTimes:string[], endTimes:string[], days:string[]) {
   
   // Initialize an empty object to hold the data
   const data: { [key: string]: { [key: string]: number } } = {};
-  const resultList: {slot: {} }[] = [];
+  const resultList: { [key: string]: number }[] = [];
 
   // Define an array to represent time slots from 12:00 am to 11:45 pm
   const timeSlots: string[] = [];
@@ -43,7 +43,7 @@ function getData(startTimes:string[], endTimes:string[], days:string[]) {
           "S": 0
         };
       }
-      resultList.push({slot: slot });
+      resultList.push(slot);
     }
   }
   return resultList
@@ -76,28 +76,6 @@ function isEmpty(obj: object) {
   return true;
 }
 
-function calculateStartAndEndTime(data: DataEntry[]): {startTime: string, endTime: string} | null {
-  if (!Array.isArray(data) || data.length === 0) {
-    return null; // Return null if data is empty or not an array
-  }
-
-  // Initialize start and end times with the first entry's start and end times
-  let startTime = data[0].startTime;
-  let endTime = data[0].endTime;
-
-  // Iterate through the data to find the earliest start time and latest end time
-  data.forEach(entry => {
-    if (entry.startTime < startTime) {
-      startTime = entry.startTime;
-    }
-    if (entry.endTime > endTime) {
-      endTime = entry.endTime;
-    }
-  });
-
-  return { startTime, endTime };
-}
-
 function Schedule() { 
   
   const jsonData = JSON.parse(JSON.stringify(placeholderData));
@@ -114,48 +92,53 @@ function Schedule() {
   //console.log('End Times:', endTimes);
   //console.log('Days:', days)
   
-  const generatedData = getData(startTimes, endTimes, days);
+  const generatedData =  React.useMemo(() => getData(startTimes, endTimes, days), []);
   console.log(generatedData)
 
   const data = React.useMemo(() => placeholderData, []);
   console.log(data)
+  
   const columns = React.useMemo(() => [
     {
-      Header: "Type",
-      accessor: "type" as const
+      Header: "Su",
+      accessor: "U" as const
     },
     {
-      Header: "Days",
-      accessor: "days" as const
+      Header: "Mo",
+      accessor: "M" as const
     },
     {
-      Header: "Name",
-      accessor: "name" as const
+      Header: "Tu",
+      accessor: "T" as const
     },
     {
-      Header: "Location",
-      accessor: "location" as const
+      Header: "We",
+      accessor: "W" as const
     },
     {
-      Header: "Start Time",
-      accessor: "startTime" as const
+      Header: "Tr",
+      accessor: "R" as const
     },
     {
-      Header: "End Time",
-      accessor: "endTime" as const
+      Header: "Fr",
+      accessor: "F" as const
+    },
+    {
+      Header: "Sa",
+      accessor: "S" as const
     }
-  ], []);
+    ], []);
 
-  const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = useTable({columns, data});
+  const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = useTable({columns, data: generatedData});
   return (
     <div className="Schedule">
       <div className="container">
-        <table {...getTableProps()}>
+        <table {...getTableProps()} className="table-auto">
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps()}>
+                  <th {...column.getHeaderProps()} className="sticky border px-4 py-2">
                     {column.render("Header")}
                   </th>
                 ))}
@@ -168,8 +151,10 @@ function Schedule() {
               return (
                 <tr {...row.getRowProps()}>
                   {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()}>
-                       {cell.render("Cell")}
+                    <td
+                      {...cell.getCellProps()}
+                      className={`border w-10 h-10 ${cell.value === 1 ? 'bg-red-500' : 'bg-gray-600'}`}
+                    >
                     </td>
                   ))}
                 </tr>
