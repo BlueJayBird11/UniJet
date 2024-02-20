@@ -27,7 +27,7 @@ function getData(startTimes:string[], endTimes:string[], days:string[]) {
           slot = createSchedule(time, days[i].split(''), slot)
         }
         else if (hour === Number(endTimes[i].substring(0,2))) { 
-          if (minute <= Number(endTimes[i].substring(2))) {
+          if (minute < Number(endTimes[i].substring(2))) {
             slot = createSchedule(time, days[i].split(''), slot)
           }
         }
@@ -131,12 +131,13 @@ function Schedule() {
 
   const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = useTable({columns, data: generatedData});
   return (
-    <div className="Schedule">
+    <div className="schedule">
       <div className="container">
         <table {...getTableProps()} className="table-auto">
-          <thead>
+          <thead className="sticky">
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
+                <th></th> {/* Add an empty header for the time column */}
                 {headerGroup.headers.map((column) => (
                   <th {...column.getHeaderProps()} className="sticky border px-4 py-2">
                     {column.render("Header")}
@@ -146,10 +147,15 @@ function Schedule() {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row) => { 
+            {rows.map((row, index) => { 
               prepareRow(row)
+              const hours = Math.floor(index / 4); // Calculate hours
+              const minutes = (index % 4) * 15; // Calculate minutes
+              const time = new Date(0, 0, 0, hours, minutes); // Create Date object
+              const formattedTime = time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); // Format time
               return (
                 <tr {...row.getRowProps()}>
+                  <td className="border px-4 py-2">{formattedTime}</td> {/* Display time */}
                   {row.cells.map((cell) => (
                     <td
                       {...cell.getCellProps()}
