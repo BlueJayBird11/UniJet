@@ -131,44 +131,51 @@ function Schedule() {
 
   const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = useTable({columns, data: generatedData});
   return (
-    <div className="schedule">
-      <div className="container">
-        <table {...getTableProps()} className="table-auto">
-          <thead className="sticky">
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                <th></th> {/* Add an empty header for the time column */}
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps()} className="sticky border px-4 py-2">
-                    {column.render("Header")}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, index) => { 
-              prepareRow(row)
-              const hours = Math.floor(index / 4); // Calculate hours
-              const minutes = (index % 4) * 15; // Calculate minutes
-              const time = new Date(0, 0, 0, hours, minutes); // Create Date object
-              const formattedTime = time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); // Format time
-              return (
-                <tr {...row.getRowProps()}>
-                  <td className="border px-4 py-2">{formattedTime}</td> {/* Display time */}
-                  {row.cells.map((cell) => (
-                    <td
-                      {...cell.getCellProps()}
-                      className={`border w-10 h-10 ${cell.value === 1 ? 'bg-red-500' : 'bg-gray-600'}`}
-                    >
-                    </td>
-                  ))}
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+    <div>
+      <div className="h-20 sticky top-0 border-black bg-gray-600 flex justify-between items-center px-2">
+      <button className="bg-primary-red rounded px-1 py-1">Add time slot</button>
+        <button className="bg-primary-red rounded px-1 py-1">View time slots</button>
+        <button className="bg-primary-red rounded px-1 py-1">Delete time slots</button>
       </div>
+        <div className="schedule bg-primary-blue">
+          <div className="container px-4">
+            <table {...getTableProps()} className="table-auto">
+              <thead className="sticky top-20">
+                {headerGroups.map((headerGroup) => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    <th></th> {/* Add an empty header for the time column */}
+                    {headerGroup.headers.map((column) => (
+                      <th {...column.getHeaderProps()} className="sticky border px-3 py-2">
+                        {column.render("Header")}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody {...getTableBodyProps()}>
+                {rows.map((row, index) => { 
+                  prepareRow(row)
+                  const hours = Math.floor(index / 4); // Calculate hours
+                  const minutes = (index % 4) * 15; // Calculate minutes
+                  const time = new Date(0, 0, 0, hours, minutes); // Create Date object
+                  const formattedTime = time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); // Format time
+                  return (
+                    <tr {...row.getRowProps()}>
+                      <td className="border px-4 py-2">{formattedTime}</td> {/* Display time */}
+                      {row.cells.map((cell) => (
+                        <td
+                          {...cell.getCellProps()}
+                          className={`border w-10 h-10 ${cell.value === 1 ? 'bg-primary-red' : 'bg-gray-600'}`}
+                        >
+                        </td>
+                      ))}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
     </div>
   );
 }
