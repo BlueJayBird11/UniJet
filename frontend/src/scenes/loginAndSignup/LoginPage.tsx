@@ -1,6 +1,8 @@
 import React, { FormEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import background from './background.png';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import app from './firebaseConfig'; // Adjust the import based on your file structure
 
 interface LoginPageProps {
   onLogin: () => void;
@@ -9,11 +11,31 @@ interface LoginPageProps {
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [emailVerificationWarning, setEmailVerificationWarning] = useState('');
+  const navigate = useNavigate();
+  const auth = getAuth(app);
 
-  const handleLogin = (e: FormEvent) => {
+  const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(email, password);
-    onLogin();
+    setLoginError('');
+    setEmailVerificationWarning('');
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      if (!user.emailVerified) {
+        setEmailVerificationWarning('Please verify your email before logging in.');
+        return;
+      }
+
+      console.log(email, password);
+      onLogin();
+      navigate('/dashboard'); // Navigate to the dashboard or the appropriate page
+    } catch (error: any) {
+      setLoginError(error.message);
+    }
   };
 
   return (

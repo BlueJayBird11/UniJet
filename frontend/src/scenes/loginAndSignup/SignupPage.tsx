@@ -37,7 +37,7 @@ const SignupPage: React.FC = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await sendEmailVerification(userCredential.user);
       alert('Verification email sent. Please check your inbox.');
-      navigate('/dashboard'); // Adjust as necessary
+    
     } catch (error: any) {
       setError(error.message);
     }
