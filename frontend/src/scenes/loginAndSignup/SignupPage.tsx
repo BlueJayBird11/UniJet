@@ -3,6 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import background from './background.png';
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 
+// Firebase Config for email verification:
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import app from './firebaseConfig';
+
 const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,16 +17,29 @@ const SignupPage: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState('');
+  const auth = getAuth(app);
+  
+  
   
   const { setUserRole } = useUserRole();
   const navigate = useNavigate();
 
-  const handleSignup = (e: FormEvent) => {
+  const handleSignup = async (e: FormEvent) => {
     e.preventDefault();
     setPasswordError('');
     if (password !== confirmPassword) {
       setPasswordError("Passwords do not match.");
       return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await sendEmailVerification(userCredential.user);
+      alert('Verification email sent. Please check your inbox.');
+      navigate('/dashboard'); // Adjust as necessary
+    } catch (error: any) {
+      setError(error.message);
     }
 
     setShowModal(true);
