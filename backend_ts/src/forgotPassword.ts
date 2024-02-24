@@ -3,16 +3,8 @@
 // import nodemailer = require('nodemailer');
 // const router = express.Router();
 
-// // Simple in-memory "database" for demo purposes
-// const otpDatabase: any = {};
+// Simple in-memory "database" for demo purposes
 
-// const transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//         user: process.env.EMAIL_USER,
-//         pass: process.env.EMAIL_PASS,
-//     },
-// });
 
 // router.post('/send-otp', async (req: { body: { email: any; }; }, res: { json: (arg0: { message: string; }) => void; status: (arg0: number) => { (): any; new(): any; json: { (arg0: { error: string; }): void; new(): any; }; }; }) => {
 //     const { email } = req.body;

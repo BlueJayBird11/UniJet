@@ -7,6 +7,7 @@ class PassengerRoutes extends BaseRoutes {
     // CREATE PASSENGER
     this.router.post("", async (req, res) => {
       try {
+        console.log(req.body);
         const hash = await bcrypt.hash(req.body.passwordHash, 10);
 
         const results = await pool.query(
@@ -44,6 +45,12 @@ class PassengerRoutes extends BaseRoutes {
           "SELECT * FROM passengers WHERE id = $1",
           [req.params.id]
         );
+        res.status(200).json({
+          status: "success",
+          data: {
+              passenger: results.rows[0],
+          },
+      });
       } catch (err) {
         console.log(err);
       }
@@ -57,6 +64,9 @@ class PassengerRoutes extends BaseRoutes {
           "DELETE FROM passengers WHERE id = $1",
           [req.params.id]
         );
+        res.status(204).json({
+          status: "success",
+        });
       } catch (err) {
         console.log(err);
       }
@@ -80,23 +90,23 @@ class PassengerRoutes extends BaseRoutes {
     });
 
     // UPDATE
-    this.router.put("/:id", async (req, res) => {
-      try {
-        const results = await pool.query("UPDATE passengers SET name = $1, location = $2, price_range = $3 WHERE id = $4 returning *", 
-            [req.body.name, req.body.location, req.body.price_range, req.params.id])
-        // console.log(req.params.id);
-        // console.log(req.body);
-        console.log(results)
-        res.status(200).json({
-            status: "success",
-            data: {
-              passenger: results.rows[0],
-            },
-        });
-    } catch (err) {
-        console.log(err);
-    }
-    });
+    // this.router.put("/:id", async (req, res) => {
+    //   try {
+    //     const results = await pool.query("UPDATE passengers SET name = $1, location = $2, price_range = $3 WHERE id = $4 returning *", 
+    //         [req.body.name, req.body.location, req.body.price_range, req.params.id])
+    //     // console.log(req.params.id);
+    //     // console.log(req.body);
+    //     console.log(results)
+    //     res.status(200).json({
+    //         status: "success",
+    //         data: {
+    //           passenger: results.rows[0],
+    //         },
+    //     });
+    // } catch (err) {
+    //     console.log(err);
+    // }
+    // });
   }
 }
 
