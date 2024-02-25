@@ -2,7 +2,7 @@ import React, { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import background from './background.png';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import app from './firebaseConfig'; // Adjust the import based on your file structure
+import app from './Firebase_stuff/firebaseConfig'; 
 
 interface LoginPageProps {
   onLogin: () => void;
@@ -41,6 +41,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           break;
         case 'auth/invalid-credential':
           setLoginError('Provided credentials are invalid. Please try again.');
+          break;
+        case 'auth/user-disabled':
+          setLoginError('Your account has been banned');
           break;
         default:
           setLoginError('Login failed. Please try again.');

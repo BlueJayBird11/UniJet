@@ -5,7 +5,7 @@ import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 
 // Firebase Config for email verification:
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import app from './firebaseConfig';
+import app from './Firebase_stuff/firebaseConfig';
 
 const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
