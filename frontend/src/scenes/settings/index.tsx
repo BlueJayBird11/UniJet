@@ -7,6 +7,7 @@ import LogoutButton from "@/assets/logout.png";
 import DeleteAccountButton from "@/assets/delete_account.png";
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 
+
 const Settings = () => {
     const { userRole, setUserRole } = useUserRole();
     const [showReportModal, setShowReportModal] = useState(false);

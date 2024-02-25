@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { SelectedPage } from './shared/types';
 
 
+
 import Profile from '@/scenes/profile';
 import NavigationBar from '@/scenes/navigationBar';
 import FindRider from '@/scenes/findRider';
