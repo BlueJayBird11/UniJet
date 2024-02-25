@@ -11,6 +11,7 @@ interface LoginPageProps {
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [emailVerificationWarning, setEmailVerificationWarning] = useState('');
   const navigate = useNavigate();
@@ -81,14 +82,24 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               title=" abc000@email.latech.edu"
               className="w-full p-2 border rounded"
             />
-            <input 
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required 
-              className="w-full p-2 border rounded"
-            />
+              <div className="relative">
+                <input 
+                  type={passwordVisible ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required 
+                  className="w-full p-2 border rounded"
+                />
+                <button 
+                  type="button" 
+                  onClick={() => setPasswordVisible(!passwordVisible)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-xs leading-5"
+                >
+                  {/* Here, you should replace "eye-icon-path" with the actual path to your eye icons */}
+                  {passwordVisible ? "Hide password" : "Show password"}
+                </button>
+              </div>
             <div className="flex justify-between items-center">
               <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full p-2 border rounded">Login</button>
               </div>

@@ -14,7 +14,7 @@ const PasswordResetPage: React.FC = () => {
     const auth = getAuth();
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        setMessage('If an account exists for the email provided, you will receive a password reset email.');
+        setMessage('If an account exists for the email provided, you will receive a link to reset your password in the email. Go back to login.');
         setError(''); // Clear any previous errors
       })
       .catch((error) => {
