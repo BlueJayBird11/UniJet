@@ -13,7 +13,6 @@ class LoginRouter extends BaseRoutes {
   routes(): void {
     this.router.post("", async (req, res) => {
       try {
-        // console.log(req.params.id);
         const result = await pool.query(
           "SELECT * FROM passengers WHERE email = $1",
           [req.body.email]
@@ -26,9 +25,14 @@ class LoginRouter extends BaseRoutes {
           res.status(401).json({ message: "Authentication failed" });
         }
         const token1 = "200";
+
+        const newResults = await pool.query(
+          "SELECT birthDate, email, phoneNumber, firstName, lastName, userStatus, carPool FROM passengers WHERE email = $1",
+          [req.body.email]
+        );
         res.status(200).json({
           token: token1,
-          passenger: result.rows[0]
+          passenger: newResults.rows[0],
         });
         console.log("LOGIN: SUCCESS");
       } catch (err) {

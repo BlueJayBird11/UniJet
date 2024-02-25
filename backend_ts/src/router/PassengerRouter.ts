@@ -7,14 +7,13 @@ class PassengerRoutes extends BaseRoutes {
     // CREATE PASSENGER
     this.router.post("", async (req, res) => {
       try {
-        console.log(req.body);
-        const hash = await bcrypt.hash(req.body.passwordHash, 10);
+        // console.log(req.body);
 
         const result = await pool.query(
           "SELECT * FROM passengers WHERE email = $1",
           [req.body.email]
         );
-        
+
         console.log(result.rows.length);
         if (result.rows.length === 1) {
           res.status(409).json({
@@ -22,6 +21,7 @@ class PassengerRoutes extends BaseRoutes {
           });
           throw new Error("Email in use");
         } else {
+          const hash = await bcrypt.hash(req.body.passwordHash, 10);
           const results = await pool.query(
             "INSERT INTO passengers (birthDate, email, passwordHash, phoneNumber, firstName, lastName, userStatus, carPool, rating, schedule) \
               VALUES ($1, $2, $3, $4, $5, $6, 0, $7, NULL, NULL) returning *",
@@ -36,8 +36,6 @@ class PassengerRoutes extends BaseRoutes {
             ]
           );
 
-          //'1990-05-15', 'jfr021@latech.edu', 1234567890, '1234567890', 'Jay', 'Reich', 0, TRUE, NULL, NULL returning *
-          // console.log(results);
           res.status(201).json({
             status: "success",
             data: {

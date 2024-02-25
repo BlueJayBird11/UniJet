@@ -19,8 +19,6 @@ const SignupPage: React.FC = () => {
   const { setUserRole } = useUserRole();
   const navigate = useNavigate();
 
-  // const [passenger, setPassenger] = useState<Passenger>({ birthdate: '', email: '', passwordhash: '', phonenumber: '', firstname: '', lastname: '', userstatus: 0, carpool: false });
-
   const postPassenger = async(user: Passenger) => {
     try {
       const response = await fetch('http://localhost:8000/api/v1/passengers', {
@@ -38,10 +36,8 @@ const SignupPage: React.FC = () => {
       const data = await response.json();
       console.log('Success:', data);
       setShowModal(true);
-      // Handle success, e.g., showing a success message or updating the state
     } catch (error) {
       console.error('Error:', error);
-      // Handle error, e.g., showing an error message
     }
   };
 
@@ -52,24 +48,12 @@ const SignupPage: React.FC = () => {
       setPasswordError("Passwords do not match.");
       return;
     }
-
-    // setShowModal(true);
-
-    // console.log({
-    //   email,
-    //   password,
-    //   confirmPassword,
-    //   FirstName,
-    //   LastName,
-    //   dob,
-    //   phone
-    // });
     
     const user: Passenger ={
-      birthDate: dob, // assuming ISO format for dates: "YYYY-MM-DD"
+      birthDate: dob, 
       email: email,
-      passwordHash: password, // Depending on how you handle hashing, might need adjustment
-      phoneNumber: +phone, // Format could be '1234567890' without any dashes or spaces
+      passwordHash: password, 
+      phoneNumber: +phone, 
       firstName: FirstName,
       lastName: LastName,
       userStatus: 0,
@@ -77,8 +61,6 @@ const SignupPage: React.FC = () => {
     }
 
     console.log(user);
-    // setPassenger(user);
-    // console.log(passenger);
 
     // SEND REQUEST
     postPassenger(user);
