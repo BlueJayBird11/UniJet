@@ -92,7 +92,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           </form>
 
           <p className="text-center mt-4">
-            Forgot your password? <Link to="/forgot-password" className="text-blue-500 hover:text-blue-700">Reset it</Link>
+           Forgot your password? <Link to="/forgot-password" className="text-blue-500 hover:text-blue-700">Reset it</Link>
           </p>
 
           <p className="text-center mt-4">
