@@ -10,27 +10,41 @@ class PassengerRoutes extends BaseRoutes {
         console.log(req.body);
         const hash = await bcrypt.hash(req.body.passwordHash, 10);
 
-        const results = await pool.query(
-          "INSERT INTO passengers (birthDate, email, passwordHash, phoneNumber, firstName, lastName, userStatus, carPool, rating, schedule) \
-              VALUES ($1, $2, $3, $4, $5, $6, 0, $7, NULL, NULL) returning *",
-          [
-            req.body.birthDate,
-            req.body.email,
-            hash,
-            req.body.phoneNumber,
-            req.body.firstName,
-            req.body.lastName,
-            req.body.carPool,
-          ]
+        const result = await pool.query(
+          "SELECT * FROM passengers WHERE email = $1",
+          [req.body.email]
         );
-        //'1990-05-15', 'jfr021@latech.edu', 1234567890, '1234567890', 'Jay', 'Reich', 0, TRUE, NULL, NULL returning *
-        // console.log(results);
-        res.status(201).json({
-          status: "success",
-          data: {
-            passengers: results.rows[0],
-          },
-        });
+        
+        console.log(result.rows.length);
+        if (result.rows.length === 1) {
+          res.status(409).json({
+            message: "Email already in use.",
+          });
+          throw new Error("Email in use");
+        } else {
+          const results = await pool.query(
+            "INSERT INTO passengers (birthDate, email, passwordHash, phoneNumber, firstName, lastName, userStatus, carPool, rating, schedule) \
+              VALUES ($1, $2, $3, $4, $5, $6, 0, $7, NULL, NULL) returning *",
+            [
+              req.body.birthDate,
+              req.body.email,
+              hash,
+              req.body.phoneNumber,
+              req.body.firstName,
+              req.body.lastName,
+              req.body.carPool,
+            ]
+          );
+
+          //'1990-05-15', 'jfr021@latech.edu', 1234567890, '1234567890', 'Jay', 'Reich', 0, TRUE, NULL, NULL returning *
+          // console.log(results);
+          res.status(201).json({
+            status: "success",
+            data: {
+              passengers: results.rows[0],
+            },
+          });
+        }
         // console.log(req.body);
       } catch (err) {
         console.log(err);

@@ -3,7 +3,6 @@
 
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
-// import Database from "./config/database";
 import PassengerRouter from "./router/PassengerRouter";
 import ClassInfoRouter from "./router/ClassInfoRouter";
 import LoginRouter from "./router/LoginRouter";
@@ -14,7 +13,6 @@ class App {
 
   constructor() {
     this.app = express();
-    // this.databaseSync();
     this.app.use(cors());
     this.app.use(express.json());
     this.routes();
@@ -24,11 +22,6 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
   }
-
-  // protected databaseSync(): void {
-  //   const db = new Database();
-  //   db.sequelize?.sync();
-  // }
 
   protected routes(): void {
     this.app.route("/").get((req: Request, res: Response) => {
