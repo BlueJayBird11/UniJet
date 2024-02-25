@@ -50,8 +50,8 @@ function App() {
       }
 
       const data = await response.json();
+
       console.log('Login Success:', data);
-      console.log(data.token);
       if (data.token == 200) {
         setPassenger({
           birthDate: data.passenger.birthdate,
@@ -67,6 +67,7 @@ function App() {
       else {
         console.log("Wrong Email or Password");
       }
+    
     } catch (error) {
       console.error('Error:', error);
     }

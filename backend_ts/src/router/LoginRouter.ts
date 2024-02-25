@@ -22,19 +22,21 @@ class LoginRouter extends BaseRoutes {
           result.rows[0].passwordhash
         );
         if (!isValid) {
-          res.status(401).json({ message: "Authentication failed" });
-        }
-        const token1 = "200";
+          res.status(401).json({ message: "Authentication failed", token: -1 });
+        } else {
+          const token1 = "200";
 
-        const newResults = await pool.query(
-          "SELECT birthDate, email, phoneNumber, firstName, lastName, userStatus, carPool FROM passengers WHERE email = $1",
-          [req.body.email]
-        );
-        res.status(200).json({
-          token: token1,
-          passenger: newResults.rows[0],
-        });
-        console.log("LOGIN: SUCCESS");
+          const newResults = await pool.query(
+            "SELECT birthDate, email, phoneNumber, firstName, lastName, userStatus, carPool FROM passengers WHERE email = $1",
+            [req.body.email]
+          );
+          res.status(200).json({
+            token: token1,
+            passenger: newResults.rows[0],
+            message: "Success",
+          });
+          console.log("LOGIN: SUCCESS");
+        }
       } catch (err) {
         console.log(err);
       }
