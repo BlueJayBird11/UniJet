@@ -1,10 +1,12 @@
 import React from 'react'
-import placeholderData from "./MOCK_DATA.json"
-import {useTable, Column} from "react-table"
+import placeholderData from "./CURR_DATA.json"
+import {useTable} from "react-table"
+import { Link } from 'react-router-dom';
 
 interface DataEntry {
   startTime: string;
   endTime: string;
+  days: string; // Add 'days' property
   // Other properties as needed
 }
 
@@ -78,12 +80,14 @@ function isEmpty(obj: object) {
 
 function Schedule() { 
   
-  const jsonData = JSON.parse(JSON.stringify(placeholderData));
+  const jsonData: DataEntry[] = Array.isArray(placeholderData) ? placeholderData : [];
+
+  // Extract startTimes, endTimes, and days from placeholderData
   const startTimes: string[] = [];
   const endTimes: string[] = [];
   const days: string[] = [];
 
-  placeholderData.forEach(item => {
+  jsonData.forEach(item => {
       startTimes.push(item.startTime);
       endTimes.push(item.endTime);
       days.push(item.days);
@@ -133,9 +137,15 @@ function Schedule() {
   return (
     <div>
       <div className="h-20 sticky top-0 border border-rose-100 bg-gray-600 flex justify-between items-center px-2">
-      <button className="bg-primary-red rounded px-1 py-1">Add time slot</button>
-        <button className="bg-primary-red rounded px-1 py-1">View time slots</button>
-        <button className="bg-primary-red rounded px-1 py-1">Delete time slots</button>
+        <Link to="/addTimeSlot">
+          <button className="bg-primary-red rounded px-1 py-1">Add time slot</button>
+        </Link>
+        <Link to="/viewTimeSlot">
+          <button className="bg-primary-red rounded px-1 py-1">View time slots</button>
+        </Link>
+        <Link to="/deleteTimeSlot">
+          <button className="bg-primary-red rounded px-1 py-1">Delete time slots</button>
+        </Link>
       </div>
         <div className="schedule bg-primary-blue">
           <div className="container px-4">

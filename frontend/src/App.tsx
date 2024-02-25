@@ -9,6 +9,9 @@ import FindRider from '@/scenes/findRider';
 import FindDriver from '@/scenes/findDriver';
 import History from '@/scenes/history';
 import Schedule from '@/scenes/schedule';
+import ViewTimeSlot from '@/scenes/schedule/viewTimeSlot'
+import AddTimeSlot from '@/scenes/schedule/addTimeSlot'
+import DeleteTimeSlot from '@/scenes/schedule/deleteTimeSlot'
 import Settings from '@/scenes/settings';
 import DeleteAccount from './scenes/settings/deleteAccount';
 import EditEmail from './scenes/settings/editEmail';
@@ -44,6 +47,9 @@ function App() {
             <Route path="/findDriver" element={<FindDriver />} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
+            <Route path="/viewTimeSlot" element={<ViewTimeSlot />} />
+            <Route path="/addTimeSlot" element={<AddTimeSlot />} />
+            <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />
             <Route path="/delete-account" element={<DeleteAccount />} />
             <Route path="/edit-email" element={<EditEmail />} />
             <Route path="/edit-name" element={<EditName />} />
