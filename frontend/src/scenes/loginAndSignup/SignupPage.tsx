@@ -2,19 +2,8 @@ import React, { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import background from './background.png';
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
+import { Passenger } from '@/shared/types';
 
-interface Passenger {
-  birthDate: string; // assuming ISO format for dates: "YYYY-MM-DD"
-  email: string;
-  passwordHash: string; // Depending on how you handle hashing, might need adjustment
-  phoneNumber: number; // Format could be '1234567890' without any dashes or spaces
-  firstName: string;
-  lastName: string;
-  userStatus: number;
-  carPool: boolean;
-  rating?: number; // Optional since a new user might not have a rating
-  schedule?: any; // Assuming this could be a complex object, 'any' type is used. Preferably define a more specific type
-}
 
 const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -48,6 +37,7 @@ const SignupPage: React.FC = () => {
 
       const data = await response.json();
       console.log('Success:', data);
+      setShowModal(true);
       // Handle success, e.g., showing a success message or updating the state
     } catch (error) {
       console.error('Error:', error);
@@ -63,7 +53,7 @@ const SignupPage: React.FC = () => {
       return;
     }
 
-    setShowModal(true);
+    // setShowModal(true);
 
     // console.log({
     //   email,

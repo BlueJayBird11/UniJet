@@ -6,7 +6,7 @@ import cors from "cors";
 // import Database from "./config/database";
 import PassengerRouter from "./router/PassengerRouter";
 import ClassInfoRouter from "./router/ClassInfoRouter";
-import PassengerValidate from "./router/PassergerValidate";
+import LoginRouter from "./router/LoginRouter";
 import ForgotPassword from "./router/ForgotPassword";
 
 class App {
@@ -36,7 +36,7 @@ class App {
     });
     this.app.use("/api/v1/passengers", PassengerRouter);
     this.app.use("/api/v1/classInfo", ClassInfoRouter);
-    this.app.use("/api/v1/login", PassengerValidate);
+    this.app.use("/api/v1/login", LoginRouter);
     this.app.use("/api/v1/forgotpassword", ForgotPassword);
   }
 }

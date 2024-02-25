@@ -9,9 +9,9 @@ const verifyPassword = async (
   return bcrypt.compare(password, hashedPassword);
 };
 
-class PassengerValidate extends BaseRoutes {
+class LoginRouter extends BaseRoutes {
   routes(): void {
-    this.router.get("", async (req, res) => {
+    this.router.post("", async (req, res) => {
       try {
         // console.log(req.params.id);
         const result = await pool.query(
@@ -28,7 +28,9 @@ class PassengerValidate extends BaseRoutes {
         const token1 = "200";
         res.status(200).json({
           token: token1,
+          passenger: result.rows[0]
         });
+        console.log("LOGIN: SUCCESS");
       } catch (err) {
         console.log(err);
       }
@@ -36,4 +38,4 @@ class PassengerValidate extends BaseRoutes {
   }
 }
 
-export default new PassengerValidate().router;
+export default new LoginRouter().router;

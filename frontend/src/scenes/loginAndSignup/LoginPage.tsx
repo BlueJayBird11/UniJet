@@ -1,9 +1,10 @@
 import React, { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import background from './background.png'
+import { Passenger, Info } from '@/shared/types';
 
 interface LoginPageProps {
-  onLogin: () => void;
+  onLogin: (info:Info) => void;
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
@@ -13,7 +14,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const handleLogin = (e: FormEvent) => {
     e.preventDefault();
     console.log(email, password);
-    onLogin();
+    const info: Info = {
+      email: email,
+      passwordHash: password
+    }
+    onLogin(info);
   };
 
   return (

@@ -48,9 +48,9 @@ class PassengerRoutes extends BaseRoutes {
         res.status(200).json({
           status: "success",
           data: {
-              passenger: results.rows[0],
+            passenger: results.rows[0],
           },
-      });
+        });
       } catch (err) {
         console.log(err);
       }
@@ -92,7 +92,7 @@ class PassengerRoutes extends BaseRoutes {
     // UPDATE
     // this.router.put("/:id", async (req, res) => {
     //   try {
-    //     const results = await pool.query("UPDATE passengers SET name = $1, location = $2, price_range = $3 WHERE id = $4 returning *", 
+    //     const results = await pool.query("UPDATE passengers SET name = $1, location = $2, price_range = $3 WHERE id = $4 returning *",
     //         [req.body.name, req.body.location, req.body.price_range, req.params.id])
     //     // console.log(req.params.id);
     //     // console.log(req.body);
