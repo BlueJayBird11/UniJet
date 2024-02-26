@@ -31,7 +31,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
         setEmailVerificationWarning('Please verify your email before logging in.');
         return;
       } else{
-        onLogin();
+        // onLogin();
         navigate('/dashboard');
       }
   

@@ -22,12 +22,7 @@ const SignupPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState('');
   const auth = getAuth(app);
-  
-  
-  const { setUserRole } = useUserRole();
-  const navigate = useNavigate();
 
-  const handleSignup = async (e: FormEvent) => {
   const [showSecondModal, setShowSecondModal] = useState(false);
   const [licensePlate, setLicensePlate] = useState('');  
   const [licenseNumber, setLicenseNumber] = useState('');  
@@ -36,6 +31,9 @@ const SignupPage: React.FC = () => {
    
   const { setUserRole } = useUserRole();
   const navigate = useNavigate();
+
+  const handleSignup = async (e: FormEvent) => {
+ 
 
   const postPassenger = async(user: Passenger) => {
     try {
@@ -59,7 +57,7 @@ const SignupPage: React.FC = () => {
     }
   };
 
-  const handleSignup = (e: FormEvent) => {
+  const handleSignup = async(e: FormEvent) => {
     e.preventDefault();
     setError('');
     setPasswordError('');
@@ -68,16 +66,7 @@ const SignupPage: React.FC = () => {
       return;
     }
     
-    const user: Passenger ={
-      birthDate: dob, 
-      email: email,
-      passwordHash: password, 
-      phoneNumber: +phone, 
-      firstName: FirstName,
-      lastName: LastName,
-      userStatus: 0,
-      carPool: false
-    }
+    
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -100,7 +89,16 @@ const SignupPage: React.FC = () => {
     }
   };
   
-
+  const user: Passenger ={
+    birthDate: dob, 
+    email: email,
+    passwordHash: password, 
+    phoneNumber: +phone, 
+    firstName: FirstName,
+    lastName: LastName,
+    userStatus: 0,
+    carPool: false
+  }
     console.log(user);
 
     // SEND REQUEST
@@ -266,9 +264,9 @@ const SignupPage: React.FC = () => {
             </p>
             {passwordError && <div className="text-red-500 text-center mb-4">{passwordError}</div>}
           </div>
-        </div>
+        </div>)}
 
-        {/* Modal for role selection */}
+        // {/* Modal for role selection */}
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-6 rounded">
@@ -284,13 +282,14 @@ const SignupPage: React.FC = () => {
                   onClick={() => handleRoleSelection('driver')}
                   className="bg-blue-500 text-white mx-2 px-4 py-2 rounded"
                 >
-                  Yes, as a Driver
+                  
+                  Yes, as a Driver</button>
               <div className="flex justify-center items-center">
                 <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                   Submit
                 </button>
               </div>
-            </form>
+            
             <div className="flex justify-center items-center">
               <button   
                 onClick={() => setShowSecondModal(false)}
@@ -300,10 +299,11 @@ const SignupPage: React.FC = () => {
               </button>
             </div>
           </div>
-        </div>
+    </div>
+    </div>
       )}
     </div>
-  );
+  )
 };
 
 export default SignupPage;
