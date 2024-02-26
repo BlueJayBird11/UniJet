@@ -13,3 +13,5 @@ const pool = new Pool({
 })
 
 export default pool;
+
+// CREATE USER unijet WITH PASSWORD 'n3rFg3nG1.';
