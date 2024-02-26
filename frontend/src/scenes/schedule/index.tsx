@@ -135,8 +135,8 @@ function Schedule() {
 
   const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = useTable({columns, data: generatedData});
   return (
-    <div>
-      <div className="h-20 sticky top-0 border border-rose-100 bg-gray-600 flex justify-between items-center px-2">
+    <div className='pt-20'>
+      <div className="h-20 fixed top-0 border border-rose-100 bg-gray-600 flex justify-between items-center px-2 w-full">
         <Link to="/addTimeSlot">
           <button className="bg-primary-red rounded px-1 py-1">Add time slot</button>
         </Link>
