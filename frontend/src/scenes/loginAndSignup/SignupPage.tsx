@@ -2,6 +2,8 @@ import React, { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import background from './background.png';
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
+import { Passenger } from '@/shared/types';
+
 
 const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -22,6 +24,28 @@ const SignupPage: React.FC = () => {
   const { setUserRole } = useUserRole();
   const navigate = useNavigate();
 
+  const postPassenger = async(user: Passenger) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/passengers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user), // Convert the passenger object to JSON
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Success:', data);
+      setShowModal(true);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   const handleSignup = (e: FormEvent) => {
     e.preventDefault();
     setPasswordError('');
@@ -29,8 +53,22 @@ const SignupPage: React.FC = () => {
       setPasswordError("Passwords do not match.");
       return;
     }
+    
+    const user: Passenger ={
+      birthDate: dob, 
+      email: email,
+      passwordHash: password, 
+      phoneNumber: +phone, 
+      firstName: FirstName,
+      lastName: LastName,
+      userStatus: 0,
+      carPool: false
+    }
 
-    setShowModal(true);
+    console.log(user);
+
+    // SEND REQUEST
+    postPassenger(user);
   };
 
   const handleRoleSelection = (role: 'driver' | 'passenger') => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-import { SelectedPage } from './shared/types';
+import { Info, Passenger, SelectedPage } from './shared/types';
 
 
 
@@ -27,12 +27,57 @@ import ChangePasswordPage from './scenes/loginAndSignup/ChangePasswordPage';
 import SignupPage from './scenes/loginAndSignup/SignupPage';
 import { UserRoleProvider } from './scenes/settings/userRole/UserRoleContext'; 
 
+
+
 function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.Profile);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [passenger, setPassenger] = useState<Passenger>({
+    birthDate: "", 
+    email: "",
+    phoneNumber: +"", 
+    firstName: "",
+    lastName: "",
+    userStatus: 0,
+    carPool: false
+  });
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
+  const handleLogin = async(info: Info) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(info), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      console.log('Login Success:', data);
+      if (data.token == 200) {
+        setPassenger({
+          birthDate: data.passenger.birthdate,
+          email: data.passenger.email,
+          phoneNumber: data.passenger.phonenumber,
+          firstName: data.passenger.firstname,
+          lastName: data.passenger.lastname,
+          userStatus: 0,
+          carPool: false,
+        });
+        setIsLoggedIn(true);
+      }
+      else {
+        console.log("Wrong Email or Password");
+      }
+    
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const handleLogout = () => {
@@ -45,7 +90,7 @@ function App() {
         <div>
           <NavigationBar selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
           <Routes>
-            <Route path="/profile" element={<Profile selectedPage={selectedPage} setSelectedPage={setSelectedPage} />} />
+            <Route path="/profile" element={<Profile selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
             <Route path="/history" element={<History />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/findDriver" element={<FindDriver />} />

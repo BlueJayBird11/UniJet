@@ -1,14 +1,15 @@
 import React, {useState} from 'react'
 import { Cog6ToothIcon } from "@heroicons/react/20/solid";
 import { Link } from 'react-router-dom';
-import { SelectedPage } from '@/shared/types';
+import { Passenger, SelectedPage } from '@/shared/types';
 
 type Props = {
     selectedPage: SelectedPage;
     setSelectedPage: (value: SelectedPage) => void;
+    passenger: Passenger;
 }
 
-const index = ({selectedPage, setSelectedPage}: Props) => {
+const index = ({selectedPage, setSelectedPage, passenger}: Props) => {
     const handleButtonClick = () => {
         console.log('hit');
       };
@@ -19,7 +20,7 @@ const index = ({selectedPage, setSelectedPage}: Props) => {
         onlineStatus(!offlineStatus)
     }; 
 
-    const name: string = "Ethan"
+    const name: string = passenger.firstName;
     const rating: number = 4.7
 
     return (
