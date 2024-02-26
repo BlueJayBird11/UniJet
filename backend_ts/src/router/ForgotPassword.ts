@@ -2,6 +2,8 @@ import BaseRoutes from "./base/BaseRouter";
 import pool from "../db";
 import nodemailer from "nodemailer";
 const otpDatabase: any = {};
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -15,11 +17,12 @@ class ForgotPasswordRoute extends BaseRoutes {
   routes(): void {
     this.router.post('/send-otp', async (req, res) => {
         // req: { body: { email: any; }; }, res: { json: (arg0: { message: string; }) => void; status: (arg0: number) => { (): any; new(): any; json: { (arg0: { error: string; }): void; new(): any; }; }; }
-        const { email } = req.body.email;
+        const email = req.body.email;
         const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digit OTP
         otpDatabase[email] = otp; // Store OTP
     
         try {
+            console.log(email)
             await transporter.sendMail({
                 from: process.env.EMAIL_USER,
                 to: email,
