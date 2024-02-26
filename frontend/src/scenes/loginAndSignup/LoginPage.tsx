@@ -2,7 +2,6 @@ import React, { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import background from './background.png'
 import { Passenger, Info } from '@/shared/types';
-import background from './background.png';
 
 interface LoginPageProps {
   onLogin: (info:Info) => void;

@@ -94,7 +94,7 @@ const SignupPage: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              pattern=".+@latech\.edu$"
+              pattern=".+@email.latech\.edu$"
               title="Email must end with @latech.edu"
               className="w-full p-2 border rounded"
             />
