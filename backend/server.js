@@ -1,10 +1,17 @@
 require('dotenv').config();
 const express = require("express");
 const db = require("./db");
+const cors = require('cors');
 
 const app = express();
 
 app.use(express.json());
+
+app.use(cors());
+
+const forgotPasswordRouter = require('./forgotPassword');
+app.use('/api', forgotPasswordRouter);
+
 
 console.log()
 // Get all passengers
@@ -73,7 +80,7 @@ app.post("/api/v1/passengers", async (req, res) => {
     // console.log(req.body);
 });
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 4000;
 app.listen(port, () => {
     console.log(`server is up and listening on port ${port}`);
 });

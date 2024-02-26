@@ -4,6 +4,7 @@ export enum SelectedPage {
     FindRider = "findRider",
     History = "history",
     Schedule = "schedule",
+    Map = "map",
     Settings = "settings",
   }
 
