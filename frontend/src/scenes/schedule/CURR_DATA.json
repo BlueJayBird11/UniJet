@@ -1,0 +1,6 @@
+[
+    {"type":"class","days":"MWF","name":"SEINOR CAPSTONE 1", "subject":"CSC", "course":"405", "section":"002", "location":"NETH", "startTime":"1400","endTime":"1515" },
+    {"type":"class","days":"MWF","name":"COMPUTER GRAPHICS", "subject":"CSC", "course":"470", "section":"001", "location":"NETH", "startTime":"0930","endTime":"1045"},
+    {"type":"class","days":"MWF","name":"OPERATING SYSTEMS", "subject":"CSC", "course":"345", "section":"001", "location":"IESB", "startTime":"0800","endTime":"0915"},
+    {"type":"class","days":"MW","name":"COMPUTER NETWORKS","subject":"CSC","course":"450","section":"001","location":"IESB","startTime":"1200","endTime":"1500"}
+]
