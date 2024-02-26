@@ -9,10 +9,6 @@ app.use(express.json());
 
 app.use(cors());
 
-const forgotPasswordRouter = require('./forgotPassword');
-app.use('/api', forgotPasswordRouter);
-
-
 console.log()
 // Get all passengers
 app.get("/api/v1/passengers", async (req, res) => {

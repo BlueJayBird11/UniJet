@@ -5,6 +5,10 @@ import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 import { Passenger } from '@/shared/types';
 
 
+// Firebase Config for email verification:
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import app from './Firebase_stuff/firebaseConfig';
+
 const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +18,16 @@ const SignupPage: React.FC = () => {
   const [dob, setDob] = useState('');   
   const [phone, setPhone] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [feedbackMessage, setFeedbackMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState('');
+  const auth = getAuth(app);
+  
+  
+  const { setUserRole } = useUserRole();
+  const navigate = useNavigate();
+
+  const handleSignup = async (e: FormEvent) => {
   const [showSecondModal, setShowSecondModal] = useState(false);
   const [licensePlate, setLicensePlate] = useState('');  
   const [licenseNumber, setLicenseNumber] = useState('');  
@@ -48,6 +61,7 @@ const SignupPage: React.FC = () => {
 
   const handleSignup = (e: FormEvent) => {
     e.preventDefault();
+    setError('');
     setPasswordError('');
     if (password !== confirmPassword) {
       setPasswordError("Passwords do not match.");
@@ -64,6 +78,28 @@ const SignupPage: React.FC = () => {
       userStatus: 0,
       carPool: false
     }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      sendEmailVerification(userCredential.user)
+        .then(() => {
+          setFeedbackMessage('Verification email sent. Please check your inbox.');
+          setShowModal(true); // Proceed to role selection only if verification email sent successfully
+        })
+        .catch((verificationError) => {
+          setError('Failed to send verification email. Please try again.');
+          console.error(verificationError);
+        });
+    } catch (signupError: any) {
+      if (signupError.code === 'auth/email-already-in-use') {
+        setError('This email is already registered.');
+      } else {
+        setError('Failed to create account. Please try again.');
+      }
+      console.error(signupError);
+    }
+  };
+  
 
     console.log(user);
 
@@ -86,7 +122,10 @@ const SignupPage: React.FC = () => {
       <div className="w-full max-w-lg">
         <h1 className="text-6xl font-bold text-center mb-2 text-white shadow-lg bg-opacity-50 bg-black px-3 py-1 rounded">UNIJET</h1>
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h2 className="text-xl font-semibold text-center mb-6">Sign Up</h2>
+        <h2 className="text-xl font-semibold text-center mb-6">Sign Up</h2>
+        {feedbackMessage && <div className="text-green-500 text-center mb-4">{feedbackMessage}</div>}
+          {error && <div className="text-red-500 text-center mb-4">{error}</div>}
+
           <form onSubmit={handleSignup} className="space-y-4">
             <input
               type="email"
@@ -220,6 +259,32 @@ const SignupPage: React.FC = () => {
                 required
                 className="w-full p-2 border rounded"
               />
+              <button type="submit" className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Sign Up</button>
+            </form>
+            <p className="text-center text-sm mt-4">
+            Already have an account? <Link to="/login" className="text-blue-500 hover:text-blue-800">Login</Link>
+            </p>
+            {passwordError && <div className="text-red-500 text-center mb-4">{passwordError}</div>}
+          </div>
+        </div>
+
+        {/* Modal for role selection */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded">
+              <h2 className="text-xl font-semibold mb-4"> Do you wish to be a Driver?</h2>
+              <div className="flex justify-center">
+                <button 
+                  onClick={() => handleRoleSelection('passenger')}
+                  className="bg-gray-200 mx-2 px-4 py-2 rounded"
+                >
+                  No, Passenger Only
+                </button>
+                <button 
+                  onClick={() => handleRoleSelection('driver')}
+                  className="bg-blue-500 text-white mx-2 px-4 py-2 rounded"
+                >
+                  Yes, as a Driver
               <div className="flex justify-center items-center">
                 <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                   Submit
