@@ -16,10 +16,12 @@
     "@heroicons/react": "^2.1.1",
     "axios": "^1.6.7",
     "framer-motion": "^10.17.12",
+    "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-anchor-link-smooth-scroll": "^1.0.12",
     "react-calendar": "^4.8.0",
     "react-dom": "^18.2.0",
+    "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.21.1",
     "react-table": "^7.8.0"
   },

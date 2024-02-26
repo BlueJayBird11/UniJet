@@ -7,6 +7,7 @@ import LogoutButton from "@/assets/logout.png";
 import DeleteAccountButton from "@/assets/delete_account.png";
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 
+
 const Settings = () => {
     const { userRole, setUserRole } = useUserRole();
     const [showReportModal, setShowReportModal] = useState(false);
@@ -40,8 +41,8 @@ const Settings = () => {
         setShowReportModal(false);
     };
 
-    const images = [EditNameButton, EditEmailButton,  EditUniversityButton, LogoutButton, DeleteAccountButton];
-    const routes = ["/edit-name", "/edit-email",  "/edit-university", "/logout", "/delete-account"];
+    const images = [EditNameButton, EditEmailButton, EditUniversityButton, LogoutButton, DeleteAccountButton];
+    const routes = ["/edit-name", "/edit-email", "/edit-university", "/logout", "/delete-account"];
 
     return (
         <div className='flex flex-col items-center bg-primary-blue-100 relative px-4 py-6'>
