@@ -2,7 +2,7 @@ CREATE TABLE passengers (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     birthDate DATE NOT NULL,
     email VARCHAR(30) NOT NULL,
-    passwordHash INT NOT NULL,
+    passwordHash VARCHAR(70) NOT NULL,
     phoneNumber CHAR(10) NOT NULL,
     firstName VARCHAR(25) NOT NULL,
     lastName VARCHAR(40) NOT NULL,

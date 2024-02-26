@@ -3,9 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import background from './background.png';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import app from './Firebase_stuff/firebaseConfig'; 
+import { Passenger, Info } from '@/shared/types';
 
 interface LoginPageProps {
-  onLogin: () => void;
+  onLogin: (info:Info) => void;
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
@@ -51,6 +52,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           break;
       }
     }
+    console.log(email, password);
+    const info: Info = {
+      email: email,
+      passwordHash: password
+    }
+    onLogin(info);
   };
 
   return (

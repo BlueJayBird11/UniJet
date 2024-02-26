@@ -1,5 +1,5 @@
 import { SelectedPage } from "@/shared/types";
-import { CalendarDaysIcon, UserCircleIcon, ClockIcon, TruckIcon } from "@heroicons/react/24/solid";
+import { CalendarDaysIcon, UserCircleIcon, ClockIcon, TruckIcon, MapIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -34,6 +34,14 @@ const Navbar = ({selectedPage, setSelectedPage}: Props) => {
                     onClick={() => setSelectedPage(SelectedPage.FindDriver)}   
                 >
                     <TruckIcon className={`${iconStyle}`}/>
+                </button>
+            </Link>
+            <Link to ="/map">
+                <button
+                    className={`${buttonStyle} ${checkIfIsSelectedPage(SelectedPage.Map)}`}    
+                    onClick={() => setSelectedPage(SelectedPage.Map)}
+                >
+                    <MapIcon className={`${iconStyle}`}/>
                 </button>
             </Link>
             <Link to ="/history">
