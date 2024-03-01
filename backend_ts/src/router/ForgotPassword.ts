@@ -27,7 +27,7 @@ class ForgotPasswordRoute extends BaseRoutes {
                 from: process.env.EMAIL_USER,
                 to: email,
                 subject: 'Your OTP',
-                text: `Your OTP is: ${otp}`,
+                text: `Your OTP is: ${otp}\n\nIf you did not request this OTP, please ignore this email or contact our support if you believe this is an unauthorized attempt to access your account.\n\nThis OTP is meant for the verification process on the Unijet website. It is confidential and should not be shared with anyone.`,
             });
             res.json({ message: 'OTP sent successfully.' });
         } catch (error) {

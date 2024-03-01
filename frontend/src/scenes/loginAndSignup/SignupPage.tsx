@@ -10,6 +10,7 @@ const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [FirstName, setFirstName] = useState('');
   const [LastName, setLastName] = useState('');
   const [dob, setDob] = useState('');   
@@ -126,14 +127,25 @@ const SignupPage: React.FC = () => {
               title="Email must end with @latech.edu"
               className="w-full p-2 border rounded"
             />
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full p-2 border rounded"
-            />
+            
+            <div className="relative mb-4">
+              <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="New Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full p-2 border rounded pr-12"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+              >
+              {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
+
             <input
               type="password"
               placeholder="Confirm your password"
@@ -214,7 +226,6 @@ const SignupPage: React.FC = () => {
             </div>
           </div>
         )}
-
 
 
       {/* First Modal */}
