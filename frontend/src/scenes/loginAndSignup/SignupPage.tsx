@@ -31,7 +31,7 @@ const SignupPage: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(user), // Convert the passenger object to JSON
+        body: JSON.stringify(user), 
       });
 
       if (!response.ok) {
@@ -75,9 +75,9 @@ const SignupPage: React.FC = () => {
     setUserRole(role);
     setShowModal(false);
     if (role === 'driver') {
-      setShowSecondModal(true); // Show the second modal when "Yes, as a Driver" is clicked
+      setShowSecondModal(true); 
     } else {
-      navigate('/dashboard'); // Navigate to dashboard or another page as needed
+      navigate('/dashboard'); 
     }
   };
 

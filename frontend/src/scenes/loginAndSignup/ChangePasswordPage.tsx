@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import background from './background.png'; // Ensure this path is correct
+import background from './background.png'; 
 
 const ChangePasswordPage: React.FC = () => {
     const [newPassword, setNewPassword] = useState<string>('');
@@ -13,11 +13,10 @@ const ChangePasswordPage: React.FC = () => {
             return;
         }
 
-        // For now, just log the new password and show a success message
         console.log("New password:", newPassword);
         alert("Your password has been changed successfully.");
 
-        navigate('/login'); // or wherever you want to redirect the user after
+        navigate('/login'); 
     };
 
     return (

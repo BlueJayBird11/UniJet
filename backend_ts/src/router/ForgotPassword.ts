@@ -43,7 +43,7 @@ class ForgotPasswordRoute extends BaseRoutes {
         const otp = req.body.otp
         if (otpDatabase[email] && otpDatabase[email] === otp) {
             // OTP matches
-            delete otpDatabase[email]; // Consider deleting the OTP after successful verification
+            delete otpDatabase[email]; 
             res.json({ message: 'OTP verified successfully.' });
         } else {
             // OTP does not match

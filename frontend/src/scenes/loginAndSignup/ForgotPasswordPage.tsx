@@ -16,13 +16,10 @@ const ForgotPasswordPage: React.FC = () => {
         return;
     }
 
-      // Call backend API to send OTP
       axios.post('http://localhost:8000/api/send-otp', { email })
           .then((response) => {
-              // Assuming the backend sends a success message
               console.log(response.data.message);
               alert("If the email is registered with us, you will receive an OTP.");
-              // Navigate to OTP verification page
               navigate('/otpverificationpage');
           })
           .catch((error) => {
