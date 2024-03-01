@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import background from './background.png';
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 import { Passenger } from '@/shared/types';
+import axios from 'axios';
 
 
 const SignupPage: React.FC = () => {
@@ -14,6 +15,11 @@ const SignupPage: React.FC = () => {
   const [dob, setDob] = useState('');   
   const [phone, setPhone] = useState('');
   const [passwordError, setPasswordError] = useState('');
+
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [otpError, setOtpError] = useState('');
+
   const [showModal, setShowModal] = useState(false);
   const [showSecondModal, setShowSecondModal] = useState(false);
   const [licensePlate, setLicensePlate] = useState('');  
@@ -46,7 +52,7 @@ const SignupPage: React.FC = () => {
     }
   };
 
-  const handleSignup = (e: FormEvent) => {
+  const handleSignup = async (e: FormEvent) => {
     e.preventDefault();
     setPasswordError('');
     if (password !== confirmPassword) {
@@ -63,6 +69,15 @@ const SignupPage: React.FC = () => {
       lastName: LastName,
       userStatus: 0,
       carPool: false
+    };
+
+    
+    try {
+      await axios.post('http://localhost:8000/api/send-otp', { email });
+      setShowOtpModal(true);
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      setOtpError('Failed to send OTP. Please try again.');
     }
 
     console.log(user);
@@ -70,6 +85,19 @@ const SignupPage: React.FC = () => {
     // SEND REQUEST
     postPassenger(user);
   };
+
+  const verifyOtp = async () => {
+    try {
+      const response = await axios.post('http://localhost:8000/api/verify-otp', { email, otp });
+      alert("OTP verified successfully.");
+      setShowOtpModal(false);
+      setShowModal(true);
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      setOtpError('Failed to verify OTP. Please try again.');
+    }
+  };
+
 
   const handleRoleSelection = (role: 'driver' | 'passenger') => {
     setUserRole(role);
@@ -154,7 +182,40 @@ const SignupPage: React.FC = () => {
             Already have an account? <Link to="/login" className="text-blue-500 hover:text-blue-800">Login</Link>
           </p>
         </div>
-      </div>
+      
+          {showOtpModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
+              <h2 className="text-xl font-semibold text-center mb-4">Verify Your Email</h2>
+              <div className="mb-4">
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  placeholder="Enter OTP"
+                  className="form-input mt-1 block w-full border-gray-300 shadow-sm rounded-md"
+                />
+              </div>
+              {otpError && <div className="text-red-500 text-sm text-center mb-3">{otpError}</div>}
+              <div className="flex justify-between gap-4">
+                <button
+                  onClick={verifyOtp}
+                  className="flex-1 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Verify OTP
+                </button>
+                <button
+                  onClick={() => setShowOtpModal(false)}
+                  className="flex-1 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+
 
       {/* First Modal */}
       {showModal && (
@@ -237,6 +298,7 @@ const SignupPage: React.FC = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };
