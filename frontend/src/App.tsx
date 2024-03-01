@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate} from 'react-router-dom';
 import { Info, Passenger, SelectedPage } from './shared/types';
 
 
@@ -26,7 +26,6 @@ import OTPVerificationPage from './scenes/loginAndSignup/OTPVerificationPage';
 import ChangePasswordPage from './scenes/loginAndSignup/ChangePasswordPage';
 import SignupPage from './scenes/loginAndSignup/SignupPage';
 import { UserRoleProvider } from './scenes/settings/userRole/UserRoleContext'; 
-
 
 
 function App() {
@@ -80,10 +79,7 @@ function App() {
     }
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
-
+  
   const renderContent = () => {
     if (isLoggedIn) {
       return (
@@ -104,7 +100,7 @@ function App() {
             <Route path="/edit-email" element={<EditEmail />} />
             <Route path="/edit-name" element={<EditName />} />
             <Route path="/edit-university" element={<EditUniversity />} />
-            <Route path="/logout" element={<Logout />} />
+            <Route path="/logout" element={<Logout onLogout={() => setIsLoggedIn(false)} />} />
             <Route path="*" element={<Navigate to="/profile" replace />} />
           </Routes>
         </div>
