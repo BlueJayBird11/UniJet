@@ -5,6 +5,7 @@ const Logout = ({ onLogout }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    localStorage.removeItem('userToken');
     onLogout(); 
     navigate('/login');
   };

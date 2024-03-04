@@ -100,7 +100,16 @@ function App() {
             <Route path="/edit-email" element={<EditEmail />} />
             <Route path="/edit-name" element={<EditName />} />
             <Route path="/edit-university" element={<EditUniversity />} />
-            <Route path="/logout" element={<Logout onLogout={() => setIsLoggedIn(false)} />} />
+            <Route path="/logout" element={<Logout onLogout={() => {setIsLoggedIn(false); setPassenger({
+                birthDate: "", 
+                email: "",
+                phoneNumber: 0,
+                firstName: "",
+                lastName: "",
+                userStatus: 0,
+                carPool: false
+              });
+            }} />} />
             <Route path="*" element={<Navigate to="/profile" replace />} />
           </Routes>
         </div>
