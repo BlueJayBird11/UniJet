@@ -7,6 +7,7 @@ const pool = new Pool({
   user: process.env.POSTGRES_USER as string,
   password: process.env.POSTGRES_PASSWORD as string,
   database: process.env.POSTGRES_DB as string,
+  ssl: true,
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
@@ -15,3 +16,4 @@ const pool = new Pool({
 export default pool;
 
 // CREATE USER unijet WITH PASSWORD 'n3rFg3nG1.';
+// GRANT ALL PRIVILEGES ON DATABASE "unijet" to unijet;
