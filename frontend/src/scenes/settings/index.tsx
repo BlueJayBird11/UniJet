@@ -5,44 +5,54 @@ import EditEmailButton from "@/assets/edit_email.png";
 import EditUniversityButton from "@/assets/edit_university.png";
 import LogoutButton from "@/assets/logout.png";
 import DeleteAccountButton from "@/assets/delete_account.png";
+import ChangePhoneNumberButton from "@/assets/change_number.png";
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
+import axios from 'axios';
+import PhoneVerification from './phoneNumber/PhoneVerification';
 
+interface IFormData {
+  name: string;
+  email: string;
+  message: string;
+}
 
-const Settings = () => {
-    const { userRole, setUserRole } = useUserRole();
-    const [showReportModal, setShowReportModal] = useState(false);
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [message, setMessage] = useState('');
+const Settings: React.FC = () => {
+  const { userRole, setUserRole } = useUserRole();
+  const [showReportModal, setShowReportModal] = useState<boolean>(false);
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
+  const [otpError, setOtpError] = useState<string>('');
 
-    const handleRoleChange = (newRole: 'driver' | 'passenger') => {
-        setUserRole(newRole);
+  const handleRoleChange = (newRole: 'driver' | 'passenger'): void => {
+    setUserRole(newRole);
+  };
+
+  const handleReportSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    const formData: IFormData = {
+      name,
+      email,
+      message,
     };
 
-    const handleReportSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const formData = {
-            name,
-            email,
-            message,
-        };
-
-        const response = await fetch('https://formspree.io/f/xdoqgnoq', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
+    try {
+      const response = await axios.post('https://formspree.io/f/xdoqgnoq', formData);
+      if (response.status === 200) {
         setName('');
         setEmail('');
         setMessage('');
         setShowReportModal(false);
-    };
+        alert('Report submitted successfully.');
+      }
+    } catch (error: any) {
+      console.error('Error submitting report:', error);
+      alert(error.response?.data?.error || 'Failed to submit the report.');
+    }
+  };
 
-    const images = [EditNameButton, EditEmailButton, EditUniversityButton, LogoutButton, DeleteAccountButton];
-    const routes = ["/edit-name", "/edit-email", "/edit-university", "/logout", "/delete-account"];
+    const images = [EditNameButton, EditEmailButton, EditUniversityButton, LogoutButton, DeleteAccountButton, ChangePhoneNumberButton];
+    const routes = ["/edit-name", "/edit-email", "/edit-university", "/logout", "/delete-account", "/change-phone-number"];
 
     return (
         <div className='flex flex-col items-center bg-primary-blue-100 relative px-4 py-6'>

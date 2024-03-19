@@ -7,6 +7,7 @@ import PassengerRouter from "./router/PassengerRouter";
 import ClassInfoRouter from "./router/ClassInfoRouter";
 import LoginRouter from "./router/LoginRouter";
 import ForgotPassword from "./router/ForgotPassword";
+import SMSVerificationRoute from './router/smsVerification';
 
 class App {
   public app: Application;
@@ -31,6 +32,7 @@ class App {
     this.app.use("/api/v1/classInfo", ClassInfoRouter);
     this.app.use("/api/v1/login", LoginRouter);
     this.app.use("/api", ForgotPassword);
+    this.app.use("/api", SMSVerificationRoute);
   }
 }
 

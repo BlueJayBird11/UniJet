@@ -26,7 +26,7 @@ import OTPVerificationPage from './scenes/loginAndSignup/OTPVerificationPage';
 import ChangePasswordPage from './scenes/loginAndSignup/ChangePasswordPage';
 import SignupPage from './scenes/loginAndSignup/SignupPage';
 import { UserRoleProvider } from './scenes/settings/userRole/UserRoleContext'; 
-
+import PhoneVerification from './scenes/settings/phoneNumber/PhoneVerification';
 
 function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.Profile);
@@ -97,6 +97,7 @@ function App() {
             <Route path="/addTimeSlot" element={<AddTimeSlot />} />
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />
             <Route path="/delete-account" element={<DeleteAccount />} />
+            <Route path="/change-phone-number" element={<PhoneVerification />} />
             <Route path="/edit-email" element={<EditEmail />} />
             <Route path="/edit-name" element={<EditName />} />
             <Route path="/edit-university" element={<EditUniversity />} />
