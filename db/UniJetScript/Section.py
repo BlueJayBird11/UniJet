@@ -19,12 +19,12 @@ print(unique_names)
 
 # Establishing the connection
 conn = psycopg2.connect(
-    database="UniJet",
-    user='postgres',
-    password='HsmlPostgreSQL',
-    host='localhost',
-    port='5432'
-)
+        database="unijet",
+        user='unijet_user',
+        password='',
+        host='',
+        port='5432'
+    )
 
 # Creating a cursor object
 cursor = conn.cursor()

@@ -13,11 +13,11 @@ conn = psycopg2.connect(
 cursor = conn.cursor()
 
 # Generating SQL statements to insert data into the 'offeredBy' table
-class_ids = range(1, 1111)  # Assuming class IDs start from 1 and go up to 972
+class_ids = range(1, 3)  # Assuming class IDs start from 1 and go up to 972
 university_id = 1  # Setting university ID to 1 for all entries
 
 for class_id in class_ids:
-    sql_insert = "INSERT INTO offeredBy(classID, universityID) VALUES (%s, %s)"
+    sql_insert = "INSERT INTO attends(passengerID, universityID) VALUES (%s, %s)"
     data = (class_id, university_id)
     cursor.execute(sql_insert, data)
 

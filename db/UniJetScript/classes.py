@@ -11,17 +11,17 @@ if all(col in df.columns for col in required_columns):
     df = df.dropna(subset=required_columns)
 
     # Convert the 'CRS #' column to integers, removing any letters
-    df['CRS #'] = df['CRS #'].apply(lambda x: int(''.join(str(x))))
+    df['CRS #'] = df['CRS #'].apply(lambda x: (''.join(str(x))))
 
     # Correct the 'SUBJ' column if needed
     df['SUBJ'] = df['SUBJ'].apply(lambda x: x.strip().upper())  # Ensure SUBJ is in uppercase and stripped of whitespaces
 
     # Establishing the connection
     conn = psycopg2.connect(
-        database="UniJet",
-        user='postgres',
-        password='HsmlPostgreSQL',
-        host='localhost',
+        database="unijet",
+        user='unijet_user',
+        password='',
+        host='',
         port='5432'
     )
 
