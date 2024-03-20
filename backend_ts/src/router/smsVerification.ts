@@ -1,9 +1,12 @@
 import { Router } from 'express';
-import axios from 'axios'; // Import Axios
 import * as dotenv from 'dotenv';
 dotenv.config();
+import twilio from 'twilio';
 
 const otpDatabase: Record<string, string> = {};
+
+// Twilio setup
+const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 class SMSVerificationRoute {
     public router = Router();
@@ -23,20 +26,19 @@ class SMSVerificationRoute {
             otpDatabase[phoneNumber] = otp;
 
             try {
-                const response = await axios.post('https://textbelt.com/text', {
-                    phone: phoneNumber,
-                    message: `Your OTP is: ${otp}. If you did not request this, please ignore this message.`,
-                    key: 'textbelt' // Use the free key for testing
+                const message = await twilioClient.messages.create({
+                    body: `Your OTP is: ${otp}. If you did not request this, please ignore this message.`,
+                    from: process.env.TWILIO_PHONE_NUMBER,
+                    to: phoneNumber,
                 });
 
-                if (response.data.success) {
+                if (message.sid) {
                     res.json({ message: 'OTP sent successfully to phone.' });
                 } else {
-                    throw new Error(response.data.error || 'Failed to send OTP');
+                    throw new Error('Failed to send OTP');
                 }
             } catch (error) {
                 console.error('Error sending SMS:', error);
-                // Check if error is an instance of Error and thus has the message property
                 const errorMessage = error instanceof Error ? error.message : 'Failed to send OTP to phone.';
                 res.status(500).json({ error: errorMessage });
             }
