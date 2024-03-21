@@ -55,6 +55,7 @@ const SignupPage: React.FC = () => {
     }
     
     const user: Passenger ={
+      id: 0,
       birthDate: dob, 
       email: email,
       passwordHash: password, 

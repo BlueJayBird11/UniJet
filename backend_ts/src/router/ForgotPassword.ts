@@ -2,6 +2,7 @@ import BaseRoutes from "./base/BaseRouter";
 import pool from "../db";
 import nodemailer from "nodemailer";
 const otpDatabase: any = {};
+import bcrypt from "bcrypt";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -50,6 +51,23 @@ class ForgotPasswordRoute extends BaseRoutes {
             res.status(400).json({ error: 'OTP verification failed.' });
         }
     });
+
+    this.router.put("/change-password/:id", async (req, res) => {
+        try {
+            const hash = await bcrypt.hash(req.body.passwordHash, 10);
+
+            const newResults = await pool.query("UPDATE passengers SET passwordHash = $2 WHERE id = $1 returning *",
+            [req.params.id, hash])
+    
+            console.log(newResults.rows[0]);
+            // console.log(results);
+            res.status(200).json({
+                status: "success",
+            });
+        } catch (err) {
+          console.log(err);
+        }
+      });
   }
 }
 

@@ -32,7 +32,7 @@ class App {
     this.app.use("/api/v1/classInfo", ClassInfoRouter);
     this.app.use("/api/v1/login", LoginRouter);
     this.app.use("/api/v1/settings", StatusRouter);
-    this.app.use("/api", ForgotPassword);
+    this.app.use("/api/v1/forgot-password", ForgotPassword);
 
   }
 }

@@ -9,7 +9,7 @@ const OTPVerificationPage: React.FC = () => {
     const navigate = useNavigate();
 
     const verifyOtp = async () => {
-        axios.post('http://localhost:8000/api/verify-otp', { email, otp })
+        axios.post('http://localhost:8000/api/v1/forgot-password/verify-otp', { email, otp })
             .then((response) => {
                 // Handle successful OTP verification
                 alert("OTP verified successfully.");
