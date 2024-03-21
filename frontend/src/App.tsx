@@ -27,6 +27,7 @@ import ChangePasswordPage from './scenes/loginAndSignup/ChangePasswordPage';
 import SignupPage from './scenes/loginAndSignup/SignupPage';
 import { UserRoleProvider } from './scenes/settings/userRole/UserRoleContext'; 
 import PhoneVerification from './scenes/settings/phoneNumber/PhoneVerification';
+import LookingForDriver from './scenes/map/LookingForDriver';
 
 function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.Profile);
@@ -93,6 +94,7 @@ function App() {
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/map" element={<Map />} />
+            <Route path="/looking-for-driver" element={<LookingForDriver />} />
             <Route path="/viewTimeSlot" element={<ViewTimeSlot />} />
             <Route path="/addTimeSlot" element={<AddTimeSlot />} />
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />
