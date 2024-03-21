@@ -7,6 +7,7 @@ import PassengerRouter from "./router/PassengerRouter";
 import ClassInfoRouter from "./router/ClassInfoRouter";
 import LoginRouter from "./router/LoginRouter";
 import ForgotPassword from "./router/ForgotPassword";
+import StatusRouter from "./router/Settings";
 
 class App {
   public app: Application;
@@ -30,7 +31,9 @@ class App {
     this.app.use("/api/v1/passengers", PassengerRouter);
     this.app.use("/api/v1/classInfo", ClassInfoRouter);
     this.app.use("/api/v1/login", LoginRouter);
+    this.app.use("/api/v1/settings", StatusRouter);
     this.app.use("/api", ForgotPassword);
+
   }
 }
 

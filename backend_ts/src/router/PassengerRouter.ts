@@ -23,8 +23,8 @@ class PassengerRoutes extends BaseRoutes {
         } else {
           const hash = await bcrypt.hash(req.body.passwordHash, 10);
           const results = await pool.query(
-            "INSERT INTO passengers (birthDate, email, passwordHash, phoneNumber, firstName, lastName, userStatus, carPool, rating, schedule) \
-              VALUES ($1, $2, $3, $4, $5, $6, 0, $7, NULL, NULL) returning *",
+            "INSERT INTO passengers (birthDate, email, passwordHash, phoneNumber, firstName, lastName, userStatus, carPool, rating, amountdeposited, schedule) \
+              VALUES ($1, $2, $3, $4, $5, $6, 0, $7, NULL, 0, NULL) returning *",
             [
               req.body.birthDate,
               req.body.email,
@@ -100,6 +100,25 @@ class PassengerRoutes extends BaseRoutes {
         console.log(err);
       }
     });
+
+    this.router.get("/rating/:id", async (req, res) => {
+      try {
+        // console.log(req.params.id);
+        const results = await pool.query(
+          "SELECT rating FROM passengers WHERE id = $1",
+          [req.params.id]
+        );
+        res.status(200).json({
+          status: "success",
+          data: {
+            passenger: results.rows[0],
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    
 
     // UPDATE
     // this.router.put("/:id", async (req, res) => {

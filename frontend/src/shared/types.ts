@@ -18,6 +18,7 @@ export interface DriverType {
 }
 
 export interface Passenger {
+  id: number;
   birthDate: string; // assuming ISO format for dates: "YYYY-MM-DD"
   email: string;
   passwordHash?: string; // Depending on how you handle hashing, might need adjustment

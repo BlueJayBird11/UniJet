@@ -33,6 +33,7 @@ function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.Profile);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [passenger, setPassenger] = useState<Passenger>({
+    id: 0,
     birthDate: "", 
     email: "",
     phoneNumber: +"", 
@@ -61,6 +62,7 @@ function App() {
       console.log('Login Success:', data);
       if (data.token == 200) {
         setPassenger({
+          id: data.passenger.id,
           birthDate: data.passenger.birthdate,
           email: data.passenger.email,
           phoneNumber: data.passenger.phonenumber,
@@ -82,6 +84,16 @@ function App() {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    setPassenger({
+      id: 0,
+      birthDate: "",
+      email: "",
+      phoneNumber: 0,
+      firstName: "",
+      lastName: "",
+      userStatus: 0,
+      carPool: false
+    });
   };
 
   const renderContent = () => {
