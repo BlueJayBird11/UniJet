@@ -7,7 +7,7 @@ import PassengerRouter from "./router/PassengerRouter";
 import ClassInfoRouter from "./router/ClassInfoRouter";
 import LoginRouter from "./router/LoginRouter";
 import ForgotPassword from "./router/ForgotPassword";
-import StatusRouter from "./router/Settings";
+import StatusRouter from "./router/SettingsRouter";
 import DriverRouter from "./router/DriverRouter";
 
 class App {
