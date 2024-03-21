@@ -1,10 +1,47 @@
+import { Passenger } from '@/shared/types';
 import React, { useState, FormEvent } from 'react'
 
-const EditName = () => {
+type Props = {
+  passenger: Passenger;
+}
+
+const EditName = ({passenger}: Props) => {
   const [name, setName] = useState('')
+  const [lastName, setLastName] = useState('')
+
+  const changeName = async() => {
+    console.log(passenger.id);
+    console.log({"firstName": name, "lastName": lastName});
+    try {
+      const response = await fetch(`http://localhost:8000/api/v1/settings/name/${passenger.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"firstName": name, "lastName": lastName}), // Convert the passenger object to JSON
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      passenger.firstName = name;
+      passenger.lastName = lastName;
+      console.log('Success:', data);
+      // setShowModal(true);
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
     setName(event.currentTarget.value)
+  };
+
+  const handleLastNameChange = (event: FormEvent<HTMLInputElement>) => {
+    setLastName(event.currentTarget.value)
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -29,11 +66,20 @@ const EditName = () => {
             value={name}
             onChange={handleChange}
           />
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="lastName"
+            type="lastName"
+            placeholder="last name"
+            value={lastName}
+            onChange={handleLastNameChange}
+          />
         </div>
         <div className="flex items-center justify-between">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
+            onClick={changeName}
           >
             Submit
           </button>

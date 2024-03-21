@@ -6,16 +6,70 @@ import EditUniversityButton from "@/assets/edit_university.png";
 import LogoutButton from "@/assets/logout.png";
 import DeleteAccountButton from "@/assets/delete_account.png";
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
+import { Passenger } from '@/shared/types';
 
+type Props = {
+    passenger: Passenger;
+  }
 
-const Settings = () => {
+const Settings = ({passenger}: Props) => {
     const { userRole, setUserRole } = useUserRole();
     const [showReportModal, setShowReportModal] = useState(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
 
-    const handleRoleChange = (newRole: 'driver' | 'passenger') => {
+    const changeRoleToPassenger = async() => {
+        try {
+            const response = await fetch(`http://localhost:8000/api/v1/settings/status/${passenger.id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({"newStatus": 1}), // Convert the passenger object to JSON
+            });
+      
+            if (!response.ok) {
+              throw new Error(`Error: ${response.status}`);
+            }
+      
+            const data = await response.json();
+            passenger.email = email;
+            console.log('Success:', data);
+            handleRoleChange('passenger');
+      
+          } catch (error) {
+            console.error('Error:', error);
+          }
+      }; 
+
+      const changeRoleToDriver = async() => {
+        try {
+          const response = await fetch(`http://localhost:8000/api/v1/settings/status-driver/${passenger.id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"newStatus": 1}), // Convert the passenger object to JSON
+          });
+    
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+    
+          const data = await response.json();
+          passenger.email = email;
+          console.log('Success:', data);
+          handleRoleChange('driver');
+    
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+
+      
+
+    const handleRoleChange = (newRole: 'passenger' | 'driver') => {
         setUserRole(newRole);
     };
 
@@ -50,13 +104,13 @@ const Settings = () => {
                 <h2 className='text-2xl font-bold text-primary-black'>Your role is {userRole}</h2>
                 <div className='flex mt-4'>
                     <button 
-                        onClick={() => handleRoleChange('driver')} 
+                        onClick={changeRoleToDriver} 
                         className={`mx-2 px-4 py-2 ${userRole === 'driver' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
                     >
                         Driver
                     </button>
                     <button 
-                        onClick={() => handleRoleChange('passenger')} 
+                        onClick={changeRoleToPassenger} 
                         className={`mx-2 px-4 py-2 ${userRole === 'passenger' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
                     >
                         Passenger

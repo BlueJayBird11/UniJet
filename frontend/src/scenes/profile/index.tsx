@@ -34,6 +34,7 @@ const index = ({selectedPage, setSelectedPage, passenger}: Props) => {
           if (!response.ok) {
             throw new Error(`Error: ${response.status}`);
           }
+          passenger.userStatus = statusNum;
     
           const data = await response.json();
           console.log('Success:', data);

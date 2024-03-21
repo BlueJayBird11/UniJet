@@ -112,11 +112,11 @@ function App() {
             <Route path="/viewTimeSlot" element={<ViewTimeSlot />} />
             <Route path="/addTimeSlot" element={<AddTimeSlot />} />
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />
-            <Route path="/delete-account" element={<DeleteAccount />} />
-            <Route path="/edit-email" element={<EditEmail />} />
-            <Route path="/edit-name" element={<EditName />} />
+            <Route path="/delete-account" element={<DeleteAccount passenger={passenger}/>} />
+            <Route path="/edit-email" element={<EditEmail passenger={passenger}/>} />
+            <Route path="/edit-name" element={<EditName passenger={passenger}/>} />
             <Route path="/edit-university" element={<EditUniversity />} />
-            <Route path="/logout" element={<Logout />} />
+            <Route path="/logout" element={<Logout passenger={passenger}/>} />
             <Route path="*" element={<Navigate to="/profile" replace />} />
           </Routes>
         </div>
