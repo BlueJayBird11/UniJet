@@ -76,7 +76,7 @@ const Map = () => {
                 cursor: 'pointer',
                 border: 'none',
             }}>
-                Request Ride
+                Request Ridev (DEV)
             </button>
             {isModalOpen && (
                 <Modal 
