@@ -104,7 +104,7 @@ function App() {
           <Routes>
             <Route path="/profile" element={<Profile selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
             <Route path="/history" element={<History />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/settings" element={<Settings passenger={passenger}/>} />
             <Route path="/findDriver" element={<FindDriver />} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />

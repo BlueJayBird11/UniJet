@@ -9,6 +9,7 @@ class DriverRoutes extends BaseRoutes {
         //   "SELECT * FROM passengers WHERE email = $1",
         //   [req.body.email]
         // );
+        console.log(req.body);
         const resultDriver = await pool.query(
           "INSERT INTO drivers(licencePlate, registeredState, availableSeats, amountReceived, rating) \
               VALUES ($1, $2, $3, 0, 0) returning *",
