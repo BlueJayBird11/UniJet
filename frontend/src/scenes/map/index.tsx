@@ -6,6 +6,8 @@ import "leaflet/dist/leaflet.css";
 import 'leaflet-geosearch/dist/geosearch.css';
 import { useNavigate } from 'react-router-dom';
 
+
+
 const Map = () => {
     const [position, setPosition] = useState<[number, number] | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,11 +76,11 @@ const Map = () => {
                 cursor: 'pointer',
                 border: 'none',
             }}>
-                Confirm Ride
+                Request Ride
             </button>
             {isModalOpen && (
                 <Modal 
-                    message="Are you sure you want to confirm a ride?" 
+                    message="Are you sure you want to request a ride for this location?" 
                     onConfirm={handleConfirm} 
                     onCancel={handleCancel}
                 />
@@ -89,13 +91,12 @@ const Map = () => {
 
 export default Map;
 
-// Modal Component
 const Modal = ({ message, onConfirm, onCancel }) => (
     <div style={{
         position: 'fixed',
         top: 0,
         left: 0,
-        zIndex: 1000,
+        zIndex: 1050,
         width: '100%',
         height: '100%',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -106,12 +107,29 @@ const Modal = ({ message, onConfirm, onCancel }) => (
         <div style={{
             backgroundColor: 'white',
             padding: '20px',
-            borderRadius: '5px',
+            borderRadius: '10px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         }}>
             <p>{message}</p>
-            <button onClick={onConfirm} style={{ marginRight: '10px' }}>Yes</button>
-            <button onClick={onCancel}>No</button>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
+                <button onClick={onConfirm} style={{
+                    marginRight: '10px',
+                    backgroundColor: '#4CAF50',
+                    color: 'white',
+                    padding: '10px 20px',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    border: 'none',
+                }}>Yes</button>
+                <button onClick={onCancel} style={{
+                    backgroundColor: '#f44336',
+                    color: 'white',
+                    padding: '10px 20px',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    border: 'none',
+                }}>No</button>
+            </div>
         </div>
     </div>
 );
-
