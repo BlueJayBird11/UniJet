@@ -1,6 +1,11 @@
+import { Passenger } from '@/shared/types';
 import React from 'react'
 
-const Logout = () => {
+type Props = {
+  passenger: Passenger;
+}
+
+const Logout = ({passenger}: Props) => {
   return (
     <div className="flex p-10 flex-col items-center py-24 min-h-screen">
       <div className="p-4 bg-white shadow-md rounded-lg">

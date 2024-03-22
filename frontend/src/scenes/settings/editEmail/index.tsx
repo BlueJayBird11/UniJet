@@ -1,7 +1,36 @@
+import { Passenger } from '@/shared/types';
 import React, { useState, FormEvent } from 'react';
 
-const EditEmail = () => {
+type Props = {
+  passenger: Passenger;
+}
+
+const EditEmail = ({passenger}: Props) => {
   const [email, setEmail] = useState('');
+
+  const changeEmail = async() => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/v1/settings/email/${passenger.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"email": email}), // Convert the passenger object to JSON
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      passenger.email = email;
+      console.log('Success:', data);
+      // setShowModal(true);
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
     setEmail(event.currentTarget.value);
@@ -34,6 +63,7 @@ const EditEmail = () => {
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
+            onClick={changeEmail}
           >
             Submit
           </button>

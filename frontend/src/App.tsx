@@ -33,6 +33,7 @@ function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.Profile);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [passenger, setPassenger] = useState<Passenger>({
+    id: 0,
     birthDate: "", 
     email: "",
     phoneNumber: +"", 
@@ -61,6 +62,7 @@ function App() {
       console.log('Login Success:', data);
       if (data.token == 200) {
         setPassenger({
+          id: data.passenger.id,
           birthDate: data.passenger.birthdate,
           email: data.passenger.email,
           phoneNumber: data.passenger.phonenumber,
@@ -82,6 +84,16 @@ function App() {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    setPassenger({
+      id: 0,
+      birthDate: "",
+      email: "",
+      phoneNumber: 0,
+      firstName: "",
+      lastName: "",
+      userStatus: 0,
+      carPool: false
+    });
   };
 
   const renderContent = () => {
@@ -92,7 +104,7 @@ function App() {
           <Routes>
             <Route path="/profile" element={<Profile selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
             <Route path="/history" element={<History />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/settings" element={<Settings passenger={passenger}/>} />
             <Route path="/findDriver" element={<FindDriver />} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
@@ -100,11 +112,11 @@ function App() {
             <Route path="/viewTimeSlot" element={<ViewTimeSlot />} />
             <Route path="/addTimeSlot" element={<AddTimeSlot />} />
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />
-            <Route path="/delete-account" element={<DeleteAccount />} />
-            <Route path="/edit-email" element={<EditEmail />} />
-            <Route path="/edit-name" element={<EditName />} />
+            <Route path="/delete-account" element={<DeleteAccount passenger={passenger}/>} />
+            <Route path="/edit-email" element={<EditEmail passenger={passenger}/>} />
+            <Route path="/edit-name" element={<EditName passenger={passenger}/>} />
             <Route path="/edit-university" element={<EditUniversity />} />
-            <Route path="/logout" element={<Logout />} />
+            <Route path="/logout" element={<Logout passenger={passenger}/>} />
             <Route path="*" element={<Navigate to="/profile" replace />} />
           </Routes>
         </div>

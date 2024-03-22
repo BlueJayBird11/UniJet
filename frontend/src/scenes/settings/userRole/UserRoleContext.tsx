@@ -18,7 +18,7 @@ type UserRoleProviderProps = {
 };
 
 export const UserRoleProvider: React.FC<UserRoleProviderProps> = ({ children }) => {
-  const [userRole, setUserRole] = useState<'driver' | 'passenger'>('driver');
+  const [userRole, setUserRole] = useState<'driver' | 'passenger'>('passenger');
 
   return (
     <UserRoleContext.Provider value={{ userRole, setUserRole }}>

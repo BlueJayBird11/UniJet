@@ -101,6 +101,25 @@ class PassengerRoutes extends BaseRoutes {
       }
     });
 
+    this.router.get("/rating/:id", async (req, res) => {
+      try {
+        // console.log(req.params.id);
+        const results = await pool.query(
+          "SELECT rating FROM passengers WHERE id = $1",
+          [req.params.id]
+        );
+        res.status(200).json({
+          status: "success",
+          data: {
+            passenger: results.rows[0],
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    
+
     // UPDATE
     // this.router.put("/:id", async (req, res) => {
     //   try {

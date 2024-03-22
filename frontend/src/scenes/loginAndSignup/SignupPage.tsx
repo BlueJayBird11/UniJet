@@ -6,6 +6,7 @@ import { Passenger } from '@/shared/types';
 
 
 const SignupPage: React.FC = () => {
+  const [newId, setID] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -17,9 +18,10 @@ const SignupPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [showSecondModal, setShowSecondModal] = useState(false);
   const [licensePlate, setLicensePlate] = useState('');  
-  const [licenseNumber, setLicenseNumber] = useState('');  
+  const [color, setColor] = useState('');  
   const [carMake, setCarMake] = useState('');  
   const [carModel, setCarModel] = useState('');  
+  const [registeredYear, setRegisteredYear] = useState('');
    
   const { setUserRole } = useUserRole();
   const navigate = useNavigate();
@@ -37,10 +39,43 @@ const SignupPage: React.FC = () => {
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-
       const data = await response.json();
       console.log('Success:', data);
+      console.log(data.data.passengers.id);
+      setID(data.data.passengers.id);
+      console.log(newId);
       setShowModal(true);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const postDriver = async() => {
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/drivers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "licensePlate": licensePlate,
+          "registeredState": "LA",
+          "availableSeats": 1,
+          "make": carMake,
+          "model": carModel,
+          "color": color,
+          "registeredYear": registeredYear,
+          "passengerID": newId
+      }), // Convert the passenger object to JSON
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log('Success:', data);
+      // goto login
+      navigate('/login');
     } catch (error) {
       console.error('Error:', error);
     }
@@ -55,6 +90,7 @@ const SignupPage: React.FC = () => {
     }
     
     const user: Passenger ={
+      id: 0,
       birthDate: dob, 
       email: email,
       passwordHash: password, 
@@ -186,7 +222,7 @@ const SignupPage: React.FC = () => {
             <h2 className="text-xl font-semibold mb-4 text-center">Driver Information</h2>
             <form onSubmit={(e) => {
               e.preventDefault();
-              navigate('/login'); // Navigate to the login screen upon form submission
+              postDriver(); // Navigate to the login screen upon form submission
             }} className="space-y-4">
               <input
                 type="text"
@@ -198,9 +234,9 @@ const SignupPage: React.FC = () => {
               />
               <input
                 type="text"
-                placeholder="Driver License Number"
-                value={licenseNumber}
-                onChange={(e) => setLicenseNumber(e.target.value)}
+                placeholder="Car Color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
                 required
                 className="w-full p-2 border rounded"
               />
@@ -217,6 +253,14 @@ const SignupPage: React.FC = () => {
                 placeholder="Car Model"
                 value={carModel}
                 onChange={(e) => setCarModel(e.target.value)}
+                required
+                className="w-full p-2 border rounded"
+              />
+              <input
+                type="text"
+                placeholder="Car's Registered Year"
+                value={registeredYear}
+                onChange={(e) => setRegisteredYear(e.target.value)}
                 required
                 className="w-full p-2 border rounded"
               />

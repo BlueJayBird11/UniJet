@@ -1,10 +1,39 @@
+import { Passenger } from '@/shared/types';
 import React, { useState } from 'react'
 
-const DeleteAccount = () => {
+type Props = {
+  passenger: Passenger;
+}
+
+const DeleteAccount = ({passenger}: Props) => {
   const [confirmation, setConfirmation] = useState('')
+
+  // Must be fixed
+  const deleteAccount = async() => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/v1/passengers/${passenger.id}`, {
+        method: 'DEL',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Success:', data);
+      // Use Logout Function
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const handleDeleteAccount = () => {
     if (confirmation === 'DELETE') {
+      deleteAccount();
       console.log('Account deleted successfully!');
     } else {
       console.error('Confirmation input is incorrect!');
