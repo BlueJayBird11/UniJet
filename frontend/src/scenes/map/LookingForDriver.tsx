@@ -7,29 +7,60 @@ const LookingForDriver: React.FC = () => {
     const navigate = useNavigate();
     const [isDriverFound, setIsDriverFound] = useState(false);
     const [rideAccepted, setRideAccepted] = useState(false);
+    const [driverHere, setDriverHere] = useState(false);
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-    const [driverDetails, setDriverDetails] = useState({ name: 'John Doe', sex: 'Male', vehicleModel: 'Toyota Camry', rating: '4.5', phone: '123-456-7890' });
+    const [showDriverOnWayModal, setShowDriverOnWayModal] = useState(false);
+    const [isInCar, setIsInCar] = useState(false);
+    const [showRateDriverModal, setShowRateDriverModal] = useState(false);
+    const [driverDetails, setDriverDetails] = useState({
+        name: 'John Doe', 
+        sex: 'Male', 
+        vehicleModel: 'Toyota Camry', 
+        rating: '4.5', 
+        phone: '123-456-7890',
+        licensePlate: 'LUV690'
+    });
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsDriverFound(true); // Simulate finding a driver after 10 seconds
-        }, 5000);
+        const findDriverTimeout = setTimeout(() => {
+            setIsDriverFound(true);
+        }, 5000); // Simulate finding a driver after 5 seconds
 
-        return () => clearTimeout(timer);
+        return () => clearTimeout(findDriverTimeout);
     }, []);
 
+    useEffect(() => {
+        if (rideAccepted) {
+            const driverArrivalTimeout = setTimeout(() => {
+                setDriverHere(true); // Simulate driver arrival
+            }, 5000); // After 5 seconds
+
+            return () => clearTimeout(driverArrivalTimeout);
+        }
+    }, [rideAccepted]);
+
     const handleAcceptDriver = () => {
-        setRideAccepted(true); // Indicate that ride has been accepted
-        setIsDriverFound(false); // Hide initial driver found modal
+        setRideAccepted(true);
+        setIsDriverFound(false);
+        setShowDriverOnWayModal(true); // Show "Driver on the way" modal
     };
 
     const handleDeclineDriver = () => {
-        setIsDriverFound(false); // Hide driver found modal
-        setIsCancelModalOpen(true); // Show confirmation for cancelling or keep looking
+        setIsDriverFound(false);
+        setIsCancelModalOpen(true); // Show cancellation confirmation modal
     };
 
     const handleCancelSearchConfirmed = () => {
-        navigate('/'); // Navigate back to map or home page
+        navigate('/map'); // Go back to the map
+    };
+
+    const handleInCarConfirmation = () => {
+        setIsInCar(true);
+        setDriverHere(false); // Driver is now not 'arriving', they have 'arrived'
+        setShowDriverOnWayModal(false); // Close the "Driver on the way" modal
+        setTimeout(() => {
+            setShowRateDriverModal(true); // Show rate driver modal after 5 seconds
+        }, 5000);
     };
 
     return (
@@ -54,14 +85,42 @@ const LookingForDriver: React.FC = () => {
                 />
             )}
 
-            {rideAccepted && (
+            {showDriverOnWayModal && !isInCar && (
                 <Modal
-                    title="Ride Accepted"
-                    message={`Your driver, ${driverDetails.name}, is on their way. Vehicle: ${driverDetails.vehicleModel}, Rating: ${driverDetails.rating}.`}
+                    title="Driver on the Way"
+                    message={`Your driver ${driverDetails.name} is on their way. Vehicle: ${driverDetails.vehicleModel}, Rating: ${driverDetails.rating}`}
                     confirmText="OK"
-                    onConfirm={() => setRideAccepted(false)} // You could navigate to a new page or just close this modal.
-                    isOpen={rideAccepted}
-                    additionalInfo={<p>Contact: {driverDetails.phone}</p>}
+                    onConfirm={() => setShowDriverOnWayModal(false)} // Just hide the modal when "OK" is clicked
+                    onCancel={() => {
+                        setShowDriverOnWayModal(false);
+                        navigate('/map'); // Go back to map if user cancels
+                    }}
+                    isOpen={showDriverOnWayModal}
+                />
+            )}
+
+            {driverHere && (
+                <Modal
+                    title="Your Driver is Here"
+                    message={`Your driver ${driverDetails.name} has arrived. Vehicle: ${driverDetails.vehicleModel}, License Plate: ${driverDetails.licensePlate}`}
+                    confirmText="I'm in the Car"
+                    onConfirm={handleInCarConfirmation}
+                    isOpen={driverHere}
+                />
+            )}
+
+            {showRateDriverModal && (
+                <Modal
+                    title="Ride Completed"
+                    message="Please rate your driver:"
+                    confirmText="Submit Rating"
+                    onConfirm={() => {
+                        setShowRateDriverModal(false);
+                        // Here you might handle the submission of the rating
+                    }} // Proceed with rating submission or just close the modal
+                    onCancel={() => setShowRateDriverModal(false)} // Close the modal without rating
+                    isOpen={showRateDriverModal}
+                    additionalInfo={<div>Rating: [Your Rating Component Here]</div>}
                 />
             )}
 

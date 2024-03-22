@@ -2,14 +2,14 @@
 import React from 'react';
 
 interface ModalProps {
+    isOpen: boolean;
     title: string;
     message: string;
     confirmText: string;
     onConfirm: () => void;
-    onCancel?: () => void; // This is optional
-    cancelText?: string; // This is optional
-    isOpen: boolean;
-    additionalInfo?: JSX.Element; // For additional information like driver details
+    onCancel?: () => void;
+    cancelText?: string;
+    additionalInfo?: JSX.Element;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -20,7 +20,7 @@ const Modal: React.FC<ModalProps> = ({
     cancelText, 
     onConfirm, 
     onCancel, 
-    additionalInfo 
+    additionalInfo
 }) => {
     if (!isOpen) return null;
 
@@ -41,37 +41,41 @@ const Modal: React.FC<ModalProps> = ({
                 backgroundColor: 'white', 
                 padding: '20px', 
                 borderRadius: '10px', 
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)'
+                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+                maxWidth: '400px'
             }}>
-                <h2 style={{ marginTop: 0 }}>{title}</h2>
+                <h2>{title}</h2>
                 <p>{message}</p>
                 {additionalInfo}
                 <div style={{
-                    display: 'flex', 
-                    justifyContent: 'flex-end', 
-                    marginTop: '20px'
+                    marginTop: '20px',
+                    display: 'flex',
+                    justifyContent: 'space-between'
                 }}>
                     <button onClick={onConfirm} style={{
-                        marginRight: '10px', 
                         backgroundColor: '#4CAF50', 
                         color: 'white', 
                         padding: '10px 20px', 
                         borderRadius: '5px', 
                         cursor: 'pointer'
-                    }}>
-                        {confirmText}
-                    </button>
-                    {onCancel && cancelText && ( // Only render if both onCancel and cancelText are provided
-                        <button onClick={onCancel} style={{
-                            backgroundColor: '#f44336', 
-                            color: 'white', 
-                            padding: '10px 20px', 
-                            borderRadius: '5px', 
-                            cursor: 'pointer'
-                        }}>
-                            {cancelText}
-                        </button>
-                    )}
+                    }}>{confirmText}</button>
+{cancelText && onCancel && (
+    <button onClick={onCancel} style={{
+        backgroundColor: '#f44336',
+        color: 'white',
+        padding: '10px 20px',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        marginLeft: '10px', // Ensure there is space between buttons
+    }}>
+        {cancelText}
+    </button>
+)}
+
+
+
+
+
                 </div>
             </div>
         </div>
