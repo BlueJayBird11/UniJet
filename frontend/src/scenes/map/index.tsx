@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const Map = () => {
+const Map : React.FC= () => {
     const [position, setPosition] = useState<[number, number] | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
