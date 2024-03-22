@@ -26,7 +26,7 @@ import OTPVerificationPage from './scenes/loginAndSignup/OTPVerificationPage';
 import ChangePasswordPage from './scenes/loginAndSignup/ChangePasswordPage';
 import SignupPage from './scenes/loginAndSignup/SignupPage';
 import { UserRoleProvider } from './scenes/settings/userRole/UserRoleContext'; 
-import PhoneVerification from './scenes/settings/phoneNumber/PhoneVerification';
+
 
 
 function App() {
@@ -44,16 +44,55 @@ function App() {
   });
 
   const handleLogin = async(info: Info) => {
-    setIsLoggedIn(true);
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(info), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      console.log('Login Success:', data);
+      if (data.token == 200) {
+        setPassenger({
+          id: data.passenger.id,
+          birthDate: data.passenger.birthdate,
+          email: data.passenger.email,
+          phoneNumber: data.passenger.phonenumber,
+          firstName: data.passenger.firstname,
+          lastName: data.passenger.lastname,
+          userStatus: 0,
+          carPool: false,
+        });
+        setIsLoggedIn(true);
+      }
+      else {
+        console.log("Wrong Email or Password");
+      }
+    
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
     setPassenger({
-      id: 5,
+      id: 0,
       birthDate: "",
-      email: "Ye",
-      phoneNumber: 1,
-      firstName: "Ethan",
-      lastName: "Joyce",
+      email: "",
+      phoneNumber: 0,
+      firstName: "",
+      lastName: "",
       userStatus: 0,
-      carPool: false,
+      carPool: false
     });
   };
 
@@ -78,7 +117,6 @@ function App() {
             <Route path="/edit-name" element={<EditName passenger={passenger}/>} />
             <Route path="/edit-university" element={<EditUniversity />} />
             <Route path="/logout" element={<Logout onLogout={() => {setIsLoggedIn(false);}} />} />
-            <Route path="/change-phone-number" element={<PhoneVerification />} />
             <Route path="*" element={<Navigate to="/profile" replace />} />
           </Routes>
         </div>
