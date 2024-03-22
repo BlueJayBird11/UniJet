@@ -62,7 +62,7 @@ const EditName = ({passenger}: Props) => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="name"
             type="name"
-            placeholder="Enter your new name"
+            placeholder="Enter your first name"
             value={name}
             onChange={handleChange}
           />
@@ -70,7 +70,7 @@ const EditName = ({passenger}: Props) => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="lastName"
             type="lastName"
-            placeholder="last name"
+            placeholder="Enter your last name"
             value={lastName}
             onChange={handleLastNameChange}
           />
