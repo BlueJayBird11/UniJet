@@ -5,7 +5,6 @@ import twilio from 'twilio';
 
 const otpDatabase: Record<string, string> = {};
 
-// Twilio setup
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 class SMSVerificationRoute {
