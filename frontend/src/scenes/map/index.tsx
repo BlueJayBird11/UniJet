@@ -1,135 +1,62 @@
-// Map.tsx
 import React, { useEffect, useState } from 'react';
-import L from 'leaflet';
-import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
-import 'leaflet-geosearch/dist/geosearch.css';
-import { useNavigate } from 'react-router-dom';
 
+const Map: React.FC = () => {
+ const [position, setPosition] = useState<[number, number] | null>(null);
+ const [routeToDestination, setRouteToDestination] = useState<[number, number][] | null>(null);
+ const [routeToUser, setRouteToUser] = useState<[number, number][] | null>(null);
+ const placeholderLocation = [32.541251162684404, -92.63578950465626]; // Example: Chase Bank Ruston
+ const driverLocation = [32.52424701643656, -92.67001400107138]; // Example: Driver's location
+ const mapboxAccessToken = ''; 
 
-
-const Map : React.FC= () => {
-    const [position, setPosition] = useState<[number, number] | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                setPosition([position.coords.latitude, position.coords.longitude]);
-            }, () => {
-                console.error('Unable to retrieve your location');
-            });
-        }
-    }, []);
-
-    useEffect(() => {
-        if (!position) return;
-
-        const map = L.map('map').setView(position, 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        const marker = L.marker(position).addTo(map);
-        marker.bindPopup("You are here").openPopup();
-
-        const provider = new OpenStreetMapProvider();
-        const searchControl = GeoSearchControl({
-          provider: provider,
-          style: 'bar',
-          showMarker: true,
-          autoClose: true,
-          searchLabel: 'Enter address',
-        });
-        
-        map.addControl(searchControl);
-
-        return () => {
-            map.remove();
-        };
-    }, [position]);
-
-    const handleConfirm = () => {
-        setIsModalOpen(false);
-        navigate('/looking-for-driver');
-    };
-
-    const handleCancel = () => setIsModalOpen(false);
-
-    if (!position) {
-        return <div>Loading...</div>;
-    }
-
-    return (
-        <div className="h-screen relative">
-            <div id="map" style={{ width: '100%', height: '89%' }}></div>
-            <button onClick={() => setIsModalOpen(true)} style={{
-                position: 'absolute',
-                top: '45px',
-                right: '20px',
-                zIndex: 1000,
-                backgroundColor: 'red',
-                color: 'white',
-                padding: '10px',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                border: 'none',
-            }}>
-                Request Ridev (DEV)
-            </button>
-            {isModalOpen && (
-                <Modal 
-                    message="Are you sure you want to request a ride for this location?" 
-                    onConfirm={handleConfirm} 
-                    onCancel={handleCancel}
-                />
-            )}
-        </div>
+ useEffect(() => {
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setPosition([latitude, longitude]);
+        fetchRoute(latitude, longitude, placeholderLocation[0], placeholderLocation[1], setRouteToDestination);
+        fetchRoute(driverLocation[0], driverLocation[1], latitude, longitude, setRouteToUser); // Fetch reverse route
+      },
+      (error) => console.error('Error watching position:', error),
+      { enableHighAccuracy: true, maximumAge: 0 }
     );
+
+    return () => navigator.geolocation.clearWatch(watchId);
+ }, []);
+
+ const fetchRoute = async (startLat: number, startLng: number, endLat: number, endLng: number, setRoute: React.Dispatch<React.SetStateAction<[number, number][] | null>>) => {
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${startLng},${startLat};${endLng},${endLat}?geometries=geojson&access_token=${mapboxAccessToken}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const routeCoordinates = data.routes[0].geometry.coordinates;
+      setRoute(routeCoordinates.map(([lng, lat]) => [lat, lng])); // Convert to Leaflet's format
+    } catch (error) {
+      console.error('Failed to fetch route:', error);
+    }
+ };
+
+ if (!position) {
+    return <div>Loading...</div>;
+ }
+
+ return (
+    <div className="h-screen">
+      <MapContainer style={{ width: '100%', height: '90.5%' }} center={position} zoom={13} scrollWheelZoom={true}>
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Marker position={position}>
+          <Popup>You are here</Popup>
+        </Marker>
+        {routeToDestination && <Polyline positions={routeToDestination} color="blue" />}
+        {routeToUser && <Polyline positions={routeToUser} color="red" />}
+      </MapContainer>
+    </div>
+ );
 };
 
 export default Map;
-
-const Modal = ({ message, onConfirm, onCancel }) => (
-    <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        zIndex: 1050,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }}>
-        <div style={{
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        }}>
-            <p>{message}</p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
-                <button onClick={onConfirm} style={{
-                    marginRight: '10px',
-                    backgroundColor: '#4CAF50',
-                    color: 'white',
-                    padding: '10px 20px',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    border: 'none',
-                }}>Yes</button>
-                <button onClick={onCancel} style={{
-                    backgroundColor: '#f44336',
-                    color: 'white',
-                    padding: '10px 20px',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    border: 'none',
-                }}>No</button>
-            </div>
-        </div>
-    </div>
-);
