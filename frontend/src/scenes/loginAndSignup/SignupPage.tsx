@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import background from './background.png';
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 import { Passenger } from '@/shared/types';
+import axios from 'axios';
 
 
 const SignupPage: React.FC = () => {
@@ -22,6 +23,11 @@ const SignupPage: React.FC = () => {
   const [carMake, setCarMake] = useState('');  
   const [carModel, setCarModel] = useState('');  
   const [registeredYear, setRegisteredYear] = useState('');
+
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [otpError, setOtpError] = useState('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
    
   const { setUserRole } = useUserRole();
   const navigate = useNavigate();
@@ -33,7 +39,7 @@ const SignupPage: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(user), // Convert the passenger object to JSON
+        body: JSON.stringify(user), 
       });
 
       if (!response.ok) {
@@ -81,7 +87,7 @@ const SignupPage: React.FC = () => {
     }
   };
 
-  const handleSignup = (e: FormEvent) => {
+  const handleSignup = async (e: FormEvent) => {
     e.preventDefault();
     setPasswordError('');
     if (password !== confirmPassword) {
@@ -101,10 +107,30 @@ const SignupPage: React.FC = () => {
       carPool: false
     }
 
+    try {
+      await axios.post('http://localhost:8000/api/send-otp', { email });
+      setShowOtpModal(true);
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      setOtpError('Failed to send OTP. Please try again.');
+    }
+
     console.log(user);
 
     // SEND REQUEST
     postPassenger(user);
+  };
+
+  const verifyOtp = async () => {
+    try {
+      const response = await axios.post('http://localhost:8000/api/verify-otp', { email, otp });
+      alert("OTP verified successfully.");
+      setShowOtpModal(false);
+      setShowModal(true);
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      setOtpError('Failed to verify OTP. Please try again.');
+    }
   };
 
   const handleRoleSelection = (role: 'driver' | 'passenger') => {
@@ -134,14 +160,25 @@ const SignupPage: React.FC = () => {
               title="Email must end with @latech.edu"
               className="w-full p-2 border rounded"
             />
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full p-2 border rounded"
-            />
+
+            <div className="relative mb-4">
+              <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full p-2 border rounded pr-12"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+              >
+              {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
+
             <input
               type="password"
               placeholder="Confirm your password"
@@ -191,6 +228,41 @@ const SignupPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+
+      {showOtpModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
+              <h2 className="text-xl font-semibold text-center mb-4">Verify Your Email</h2>
+              <div className="mb-4">
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  placeholder="Enter OTP"
+                  className="form-input mt-1 block w-full border-gray-300 shadow-sm rounded-md"
+                />
+              </div>
+              {otpError && <div className="text-red-500 text-sm text-center mb-3">{otpError}</div>}
+              <div className="flex justify-between gap-4">
+                <button
+                  onClick={verifyOtp}
+                  className="flex-1 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Verify OTP
+                </button>
+                <button
+                  onClick={() => setShowOtpModal(false)}
+                  className="flex-1 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+
 
       {/* First Modal */}
       {showModal && (

@@ -7,9 +7,14 @@ import LogoutButton from "@/assets/logout.png";
 import DeleteAccountButton from "@/assets/delete_account.png";
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 import { Passenger } from '@/shared/types';
+import ChangePhoneNumberButton from "@/assets/change_number.png";
+import axios from 'axios';
 
 type Props = {
     passenger: Passenger;
+    name: string;
+    email: string;
+    message: string;
   }
 
 const Settings = ({passenger}: Props) => {
@@ -95,8 +100,8 @@ const Settings = ({passenger}: Props) => {
         setShowReportModal(false);
     };
 
-    const images = [EditNameButton, EditEmailButton, EditUniversityButton, LogoutButton, DeleteAccountButton];
-    const routes = ["/edit-name", "/edit-email", "/edit-university", "/logout", "/delete-account"];
+    const images = [EditNameButton, EditEmailButton, EditUniversityButton, LogoutButton, DeleteAccountButton, ChangePhoneNumberButton];
+    const routes = ["/edit-name", "/edit-email", "/edit-university", "/logout", "/delete-account", "/change-phone-number"];
 
     return (
         <div className='flex flex-col items-center bg-primary-blue-100 relative px-4 py-6'>

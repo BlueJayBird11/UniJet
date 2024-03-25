@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import background from './background.png'; // Ensure this path is correct
+import background from './background.png'; 
 
 const ChangePasswordPage: React.FC = () => {
     const [newPassword, setNewPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const changePassword = async () => {
@@ -13,11 +14,10 @@ const ChangePasswordPage: React.FC = () => {
             return;
         }
 
-        // For now, just log the new password and show a success message
         console.log("New password:", newPassword);
         alert("Your password has been changed successfully.");
 
-        navigate('/login'); // or wherever you want to redirect the user after
+        navigate('/login'); 
     };
 
     return (
@@ -26,14 +26,23 @@ const ChangePasswordPage: React.FC = () => {
                 <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <h2 className="text-xl font-semibold text-center mb-6">Change Password</h2>
                     <div>
-                        <input
-                            type="password"
-                            placeholder="New Password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            required
-                            className="w-full p-2 border rounded mb-4"
-                        />
+                    <div className="relative mb-4">
+                            <input
+                                type={showNewPassword ? 'text' : 'password'}
+                                placeholder="New Password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                required
+                                className="w-full p-2 border rounded pr-12"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowNewPassword(!showNewPassword)}
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                            >
+                                {showNewPassword ? 'Hide' : 'Show'}
+                            </button>
+                        </div>
                         <input
                             type="password"
                             placeholder="Confirm New Password"

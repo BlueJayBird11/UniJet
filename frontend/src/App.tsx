@@ -26,7 +26,7 @@ import OTPVerificationPage from './scenes/loginAndSignup/OTPVerificationPage';
 import ChangePasswordPage from './scenes/loginAndSignup/ChangePasswordPage';
 import SignupPage from './scenes/loginAndSignup/SignupPage';
 import { UserRoleProvider } from './scenes/settings/userRole/UserRoleContext'; 
-
+import PhoneVerification from './scenes/settings/phoneNumber/PhoneVerification';
 
 
 function App() {
@@ -104,7 +104,7 @@ function App() {
           <Routes>
             <Route path="/profile" element={<Profile selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
             <Route path="/history" element={<History />} />
-            <Route path="/settings" element={<Settings passenger={passenger}/>} />
+            <Route path="/settings" element={<Settings passenger={passenger} name={''} email={''} message={''}/>} />
             <Route path="/findDriver" element={<FindDriver />} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
@@ -115,8 +115,9 @@ function App() {
             <Route path="/delete-account" element={<DeleteAccount passenger={passenger}/>} />
             <Route path="/edit-email" element={<EditEmail passenger={passenger}/>} />
             <Route path="/edit-name" element={<EditName passenger={passenger}/>} />
+            <Route path="/change-phone-number" element={<PhoneVerification />} />
             <Route path="/edit-university" element={<EditUniversity />} />
-            <Route path="/logout" element={<Logout passenger={passenger}/>} />
+            <Route path="/logout" element={<Logout onLogout={() => {setIsLoggedIn(false);}} />} />
             <Route path="*" element={<Navigate to="/profile" replace />} />
           </Routes>
         </div>
