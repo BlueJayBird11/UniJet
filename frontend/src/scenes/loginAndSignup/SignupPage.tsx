@@ -95,17 +95,7 @@ const SignupPage: React.FC = () => {
       return;
     }
     
-    const user: Passenger ={
-      id: 0,
-      birthDate: dob, 
-      email: email,
-      passwordHash: password, 
-      phoneNumber: +phone, 
-      firstName: FirstName,
-      lastName: LastName,
-      userStatus: 0,
-      carPool: false
-    }
+    
 
     try {
       await axios.post('http://localhost:8000/api/send-otp', { email });
@@ -115,10 +105,7 @@ const SignupPage: React.FC = () => {
       setOtpError('Failed to send OTP. Please try again.');
     }
 
-    console.log(user);
-
-    // SEND REQUEST
-    postPassenger(user);
+    // console.log(user);
   };
 
   const verifyOtp = async () => {
@@ -126,7 +113,20 @@ const SignupPage: React.FC = () => {
       const response = await axios.post('http://localhost:8000/api/verify-otp', { email, otp });
       alert("OTP verified successfully.");
       setShowOtpModal(false);
+      const user: Passenger ={
+        id: 0,
+        birthDate: dob, 
+        email: email,
+        passwordHash: password, 
+        phoneNumber: +phone, 
+        firstName: FirstName,
+        lastName: LastName,
+        userStatus: 0,
+        carPool: false
+      }
+      postPassenger(user);
       setShowModal(true);
+
     } catch (error) {
       console.error("Error verifying OTP:", error);
       setOtpError('Failed to verify OTP. Please try again.');

@@ -7,6 +7,7 @@ const pool = new Pool({
   user: process.env.POSTGRES_USER as string,
   password: process.env.POSTGRES_PASSWORD as string,
   database: process.env.POSTGRES_DB as string,
+  ssl: true,
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
