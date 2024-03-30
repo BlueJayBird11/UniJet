@@ -18,6 +18,7 @@ import Settings from '@/scenes/settings';
 import DeleteAccount from './scenes/settings/deleteAccount';
 import EditEmail from './scenes/settings/editEmail';
 import EditName from './scenes/settings/editName';
+import ChangePassword from './scenes/settings/changePassword';
 import EditUniversity from './scenes/settings/editUniversity';
 import Logout from './scenes/settings/logout';
 import LoginPage from './scenes/loginAndSignup/LoginPage';
@@ -114,6 +115,7 @@ function App() {
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />
             <Route path="/delete-account" element={<DeleteAccount passenger={passenger}/>} />
             <Route path="/edit-email" element={<EditEmail passenger={passenger}/>} />
+            <Route path="/change-password" element={<ChangePassword/>} />
             <Route path="/edit-name" element={<EditName passenger={passenger}/>} />
             <Route path="/change-phone-number" element={<PhoneVerification />} />
             <Route path="/edit-university" element={<EditUniversity />} />
