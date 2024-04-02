@@ -47,10 +47,10 @@ const Map: React.FC = () => {
 
  return (
     <div className="h-screen">
-      <MapContainer style={{ width: '100%', height: '90.5%' }} center={position} zoom={13} scrollWheelZoom={true}>
+      <MapContainer style={{ width: '100%', height: '85.5%' }} center={position} zoom={13} scrollWheelZoom={true}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
         />
         <Marker position={position}>
           <Popup>You are here</Popup>
