@@ -74,8 +74,8 @@ const ResetViewButton = () => {
         <Marker position={position}>
           <Popup>You are here</Popup>
         </Marker>
-        {routeToDestination && <Polyline positions={routeToDestination} weight={3} color="blue" />}
-        {routeToUser && <Polyline positions={routeToUser} weight={3} color="red" />}
+        {routeToDestination && <Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />}
+        {routeToUser && <Polyline positions={routeToUser} weight={10} opacity={0.3} color="red" />}
         <ResetViewButton /> 
       </MapContainer>
     </div>
