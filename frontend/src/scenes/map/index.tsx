@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 // import * as dotenv from "dotenv";
 // dotenv.config();
-
 
 const Map: React.FC = () => {
  const [position, setPosition] = useState<[number, number] | null>(null);
@@ -11,7 +10,7 @@ const Map: React.FC = () => {
  const [routeToUser, setRouteToUser] = useState<[number, number][] | null>(null);
  const placeholderLocation = [32.541251162684404, -92.63578950465626]; // Example: Chase Bank Ruston
  const driverLocation = [32.52424701643656, -92.67001400107138]; // Example: Driver's location
- const mapboxAccessToken = ''; 
+ const mapboxAccessToken = '';
 
  useEffect(() => {
     const watchId = navigator.geolocation.watchPosition(
@@ -45,9 +44,29 @@ const Map: React.FC = () => {
     return <div>Loading...</div>;
  }
 
+// Button component to reset the map view to the user's location
+const ResetViewButton = () => {
+  const map = useMap();
+  const resetView = () => {
+    if (position) {
+      map.flyTo(position, map.getZoom());
+    }
+  };
+
+  return (
+    <button
+      onClick={resetView}
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded absolute top-3 left-14 z-10"
+      style={{ zIndex: 9999 }} 
+    >
+      Reset View
+    </button>
+  );
+};
+
  return (
     <div className="h-screen">
-      <MapContainer style={{ width: '100%', height: '85.5%' }} center={position} zoom={13} scrollWheelZoom={true}>
+      <MapContainer style={{ width: '100%', height: '85.5%' }} center={position} zoom={13} scrollWheelZoom={true} className="relative">
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
@@ -55,8 +74,9 @@ const Map: React.FC = () => {
         <Marker position={position}>
           <Popup>You are here</Popup>
         </Marker>
-        {routeToDestination && <Polyline positions={routeToDestination} color="blue" />}
-        {routeToUser && <Polyline positions={routeToUser} color="red" />}
+        {routeToDestination && <Polyline positions={routeToDestination} weight={3} color="blue" />}
+        {routeToUser && <Polyline positions={routeToUser} weight={3} color="red" />}
+        <ResetViewButton /> 
       </MapContainer>
     </div>
  );
