@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, CircleMarker, Popup, Polyline, useMap } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 // import * as dotenv from "dotenv";
 // dotenv.config();
@@ -71,9 +71,11 @@ const ResetViewButton = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
         />
-        <Marker position={position}>
-          <Popup>You are here</Popup>
-        </Marker>
+        {position && (
+          <CircleMarker center={position} radius={5} color="blue">
+            <Popup>You are here</Popup>
+          </CircleMarker>
+        )}
         {routeToDestination && <Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />}
         {routeToUser && <Polyline positions={routeToUser} weight={10} opacity={0.3} color="red" />}
         <ResetViewButton /> 
