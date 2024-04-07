@@ -44,6 +44,17 @@ function App() {
   });
 
   const handleLogin = async(info: Info) => {
+    // setPassenger({
+    //   id: 0,
+    //   birthDate: "",
+    //   email: "jfr021@email.latech.edu",
+    //   phoneNumber: 1,
+    //   firstName: "Test",
+    //   lastName: "User",
+    //   userStatus: 0,
+    //   carPool: false,
+    // });
+    // setIsLoggedIn(true);
     try {
       const response = await fetch('http://localhost:8000/api/v1/login', {
         method: 'POST',
@@ -125,12 +136,12 @@ function App() {
     } else {
       return (
         <Routes>
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/otpverificationpage" element={<OTPVerificationPage />} />
           <Route path="/change-password" element={<ChangePasswordPage />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       );
     }
