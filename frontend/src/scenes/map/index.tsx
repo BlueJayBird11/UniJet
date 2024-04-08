@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
-import { RiderType } from '@/shared/types';
+import { Passenger, RiderType } from '@/shared/types';
 // import * as dotenv from "dotenv";
 // dotenv.config();
 
+interface Props {
+  passenger: Passenger;
+}
 
-const Map: React.FC = () => {
+const Map: React.FC<Props> = ({  passenger }) => {
   const [position, setPosition] = useState<[number, number] | null>(null);
   const [routeToDestination, setRouteToDestination] = useState<[number, number][] | null>(null);
   const [routeToUser, setRouteToUser] = useState<[number, number][] | null>(null);
@@ -42,17 +45,35 @@ const Map: React.FC = () => {
       console.log('Success:');
       console.log(data);
       console.log(data.data.passengers);
-      // for (let index = 0; index < data.data.passengers.length; index++) {
-      //   console.log(data.data.passengers[index])
-      //   riders.push(data.data.passengers[index])
-      // }
-      // console.log(riders);
       setRiders(data.data.passengers);
 
     } catch (error) {
       console.error('Error:', error);
     }
   };
+
+  const makeRequest = async(userPosition: [number, number]) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/requests/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: passenger.email,
+          location: userPosition,
+          destination: "IESB"
+        }), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  
   useEffect(() => {
     const watchId = navigator.geolocation.watchPosition(
       (position) => {
@@ -92,16 +113,15 @@ const Map: React.FC = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={position}>
+        {/* <Marker position={position}>
           <Popup>You are here</Popup>
-        </Marker>
+        </Marker> */}
         {riders.map((rider: RiderType) => (
           <Marker key={rider.name} position={rider.position}>
             <Popup className='items-center justify-center'>
               <p>Name: {rider.name}</p> 
-              <p>Rating: {rider.rating}</p> 
-              <p>Pay: ${rider.payMin} - ${rider.payMax} </p>
-              <p>Destination: {rider.destination} </p>
+              <p>Rating: {rider.rating !== null ? rider.rating : '0.0 - New Account'}</p> 
+              <p>Destination: {rider.destination}</p>
               <button className='bg-blue-700 rounded-full p-2 text-white'>Accept</button>
             </Popup>
           </Marker>
@@ -111,7 +131,7 @@ const Map: React.FC = () => {
         {routeToUser && <Polyline positions={routeToUser} color="red" />}
       </MapContainer>
       <button onClick={getRequests} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-28 text-white hover:bg-blue-300'>Find Rider's</button>
-      <button className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-40 text-white hover:bg-blue-300'>Request Driver</button>
+      <button onClick={() => makeRequest(position)} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-40 text-white hover:bg-blue-300'>Request Driver</button>
     </div>
   );
 };

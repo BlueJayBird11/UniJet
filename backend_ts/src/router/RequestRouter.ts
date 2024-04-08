@@ -15,8 +15,6 @@ var requests: Array<RiderType> = [
   {
     name: "Ash",
     rating: 5.0,
-    payMin: 9,
-    payMax: 11,
     position: [32.541251162684404, -92.63578950465626],
     destination: "Chase Bank",
   },
@@ -33,16 +31,18 @@ class RequestRoutes extends BaseRoutes {
           [req.body.email]
         );
 
+        console.log(result.rows[0]);
+        console.log(result.rows[0].firstname);
+
         requests.push({
-          name: result.rows[0].firstName + " " + result.rows[0].lastName,
+          name: result.rows[0].firstname + " " + result.rows[0].lastname,
           rating: result.rows[0].rating,
-          payMin: result.rows[0].payMin,
-          payMax: result.rows[0].payMax,
-          position: req.body.position,
+          position: req.body.location,
           destination: req.body.destination,
         });
 
         console.log(result.rows.length);
+        console.log(requests);
 
         res.status(200).json({
           status: "success",
