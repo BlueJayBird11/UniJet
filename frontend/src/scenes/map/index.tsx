@@ -7,24 +7,53 @@ import { RiderType } from '@/shared/types';
 
 
 const Map: React.FC = () => {
- const [position, setPosition] = useState<[number, number] | null>(null);
- const [routeToDestination, setRouteToDestination] = useState<[number, number][] | null>(null);
- const [routeToUser, setRouteToUser] = useState<[number, number][] | null>(null);
- const placeholderLocation = [32.541251162684404, -92.63578950465626]; // Example: Chase Bank Ruston
- const driverLocation = [32.52424701643656, -92.67001400107138]; // Example: Driver's location
- const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
- const riders: Array<RiderType> = [
-  {
-    name: "Ash",
-    rating: 5.0,
-    payMin: 9,
-    payMax: 11,
-    position: [32.541251162684404, -92.63578950465626], 
-    destination: "Chase Bank"
-  }
-] 
+  const [position, setPosition] = useState<[number, number] | null>(null);
+  const [routeToDestination, setRouteToDestination] = useState<[number, number][] | null>(null);
+  const [routeToUser, setRouteToUser] = useState<[number, number][] | null>(null);
+  const placeholderLocation = [32.541251162684404, -92.63578950465626]; // Example: Chase Bank Ruston
+  const driverLocation = [32.52424701643656, -92.67001400107138]; // Example: Driver's location
+  const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+  // const riders: Array<RiderType> = [
+  //   {
+  //     name: "Ash",
+  //     rating: 5.0,
+  //     payMin: 9,
+  //     payMax: 11,
+  //     position: [32.541251162684404, -92.63578950465626],
+  //     destination: "Chase Bank"
+  //   }
+  // ]
+  const [riders, setRiders] = useState<RiderType[]>([]); // State to hold list of riders
+  // http://localhost:8000/api/v1/requests
+  const getRequests = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/v1/requests`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
- useEffect(() => {
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Success:');
+      console.log(data);
+      console.log(data.data.passengers);
+      // for (let index = 0; index < data.data.passengers.length; index++) {
+      //   console.log(data.data.passengers[index])
+      //   riders.push(data.data.passengers[index])
+      // }
+      // console.log(riders);
+      setRiders(data.data.passengers);
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  useEffect(() => {
     const watchId = navigator.geolocation.watchPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -37,9 +66,9 @@ const Map: React.FC = () => {
     );
 
     return () => navigator.geolocation.clearWatch(watchId);
- }, []);
+  }, []);
 
- const fetchRoute = async (startLat: number, startLng: number, endLat: number, endLng: number, setRoute: React.Dispatch<React.SetStateAction<[number, number][] | null>>) => {
+  const fetchRoute = async (startLat: number, startLng: number, endLat: number, endLng: number, setRoute: React.Dispatch<React.SetStateAction<[number, number][] | null>>) => {
     const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${startLng},${startLat};${endLng},${endLat}?geometries=geojson&access_token=${mapboxAccessToken}`;
 
     try {
@@ -50,13 +79,13 @@ const Map: React.FC = () => {
     } catch (error) {
       console.error('Failed to fetch route:', error);
     }
- };
+  };
 
- if (!position) {
+  if (!position) {
     return <div>Loading...</div>;
- }
+  }
 
- return (
+  return (
     <div className="h-screen">
       <MapContainer style={{ width: '100%', height: '90.5%' }} center={position} zoom={13} scrollWheelZoom={true}>
         <TileLayer
@@ -67,22 +96,24 @@ const Map: React.FC = () => {
           <Popup>You are here</Popup>
         </Marker>
         {riders.map((rider: RiderType) => (
-        <Marker position={rider.position}>
-          <Popup className='flex items-center justify-center'>
-            Name: {rider.name} <br/>
-            Rating: {rider.rating} <br/>
-            Pay: {rider.payMin} - {rider.payMax} <br/>
-            Destination: {rider.destination} <br/>
-            <button className='bg-blue-700 rounded-full p-2 text-white'>Accept</button>
-          </Popup>
-        </Marker>
+          <Marker key={rider.name} position={rider.position}>
+            <Popup className='items-center justify-center'>
+              <p>Name: {rider.name}</p> 
+              <p>Rating: {rider.rating}</p> 
+              <p>Pay: ${rider.payMin} - ${rider.payMax} </p>
+              <p>Destination: {rider.destination} </p>
+              <button className='bg-blue-700 rounded-full p-2 text-white'>Accept</button>
+            </Popup>
+          </Marker>
 
-      ))}
+        ))}
         {routeToDestination && <Polyline positions={routeToDestination} color="blue" />}
         {routeToUser && <Polyline positions={routeToUser} color="red" />}
       </MapContainer>
+      <button onClick={getRequests} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-28 text-white hover:bg-blue-300'>Find Rider's</button>
+      <button className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-40 text-white hover:bg-blue-300'>Request Driver</button>
     </div>
- );
+  );
 };
 
 export default Map;

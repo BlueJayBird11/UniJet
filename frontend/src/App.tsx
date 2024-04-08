@@ -55,6 +55,7 @@ function App() {
     //   carPool: false,
     // });
     // setIsLoggedIn(true);
+
     try {
       const response = await fetch('http://localhost:8000/api/v1/login', {
         method: 'POST',
@@ -71,7 +72,6 @@ function App() {
       const data = await response.json();
 
       console.log('Login Success:', data);
-      if (data.token == 200) {
         setPassenger({
           id: data.passenger.id,
           birthDate: data.passenger.birthdate,
@@ -83,10 +83,6 @@ function App() {
           carPool: false,
         });
         setIsLoggedIn(true);
-      }
-      else {
-        console.log("Wrong Email or Password");
-      }
     
     } catch (error) {
       console.error('Error:', error);
