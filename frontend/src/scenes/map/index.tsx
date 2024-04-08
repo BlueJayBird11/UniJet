@@ -48,7 +48,7 @@ const Map: React.FC = () => {
     const map = useMap();
     const resetView = () => {
       if (position) {
-        map.flyTo(position, map.getZoom());
+        map.flyTo(position, 16);
       }
     };
 
