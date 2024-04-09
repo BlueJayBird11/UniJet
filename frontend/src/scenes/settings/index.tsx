@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
 import EditNameButton from "@/assets/edit_name.png";
 import EditEmailButton from "@/assets/edit_email.png";
 import EditUniversityButton from "@/assets/edit_university.png";
@@ -15,7 +16,7 @@ type Props = {
     name: string;
     email: string;
     message: string;
-  }
+}
 
 const Settings = ({passenger}: Props) => {
     const { userRole, setUserRole } = useUserRole();
@@ -72,8 +73,6 @@ const Settings = ({passenger}: Props) => {
         }
       };
 
-      
-
     const handleRoleChange = (newRole: 'passenger' | 'driver') => {
         setUserRole(newRole);
     };
@@ -105,6 +104,12 @@ const Settings = ({passenger}: Props) => {
 
     return (
         <div className='flex flex-col items-center bg-primary-blue-100 relative px-4 py-6'>
+            <div className="absolute top-0 left-0 mt-4 ml-4 flex items-center text-white">
+                <Link to="/" className="flex items-center">
+                    <ChevronLeftIcon className="h-5 w-5 mr-1" /> 
+                    Back
+                </Link>
+            </div>
             <div className='my-8'>
                 <h2 className='text-2xl font-bold text-primary-black'>Your role is {userRole}</h2>
                 <div className='flex mt-4'>
