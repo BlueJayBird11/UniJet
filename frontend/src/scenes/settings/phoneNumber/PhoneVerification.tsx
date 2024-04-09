@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { ChevronLeftIcon } from '@heroicons/react/24/solid';
 
 interface PhoneVerificationProps {
 }
@@ -55,6 +57,12 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = () => {
 
     return (
         <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div className="absolute top-0 left-0 mt-4 ml-4 flex items-center text-white">
+                <Link to="/settings" className="flex items-center">
+                    <ChevronLeftIcon className="h-5 w-5 mr-1" />
+                    Back
+                </Link>
+            </div>
             {!isPhoneVerified && (
                 <div style={{ marginBottom: '20px' }}>
                     {editMode && !otpSent ? ( // Only show this if in edit mode and OTP has not been sent
