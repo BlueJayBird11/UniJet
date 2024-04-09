@@ -1,6 +1,7 @@
 import { Passenger } from '@/shared/types';
 import React, { useState, FormEvent } from 'react';
-
+import { Link } from 'react-router-dom';
+import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
 type Props = {
   passenger: Passenger;
 }
@@ -36,14 +37,21 @@ const EditEmail = ({passenger}: Props) => {
     setEmail(event.currentTarget.value);
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(`New email: ${email}`);
-    // could probably add the logic for handling the email update here
+    await changeEmail(); // Call changeEmail function to update email
+    window.history.back(); // Navigate back to previous page
   };
 
   return (
     <div className="flex justify-center items-center h-screen">
+      <div className="absolute top-0 left-0 mt-4 ml-4 flex items-center text-white">
+        <Link to="/settings" className="flex items-center">
+          <ChevronLeftIcon className="h-5 w-5 mr-1" />
+          Back
+        </Link>
+      </div>
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-2xl font-bold mb-4">Edit Email</h2>
         <div className="mb-4">
@@ -63,7 +71,6 @@ const EditEmail = ({passenger}: Props) => {
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
-            onClick={changeEmail}
           >
             Submit
           </button>
