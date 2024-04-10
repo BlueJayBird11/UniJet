@@ -11,6 +11,8 @@ import StatusRouter from "./router/SettingsRouter";
 import DriverRouter from "./router/DriverRouter";
 import SMSVerificationRoute from './router/smsVerification';
 import HistoryRouter from './router/HistoryRouter';
+import SchedulerRouter from './router/SchedulerRouter';
+
 
 class App {
   public app: Application;
@@ -35,6 +37,7 @@ class App {
     this.app.use("/api/v1/drivers", DriverRouter);
     this.app.use("/api/v1/classInfo", ClassInfoRouter);
     this.app.use("/api/v1/history", HistoryRouter);
+    this.app.use("/api/v1/scheduler", SchedulerRouter);
     this.app.use("/api/v1/login", LoginRouter);
     this.app.use("/api/v1/settings", StatusRouter);
     this.app.use("/api", ForgotPassword);
