@@ -77,28 +77,52 @@ const History: React.FC<Props> = ({ selectedPage, setSelectedPage, passenger }: 
   const [filteredEntries, setFilteredEntries] = useState<any[]>([]);
 
   useEffect(() => {
-    const getPassengers = async (passenger: Passenger) => {
-      try {
-        const id = await getDriverId(BigInt(Number(passenger.id)))
-        const response = await fetch(`http://localhost:8000/api/v1/history/passengers/${id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
+    const getInformation = async (passenger: Passenger) => {
+      console.log(userRole)
+      if (userRole === "driver") { 
+        try {
+          console.log("driver")
+          const id = await getDriverId(BigInt(Number(passenger.id)))
+          const response = await fetch(`http://localhost:8000/api/v1/history/passengers/${id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+  
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+          const {data} = await response.json();
+          console.log('Passenger data:', data);
+          setHistoryEntries(data.history)
+        } catch (error) {
+          console.error('Error:', error);
         }
-        const {data} = await response.json();
-        console.log('Passenger data:', data);
-        setHistoryEntries(data.history)
-      } catch (error) {
-        console.error('Error:', error);
+      }
+      else if (userRole === "passenger")  {
+        try {
+          console.log("passenger")
+          const response = await fetch(`http://localhost:8000/api/v1/history/drivers/${BigInt(Number(passenger.id))}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+  
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+          const {data} = await response.json();
+          console.log('Passenger data:', data);
+          setHistoryEntries(data.history)
+        } catch (error) {
+          console.error('Error:', error);
+        }
       }
     };
 
-    getPassengers(passenger);
+    getInformation(passenger);
   }, [passenger]); // Fetch data when 'passenger' prop changes
 
   // Filter function
