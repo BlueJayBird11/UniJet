@@ -54,10 +54,11 @@ class ForgotPasswordRoute extends BaseRoutes {
 
     this.router.put("/change-password/:id", async (req, res) => {
         try {
+            const id = BigInt(parseInt(req.params.id, 10));
             const hash = await bcrypt.hash(req.body.passwordHash, 10);
 
             const newResults = await pool.query("UPDATE passengers SET passwordHash = $2 WHERE id = $1 returning *",
-            [req.params.id, hash])
+            [id, hash])
     
             console.log(newResults.rows[0]);
             // console.log(results);
@@ -68,7 +69,31 @@ class ForgotPasswordRoute extends BaseRoutes {
           console.log(err);
         }
       });
+
+    this.router.get("/passenger-id/", async (req, res) => {
+        try {
+            // Extract the email from the query parameters
+            const email = req.query.email;
+    
+            // Make the database query to retrieve the passenger ID
+            const queryResult = await pool.query(
+                'SELECT id FROM passengers WHERE email=$1',
+                [email]
+            );
+    
+            // Extract the passenger ID from the query result
+            const passengerId = queryResult.rows[0]?.id;
+    
+            // Return the passenger ID in the response
+            res.json({ id: passengerId });
+        } catch (error) {
+            // Handle errors
+            console.error('Error retrieving passenger ID:', error);
+            res.status(500).json({ error: 'Failed to retrieve passenger ID.' });
+        }
+    });
   }
+
 }
 
 export default new ForgotPasswordRoute().router;
