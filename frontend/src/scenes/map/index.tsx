@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, CircleMarker, Popup, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, CircleMarker, Marker, Popup, Polyline, useMap } from 'react-leaflet';
+import { HomeIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
 import "leaflet/dist/leaflet.css";
 // import * as dotenv from "dotenv";
 // dotenv.config();
@@ -8,8 +9,8 @@ const Map: React.FC = () => {
   const [position, setPosition] = useState<[number, number] | null>(null);
   const [routeToDestination, setRouteToDestination] = useState<[number, number][] | null>(null);
   const [routeToUser, setRouteToUser] = useState<[number, number][] | null>(null);
-  const placeholderLocation = [32.541251162684404, -92.63578950465626]; // Example: Chase Bank Ruston
-  const driverLocation = [32.52424701643656, -92.67001400107138]; // Example: Driver's location
+  const placeholderLocation: [number, number] = [32.541251162684404, -92.63578950465626]; 
+  const driverLocation: [number, number] = [32.52424701643656, -92.67001400107138]; 
   const mapboxAccessToken = '';
 
   useEffect(() => {
@@ -77,6 +78,18 @@ const Map: React.FC = () => {
         <CircleMarker center={position} radius={5} fillColor="blue" fillOpacity={1}>
           <Popup>You are here</Popup>
         </CircleMarker>
+
+        {/* Placeholder location marker with home icon (not working) */}
+        <Marker position={placeholderLocation}>
+          <Popup>Placeholder Location</Popup>
+          <HomeIcon className="h-6 w-6 text-blue-500" />
+        </Marker>
+
+        {/* Driver location marker with rocket icon (not working)*/}
+        <Marker position={driverLocation}>
+          <Popup>Driver Location</Popup>
+          <RocketLaunchIcon className="h-6 w-6 text-red-500" />
+        </Marker>
 
         {routeToDestination && <Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />}
         {routeToUser && <Polyline positions={routeToUser} weight={10} opacity={0.3} color="red" />}
