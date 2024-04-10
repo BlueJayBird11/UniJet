@@ -7,7 +7,7 @@ import { Info, Passenger, SelectedPage } from './shared/types';
 import Profile from '@/scenes/profile';
 import NavigationBar from '@/scenes/navigationBar';
 import FindRider from '@/scenes/findRider';
-import FindDriver from '@/scenes/findDriver';
+import FindDriver from './scenes/findDriver';
 import History from '@/scenes/history';
 import Schedule from '@/scenes/schedule';
 import Map from '@/scenes/map';
@@ -28,6 +28,9 @@ import ChangePasswordPage from './scenes/loginAndSignup/ChangePasswordPage';
 import SignupPage from './scenes/loginAndSignup/SignupPage';
 import { UserRoleProvider } from './scenes/settings/userRole/UserRoleContext'; 
 import PhoneVerification from './scenes/settings/phoneNumber/PhoneVerification';
+import ConfirmRide from './scenes/map/searchDriver';
+import DriverFound from './scenes/map/driverFound';
+
 
 
 function App() {
@@ -107,6 +110,8 @@ function App() {
             <Route path="/history" element={<History />} />
             <Route path="/settings" element={<Settings passenger={passenger} name={''} email={''} message={''}/>} />
             <Route path="/findDriver" element={<FindDriver />} />
+            <Route path="/confirmRide" element={<ConfirmRide />} />
+            <Route path="/driverFound" element={<DriverFound />} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/map" element={<Map />} />
