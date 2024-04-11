@@ -155,6 +155,9 @@ const Map: React.FC<Props> = ({  passenger }) => {
     return () => {navigator.geolocation.clearWatch(watchId);isMounted.current = false;};
   }, [location.state]);
 
+//   return () => {navigator.geolocation.clearWatch(watchId);isMounted.current = false;};
+// }, [location.state]);
+
   const handleCancelRide = () => {
     if (isMounted.current) {
       setShowDriverOnTheWay(false);
@@ -182,8 +185,7 @@ const handleCancelRideFromArrivedModal = () => {
   setShowDriverArrivedModal(false);
   navigate('/map'); // Navigate back to the map or to a different screen as needed
 };
-    return () => navigator.geolocation.clearWatch(watchId);
-  }, []);
+    
 
   const fetchRoute = async (startLat: number, startLng: number, endLat: number, endLng: number, setRoute: React.Dispatch<React.SetStateAction<[number, number][] | null>>) => {
     const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${startLng},${startLat};${endLng},${endLat}?geometries=geojson&access_token=${mapboxAccessToken}`;
