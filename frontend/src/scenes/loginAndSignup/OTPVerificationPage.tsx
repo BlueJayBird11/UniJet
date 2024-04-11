@@ -13,7 +13,7 @@ const OTPVerificationPage: React.FC = () => {
             .then((response) => {
                 // Handle successful OTP verification
                 alert("OTP verified successfully.");
-                navigate('/change-password'); 
+                navigate('/change-password', { state: { email } }); 
             })
             .catch((error) => {
                 // Handle error in OTP verification
