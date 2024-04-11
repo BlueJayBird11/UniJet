@@ -10,9 +10,9 @@ import ForgotPassword from "./router/ForgotPassword";
 import StatusRouter from "./router/SettingsRouter";
 import DriverRouter from "./router/DriverRouter";
 import SMSVerificationRoute from './router/smsVerification';
+import RequestRouter from "./router/RequestRouter";
 import HistoryRouter from './router/HistoryRouter';
 import SchedulerRouter from './router/SchedulerRouter';
-
 
 class App {
   public app: Application;
@@ -40,6 +40,7 @@ class App {
     this.app.use("/api/v1/scheduler", SchedulerRouter);
     this.app.use("/api/v1/login", LoginRouter);
     this.app.use("/api/v1/settings", StatusRouter);
+    this.app.use("/api/v1/requests", RequestRouter);
     this.app.use("/api", ForgotPassword);
     this.app.use("/api", SMSVerificationRoute);
 

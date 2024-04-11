@@ -8,6 +8,8 @@
       {
         "button-name": "off"
       }
-    ]
+    ],
+    "typescript-config/consistent-casing": "off",
+    "typescript-config/strict": "off"
   }
 }
