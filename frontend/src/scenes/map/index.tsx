@@ -234,12 +234,12 @@ const handleCancelRideFromArrivedModal = () => {
 
   return (
     <div className="h-screen relative">
-      <MapContainer style={{ width: '100%', height: '85.5%' }} center={position} zoom={13} scrollWheelZoom={true} className="relative">
+      <MapContainer style={{ width: '100%', height: '90.5%' }} center={position} zoom={13} scrollWheelZoom={true} className="relative">
 
 
- // return (
+ {/* // return (
  //   <div className="h-screen relative">
- //     <MapContainer style={{ width: '100%', height: '90.5%' }} center={position} zoom={13} scrollWheelZoom={true}>
+ //     <MapContainer style={{ width: '100%', height: '90.5%' }} center={position} zoom={13} scrollWheelZoom={true}> */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
@@ -280,8 +280,8 @@ const handleCancelRideFromArrivedModal = () => {
           </Marker>
 
         ))}
-        {routeToDestination && <Polyline positions={routeToDestination} color="blue" />}
-        {routeToUser && <Polyline positions={routeToUser} color="red" />}
+        {/* {routeToDestination && <Polyline positions={routeToDestination} color="blue" />}
+        {routeToUser && <Polyline positions={routeToUser} color="red" />} */}
       </MapContainer>
 
       {showDriverOnTheWay && (
