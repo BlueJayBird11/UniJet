@@ -35,3 +35,10 @@ export interface Info {
   email: string,
   passwordHash: string
 }
+
+export interface RiderType {
+  name: string;
+  rating: number;
+  position: [number, number];
+  destination: string;
+}

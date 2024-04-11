@@ -7,7 +7,7 @@ import { Info, Passenger, SelectedPage } from './shared/types';
 import Profile from '@/scenes/profile';
 import NavigationBar from '@/scenes/navigationBar';
 import FindRider from '@/scenes/findRider';
-import FindDriver from '@/scenes/findDriver';
+import FindDriver from './scenes/findDriver';
 import History from '@/scenes/history';
 import Schedule from '@/scenes/schedule';
 import Map from '@/scenes/map';
@@ -18,6 +18,7 @@ import Settings from '@/scenes/settings';
 import DeleteAccount from './scenes/settings/deleteAccount';
 import EditEmail from './scenes/settings/editEmail';
 import EditName from './scenes/settings/editName';
+import ChangePassword from './scenes/settings/changePassword';
 import EditUniversity from './scenes/settings/editUniversity';
 import Logout from './scenes/settings/logout';
 import LoginPage from './scenes/loginAndSignup/LoginPage';
@@ -27,6 +28,9 @@ import ChangePasswordPage from './scenes/loginAndSignup/ChangePasswordPage';
 import SignupPage from './scenes/loginAndSignup/SignupPage';
 import { UserRoleProvider } from './scenes/settings/userRole/UserRoleContext'; 
 import PhoneVerification from './scenes/settings/phoneNumber/PhoneVerification';
+import ConfirmRide from './scenes/map/searchDriver';
+import DriverFound from './scenes/map/driverFound';
+
 
 
 function App() {
@@ -44,6 +48,18 @@ function App() {
   });
 
   const handleLogin = async(info: Info) => {
+    // setPassenger({
+    //   id: 0,
+    //   birthDate: "",
+    //   email: "jfr021@email.latech.edu",
+    //   phoneNumber: 1,
+    //   firstName: "Test",
+    //   lastName: "User",
+    //   userStatus: 0,
+    //   carPool: false,
+    // });
+    // setIsLoggedIn(true);
+
     try {
       const response = await fetch('http://localhost:8000/api/v1/login', {
         method: 'POST',
@@ -60,7 +76,6 @@ function App() {
       const data = await response.json();
 
       console.log('Login Success:', data);
-      if (data.token == 200) {
         setPassenger({
           id: data.passenger.id,
           birthDate: data.passenger.birthdate,
@@ -72,10 +87,6 @@ function App() {
           carPool: false,
         });
         setIsLoggedIn(true);
-      }
-      else {
-        console.log("Wrong Email or Password");
-      }
     
     } catch (error) {
       console.error('Error:', error);
@@ -103,17 +114,20 @@ function App() {
           <NavigationBar selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
           <Routes>
             <Route path="/profile" element={<Profile selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
-            <Route path="/history" element={<History />} />
+            <Route path="/history" element={<History selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
             <Route path="/settings" element={<Settings passenger={passenger} name={''} email={''} message={''}/>} />
             <Route path="/findDriver" element={<FindDriver />} />
+            <Route path="/confirmRide" element={<ConfirmRide />} />
+            <Route path="/driverFound" element={<DriverFound />} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
-            <Route path="/map" element={<Map />} />
+            <Route path="/map" element={<Map passenger={passenger}/>} />
             <Route path="/viewTimeSlot" element={<ViewTimeSlot />} />
             <Route path="/addTimeSlot" element={<AddTimeSlot />} />
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />
             <Route path="/delete-account" element={<DeleteAccount passenger={passenger}/>} />
             <Route path="/edit-email" element={<EditEmail passenger={passenger}/>} />
+            <Route path="/change-password" element={<ChangePassword/>} />
             <Route path="/edit-name" element={<EditName passenger={passenger}/>} />
             <Route path="/change-phone-number" element={<PhoneVerification />} />
             <Route path="/edit-university" element={<EditUniversity />} />
@@ -125,12 +139,12 @@ function App() {
     } else {
       return (
         <Routes>
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/otpverificationpage" element={<OTPVerificationPage />} />
           <Route path="/change-password" element={<ChangePasswordPage />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       );
     }

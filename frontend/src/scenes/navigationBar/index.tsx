@@ -20,7 +20,7 @@ const Navbar = ({selectedPage, setSelectedPage}: Props) => {
     const iconStyle = "h-10 w-10 text-black";
     return (
     <nav>
-        <div className='bg-primary-red flex w-full items-center justify-between fixed bottom-0 py-2 px-6 gap-2 z-50'>
+        <div className='bg-primary-red flex w-full items-center justify-between fixed bottom-0 py-2 px-6 gap-2 z-[400]'>
             <Link to ="/schedule">
                 <button className={`${buttonStyle} ${checkIfIsSelectedPage(SelectedPage.Schedule)}`} 
                     onClick={() => setSelectedPage(SelectedPage.Schedule)}
@@ -28,14 +28,14 @@ const Navbar = ({selectedPage, setSelectedPage}: Props) => {
                     <CalendarDaysIcon className={`${iconStyle}`}/>
                 </button>
             </Link>
-            <Link to ="/findDriver">
+            {/* <Link to ="/findDriver">
                 <button
                     className={`${buttonStyle} ${checkIfIsSelectedPage(SelectedPage.FindDriver)}`} 
                     onClick={() => setSelectedPage(SelectedPage.FindDriver)}   
                 >
                     <TruckIcon className={`${iconStyle}`}/>
                 </button>
-            </Link>
+            </Link> */}
             <Link to ="/map">
                 <button
                     className={`${buttonStyle} ${checkIfIsSelectedPage(SelectedPage.Map)}`}    
