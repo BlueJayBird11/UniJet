@@ -103,7 +103,7 @@ function App() {
           <NavigationBar selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
           <Routes>
             <Route path="/profile" element={<Profile selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
-            <Route path="/history" element={<History />} />
+            <Route path="/history" element={<History selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
             <Route path="/settings" element={<Settings passenger={passenger} name={''} email={''} message={''}/>} />
             <Route path="/findDriver" element={<FindDriver />} />
             <Route path="/findRider" element={<FindRider />} />

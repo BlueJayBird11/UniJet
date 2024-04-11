@@ -30,7 +30,7 @@
     "reflect-metadata": "^0.2.1",
     "sequelize": "^6.36.0",
     "sequelize-typescript": "^2.1.6",
-    "twilio": "^5.0.1",
+    "twilio": "^5.0.3",
     "zod": "^3.22.4"
   }
 }
