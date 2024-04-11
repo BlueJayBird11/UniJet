@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Marker, Popup, Polyline, useMap } from 'react-leaflet';
-import { HomeIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
+import L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 // import * as dotenv from "dotenv";
 // dotenv.config();
+
+const carIcon = L.icon({
+  iconUrl: '@/assets/car.png', 
+  iconSize: [32, 32], 
+});
+
+const destinationIcon = L.icon({
+  iconUrl: '@/assets/destination.png', 
+  iconSize: [32, 32], 
+});
 
 const Map: React.FC = () => {
   const [position, setPosition] = useState<[number, number] | null>(null);
@@ -79,16 +89,14 @@ const Map: React.FC = () => {
           <Popup>You are here</Popup>
         </CircleMarker>
 
-        {/* Placeholder location marker with home icon (not working) */}
-        <Marker position={placeholderLocation}>
-          <Popup>Placeholder Location</Popup>
-          <HomeIcon className="h-6 w-6 text-blue-500" />
+        {/* Placeholder location marker with destination icon */}
+        <Marker position={placeholderLocation} icon={destinationIcon}>
+          <Popup>Destination Location</Popup>
         </Marker>
 
-        {/* Driver location marker with rocket icon (not working)*/}
-        <Marker position={driverLocation}>
+        {/* Driver location marker with car icon */}
+        <Marker position={driverLocation} icon={carIcon}>
           <Popup>Driver Location</Popup>
-          <RocketLaunchIcon className="h-6 w-6 text-red-500" />
         </Marker>
 
         {routeToDestination && <Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />}
