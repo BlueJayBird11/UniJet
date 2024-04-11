@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, CircleMarker, Marker, Popup, Polyline, useMap } from 'react-leaflet';
+import L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import { useNavigate, useLocation } from 'react-router-dom';
 import loadingGif from './car.gif';
@@ -37,12 +38,22 @@ const ReachedDestinationModal = ({ driver, onRate }) => {
   );
 };
 
+const carIcon = L.icon({
+  iconUrl: '@/assets/car.png', 
+  iconSize: [32, 32], 
+});
+
+const destinationIcon = L.icon({
+  iconUrl: '@/assets/destination.png', 
+  iconSize: [32, 32], 
+});
+    
 const Map: React.FC<Props> = ({  passenger }) => {
   const [position, setPosition] = useState<[number, number] | null>(null);
   const [routeToDestination, setRouteToDestination] = useState<[number, number][] | null>(null);
   const [routeToUser, setRouteToUser] = useState<[number, number][] | null>(null);
-  const placeholderLocation = [32.541251162684404, -92.63578950465626]; // Example: Chase Bank Ruston
-  const driverLocation = [32.52424701643656, -92.67001400107138]; // Example: Driver's location
+  const placeholderLocation: [number, number] = [32.541251162684404, -92.63578950465626]; 
+  const driverLocation: [number, number] = [32.52424701643656, -92.67001400107138]; 
   const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
   // const riders: Array<RiderType> = [
   //   {
@@ -102,7 +113,7 @@ const Map: React.FC<Props> = ({  passenger }) => {
     }
   };
   
-  const location = useLocation();
+ const location = useLocation();
  const navigate = useNavigate();
  const [showDriverOnTheWay, setShowDriverOnTheWay] = useState(false);
  const [showDriverArrivedModal, setShowDriverArrivedModal] = useState(false);
@@ -124,7 +135,7 @@ const Map: React.FC<Props> = ({  passenger }) => {
 
  useEffect(() => {
   isMounted.current = true;
-    const watchId = navigator.geolocation.watchPosition(
+  const watchId = navigator.geolocation.watchPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         setPosition([latitude, longitude]);
@@ -186,7 +197,6 @@ const handleCancelRideFromArrivedModal = () => {
   navigate('/map'); // Navigate back to the map or to a different screen as needed
 };
     
-
   const fetchRoute = async (startLat: number, startLng: number, endLat: number, endLng: number, setRoute: React.Dispatch<React.SetStateAction<[number, number][] | null>>) => {
     const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${startLng},${startLat};${endLng},${endLat}?geometries=geojson&access_token=${mapboxAccessToken}`;
 
@@ -203,14 +213,59 @@ const handleCancelRideFromArrivedModal = () => {
   if (!position) {
     return <div>Loading...</div>;
   }
+  const ResetViewButton = () => {
+    const map = useMap();
+    const resetView = () => {
+      if (position) {
+        map.flyTo(position, 16);
+      }
+    };
 
- return (
+    return (
+      <button
+        onClick={resetView}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded absolute top-3 left-14 z-10"
+        style={{ zIndex: 9999 }}
+      >
+        Reset View
+      </button>
+    );
+  };
+
+  return (
     <div className="h-screen relative">
-      <MapContainer style={{ width: '100%', height: '90.5%' }} center={position} zoom={13} scrollWheelZoom={true}>
+      <MapContainer style={{ width: '100%', height: '85.5%' }} center={position} zoom={13} scrollWheelZoom={true} className="relative">
+
+
+ // return (
+ //   <div className="h-screen relative">
+ //     <MapContainer style={{ width: '100%', height: '90.5%' }} center={position} zoom={13} scrollWheelZoom={true}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
         />
+        {/* White outline marker */}
+        <CircleMarker center={position} radius={6} color="white" fillColor="white" fillOpacity={1} />
+
+        {/* Blue center marker */}
+        <CircleMarker center={position} radius={5} fillColor="blue" fillOpacity={1}>
+          <Popup>You are here</Popup>
+        </CircleMarker>
+
+        {/* Placeholder location marker with destination icon */}
+        <Marker position={placeholderLocation} icon={destinationIcon}>
+          <Popup>Destination Location</Popup>
+        </Marker>
+
+        {/* Driver location marker with car icon */}
+        <Marker position={driverLocation} icon={carIcon}>
+          <Popup>Driver Location</Popup>
+        </Marker>
+
+        {routeToDestination && <Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />}
+        {routeToUser && <Polyline positions={routeToUser} weight={10} opacity={0.3} color="red" />}
+
+        <ResetViewButton />
         {/* <Marker position={position}>
           <Popup>You are here</Popup>
         </Marker> */}
