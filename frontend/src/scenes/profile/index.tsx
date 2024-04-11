@@ -1,133 +1,131 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { Cog6ToothIcon } from "@heroicons/react/20/solid";
 import { Link } from 'react-router-dom';
 import { Passenger, SelectedPage } from '@/shared/types';
 
 type Props = {
-    selectedPage: SelectedPage;
-    setSelectedPage: (value: SelectedPage) => void;
-    passenger: Passenger;
+  selectedPage: SelectedPage;
+  setSelectedPage: (value: SelectedPage) => void;
+  passenger: Passenger;
 }
 
-const index = ({selectedPage, setSelectedPage, passenger}: Props) => {
-    const [rating, setRating] = useState(null); // null or some default value
+const index = ({ selectedPage, setSelectedPage, passenger }: Props) => {
+  const [rating, setRating] = useState(null); // null or some default value
 
-    const changeStatus = async(statusBool: boolean) => {
-        try {
-            let statusNum: number = 0;
-            if (statusBool == true)
-            {
-                statusNum = 0;
-            }
-            else
-            {
-                statusNum = 1;
-            }
-          const response = await fetch(`http://localhost:8000/api/v1/settings/status/${passenger.id}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({"newStatus": statusNum}), // Convert the passenger object to JSON
-          });
-    
-          if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-          }
-          passenger.userStatus = statusNum;
-    
-          const data = await response.json();
-          console.log('Success:', data);
-          // setShowModal(true);
-          //handleStatusClick();
-            onlineStatus(!offlineStatus)
+  const changeStatus = async (statusBool: boolean) => {
+    try {
+      let statusNum: number = 0;
+      if (statusBool == true) {
+        statusNum = 0;
+      }
+      else {
+        statusNum = 1;
+      }
+      const response = await fetch(`http://localhost:8000/api/v1/settings/status/${passenger.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "newStatus": statusNum }), // Convert the passenger object to JSON
+      });
 
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      };
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      passenger.userStatus = statusNum;
 
-    const getRating= async(id: number) => {
-        try {
-            
-          const response = await fetch(`http://localhost:8000/api/v1/passengers/rating/${passenger.id}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-    
-          if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-          }
-    
-          const data = await response.json();
-          console.log('Success:', data);
-          let rating = data.data.passenger.rating;
-          console.log(rating);
-          return rating;
+      const data = await response.json();
+      console.log('Success:', data);
+      // setShowModal(true);
+      //handleStatusClick();
+      onlineStatus(!offlineStatus)
 
-        } catch (error) {
-          console.error('Error:', error);
-          return 0.0;
-        }
-      };
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
-    const [offlineStatus, onlineStatus] = useState(false);
+  const getRating = async (id: number) => {
+    try {
 
-    const handleStatusClick = () => { 
-        changeStatus(!offlineStatus);
-    }; 
+      const response = await fetch(`http://localhost:8000/api/v1/passengers/rating/${passenger.id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-    useEffect(() => {
-        // Define the async function inside useEffect
-        const fetchRating = async () => {
-          try {
-            let tempNum = await getRating(passenger.id);
-            setRating(tempNum); // Update state with the fetched rating
-          } catch (error) {
-            console.error('Failed to fetch rating:', error);
-            // Handle error (e.g., set rating to a default value or show an error message)
-          }
-        };
-    
-        fetchRating(); // Execute the async function
-      }, [passenger.id]);
-      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
 
-    const name: string = passenger.firstName;    
+      const data = await response.json();
+      console.log('Success:', data);
+      let rating = data.data.passenger.rating;
+      console.log(rating);
+      return rating;
 
-    return (
-        <header className='relative'>
-            <div className='flex justify-end p-4'> 
-                <Link to="/settings">
-                    <button
-                        onClick={() => setSelectedPage(SelectedPage.Settings)}
-                    > 
-                        <Cog6ToothIcon className='w-10 h-10 text-primary-red'/>
-                    </button> 
-                </Link>
-            </div>
-            <div className='flex justify-center items-start'>
-                <h1 className='text-5xl font-bold text-primary-black mt-16'>
-                    Hello {name}!
-                </h1>
-            </div>
-            <div className='flex justify-center items-start'>
-                <h2 className='text-4xl font-bold text-primary-black mt-4'>
-                    Rating: {rating !== null ? rating : '0.0'}
-                </h2>
-            </div>
-            <div className='flex justify-center items-start'>
-                <button
-                        className={`text-3xl p-5 font-bold text-primary-black  rounded-full focus:outline-none mt-24 ${offlineStatus ? 'bg-primary-red' : 'bg-primary-green-500'}`}
-                        onClick={handleStatusClick}
-                    >
-                        {offlineStatus ? 'Offline' : 'Online'}
-                </button>
-            </div>
-        </header>
-    )
+    } catch (error) {
+      console.error('Error:', error);
+      return 0.0;
+    }
+  };
+
+  const [offlineStatus, onlineStatus] = useState(true);
+
+  const handleStatusClick = () => {
+    changeStatus(!offlineStatus);
+  };
+
+  useEffect(() => {
+    // Define the async function inside useEffect
+    const fetchRating = async () => {
+      try {
+        let tempNum = await getRating(passenger.id);
+        setRating(tempNum); // Update state with the fetched rating
+      } catch (error) {
+        console.error('Failed to fetch rating:', error);
+        // Handle error (e.g., set rating to a default value or show an error message)
+      }
+    };
+
+    fetchRating(); // Execute the async function
+  }, [passenger.id]);
+
+
+  const name: string = passenger.firstName;
+
+  return (
+    <header className='relative'>
+      <div className='flex justify-end p-4'>
+        <Link to="/settings">
+          <button
+            onClick={() => setSelectedPage(SelectedPage.Settings)}
+          >
+            <Cog6ToothIcon className='w-10 h-10 text-primary-red' />
+          </button>
+        </Link>
+      </div>
+      <div className='flex justify-center items-start'>
+        <h1 className='text-5xl font-bold text-primary-black mt-16'>
+          Hello {name}!
+        </h1>
+      </div>
+      <div className='flex justify-center items-start'>
+        <h2 className='text-4xl font-bold text-primary-black mt-4'>
+          Rating: {rating !== null ? rating : '0.0'}
+        </h2>
+      </div>
+      <div className='flex justify-center items-start'>
+        <button
+          className={`text-3xl p-5 font-bold text-primary-black  rounded-full focus:outline-none mt-24 ${offlineStatus ? 'bg-primary-red' : 'bg-primary-green-500'}`}
+          onClick={handleStatusClick}
+        >
+          {offlineStatus ? 'Offline' : 'Online'}
+        </button>
+      </div>
+    </header>
+  )
 }
 
 export default index

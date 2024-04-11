@@ -48,6 +48,18 @@ function App() {
   });
 
   const handleLogin = async(info: Info) => {
+    // setPassenger({
+    //   id: 0,
+    //   birthDate: "",
+    //   email: "jfr021@email.latech.edu",
+    //   phoneNumber: 1,
+    //   firstName: "Test",
+    //   lastName: "User",
+    //   userStatus: 0,
+    //   carPool: false,
+    // });
+    // setIsLoggedIn(true);
+
     try {
       const response = await fetch('http://localhost:8000/api/v1/login', {
         method: 'POST',
@@ -64,7 +76,6 @@ function App() {
       const data = await response.json();
 
       console.log('Login Success:', data);
-      if (data.token == 200) {
         setPassenger({
           id: data.passenger.id,
           birthDate: data.passenger.birthdate,
@@ -76,10 +87,6 @@ function App() {
           carPool: false,
         });
         setIsLoggedIn(true);
-      }
-      else {
-        console.log("Wrong Email or Password");
-      }
     
     } catch (error) {
       console.error('Error:', error);
@@ -107,14 +114,14 @@ function App() {
           <NavigationBar selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
           <Routes>
             <Route path="/profile" element={<Profile selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
-            <Route path="/history" element={<History />} />
+            <Route path="/history" element={<History selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
             <Route path="/settings" element={<Settings passenger={passenger} name={''} email={''} message={''}/>} />
             <Route path="/findDriver" element={<FindDriver />} />
             <Route path="/confirmRide" element={<ConfirmRide />} />
             <Route path="/driverFound" element={<DriverFound />} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
-            <Route path="/map" element={<Map />} />
+            <Route path="/map" element={<Map passenger={passenger}/>} />
             <Route path="/viewTimeSlot" element={<ViewTimeSlot />} />
             <Route path="/addTimeSlot" element={<AddTimeSlot />} />
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />
@@ -132,12 +139,12 @@ function App() {
     } else {
       return (
         <Routes>
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/otpverificationpage" element={<OTPVerificationPage />} />
           <Route path="/change-password" element={<ChangePasswordPage />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       );
     }

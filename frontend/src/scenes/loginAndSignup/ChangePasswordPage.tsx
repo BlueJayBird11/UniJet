@@ -1,23 +1,65 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import background from './background.png'; 
+import axios from 'axios';
 
 const ChangePasswordPage: React.FC = () => {
     const [newPassword, setNewPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
     const navigate = useNavigate();
-
+    const location = useLocation();
+    const { email } = location.state as { email: string };
+    
+    const getPassengerId = async (email: string): Promise<number> => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/passenger-id/', {
+                params: { email: email }
+            });
+            return response.data.id;
+        } catch (error) {
+            // Handle error in OTP verification
+            alert("Failed to get associated email. Please try again.");
+            throw error; // Rethrow error if necessary
+        }
+    };
+    
     const changePassword = async () => {
         if (newPassword !== confirmPassword) {
             alert("Passwords do not match.");
             return;
         }
 
-        console.log("New password:", newPassword);
-        alert("Your password has been changed successfully.");
-
-        navigate('/login'); 
+        else { 
+            try {
+                const id = await getPassengerId(email)
+                const response = await fetch(`http://localhost:8000/api/change-password/${id}`, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({"passwordHash": newPassword, "id": id}), // Convert the passenger object to JSON
+                });
+          
+                if (!response.ok) {
+                  throw new Error(`Error: ${response.status}`);
+                }
+          
+                const data = await response.json();
+                console.log('Success:', data);
+                var passed = true
+                // setShowModal(true);
+          
+              } catch (error) {
+                var passed = false
+                console.error('Error:', error);
+              }
+        }
+        if (passed) { 
+            console.log("New password:", newPassword);
+            alert("Your password has been changed successfully.");
+            navigate('/login'); 
+        }
     };
 
     return (
