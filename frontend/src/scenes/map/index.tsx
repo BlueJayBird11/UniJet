@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
+import { useNavigate, useLocation } from 'react-router-dom';
+import loadingGif from './car.gif';
 import { Passenger, RiderType } from '@/shared/types';
 // import * as dotenv from "dotenv";
 // dotenv.config();
@@ -8,6 +10,32 @@ import { Passenger, RiderType } from '@/shared/types';
 interface Props {
   passenger: Passenger;
 }
+
+const ReachedDestinationModal = ({ driver, onRate }) => {
+  const [driverRating, setDriverRating] = useState(0);
+
+  const renderRatingStars = () => {
+    return [...Array(5)].map((_, i) => (
+      <span key={i} style={{cursor: 'pointer', color: i < driverRating ? '#FFD700' : '#ccc', fontSize: '30px', textAlign:'center'}}onClick={() => setDriverRating(i + 1)}>
+        ★
+      </span>
+    ));
+  };
+
+  return (
+    <div style={{position: 'absolute',top: '45%',left: '50%',transform: 'translate(-50%, -50%)',backgroundColor: 'rgba(0, 0, 0, 0.85)',color: 'white',padding: '20px',borderRadius: '8px',zIndex: 10100,maxWidth: '400px',textAlign: 'left',}}>
+      <p style={{ fontSize:'lg',fontWeight:'bold', backgroundColor:'green', padding:'1px'}}>You have reached your destination !!</p>
+      <p><strong>Name:</strong> {driver.name}</p>
+      <p><strong>Car Model:</strong> {driver.carModel}</p>
+      <p><strong>Phone:</strong> {driver.phone}</p>
+      <p style={{ fontWeight: 'bold', marginBottom: '1em' }}>Rate the driver:</p>
+      <div>{renderRatingStars()}</div>
+      <button onClick={() => onRate(driverRating)} style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '5px', backgroundColor: 'green', color: 'white', cursor: 'pointer' }}>
+        Submit Rating
+      </button>
+    </div>
+  );
+};
 
 const Map: React.FC<Props> = ({  passenger }) => {
   const [position, setPosition] = useState<[number, number] | null>(null);
@@ -74,7 +102,28 @@ const Map: React.FC<Props> = ({  passenger }) => {
     }
   };
   
-  useEffect(() => {
+  const location = useLocation();
+ const navigate = useNavigate();
+ const [showDriverOnTheWay, setShowDriverOnTheWay] = useState(false);
+ const [showDriverArrivedModal, setShowDriverArrivedModal] = useState(false);
+ const [isCopied, setIsCopied] = useState(false);
+ const isMounted = useRef(true);
+ const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
+    }).catch(err => {
+      console.error('Could not copy text: ', err);
+    });
+  };
+ const [showEnrouteModal, setShowEnrouteModal] = useState(false);
+ const [showRateDriverModal, setShowRateDriverModal] = useState(false);
+
+
+ useEffect(() => {
+  isMounted.current = true;
     const watchId = navigator.geolocation.watchPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -86,6 +135,53 @@ const Map: React.FC<Props> = ({  passenger }) => {
       { enableHighAccuracy: true, maximumAge: 0 }
     );
 
+    if (location.state?.driverOnTheWay) {
+      setShowDriverOnTheWay(true);
+
+      // Instead of directly modifying state after a timeout, check if component is still mounted
+      const timeoutId = setTimeout(() => {
+        if (isMounted.current) {
+          setShowDriverOnTheWay(false);
+          setShowDriverArrivedModal(true);
+        }
+      }, 10000);
+
+      return () => {
+        clearTimeout(timeoutId);
+        isMounted.current = false;
+      };
+    }
+  
+    return () => {navigator.geolocation.clearWatch(watchId);isMounted.current = false;};
+  }, [location.state]);
+
+  const handleCancelRide = () => {
+    if (isMounted.current) {
+      setShowDriverOnTheWay(false);
+      navigate('/map');
+    }
+  };
+
+const handleConfirmRide = () => {
+  setShowDriverArrivedModal(false);
+  setShowEnrouteModal(true);
+  setTimeout(() => {
+    setShowEnrouteModal(false);
+    setShowRateDriverModal(true); // This will display the reached destination modal
+  }, 10000); // After enroute, show rate driver modal
+};
+
+const handleRateDriver = (rating) => {
+  // Here you would handle the rating logic
+  setShowRateDriverModal(false);
+  console.log(`Driver rated with: ${rating}`);
+  // You might want to navigate away or update some state here
+};
+
+const handleCancelRideFromArrivedModal = () => {
+  setShowDriverArrivedModal(false);
+  navigate('/map'); // Navigate back to the map or to a different screen as needed
+};
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
@@ -106,8 +202,8 @@ const Map: React.FC<Props> = ({  passenger }) => {
     return <div>Loading...</div>;
   }
 
-  return (
-    <div className="h-screen">
+ return (
+    <div className="h-screen relative">
       <MapContainer style={{ width: '100%', height: '90.5%' }} center={position} zoom={13} scrollWheelZoom={true}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -130,6 +226,65 @@ const Map: React.FC<Props> = ({  passenger }) => {
         {routeToDestination && <Polyline positions={routeToDestination} color="blue" />}
         {routeToUser && <Polyline positions={routeToUser} color="red" />}
       </MapContainer>
+
+      {showDriverOnTheWay && (
+        <div style={{position: 'absolute',top: '40%',left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(0, 0, 0, 0.75)',color: 'white',padding: '20px', borderRadius: '8px', zIndex: 10000, maxWidth: '400px', textAlign: 'center',}}>
+          <p>Driver is on the way!</p>
+          <p><strong>Name:</strong> {location.state.driver.name}</p>
+          <p><strong>Sex:</strong> {location.state.driver.sex}</p>
+          <p><strong>Car Model:</strong> {location.state.driver.carModel}</p>
+          <p><strong>Rating:</strong> {location.state.driver.rating}</p>
+          <p><strong>Phone:</strong> <span onClick={() => copyToClipboard(location.state.driver.phone)} style={{ cursor: 'pointer',fontWeight:'bold', textDecoration: 'underline' }}>{location.state.driver.phone}</span></p>
+          <button onClick={handleCancelRide} style={{
+            backgroundColor: 'rgb(220, 0, 0)', 
+            color: 'white', 
+            border: 'none', 
+            padding: '10px 20px', 
+            borderRadius: '5px', 
+            marginTop: '15px', 
+            cursor: 'pointer'
+          }}>
+            Cancel Ride
+          </button>
+        </div>
+      )}
+
+      {isCopied && (<div style={{position: 'absolute',bottom: '20%',left: '50%',transform: 'translateX(-50%)',backgroundColor: 'white',color: 'black',fontWeight:'bold' , padding: '8px 16px',borderRadius: '4px',zIndex: 10100,}}>Copied to clipboard!</div>)}
+
+      {showDriverArrivedModal && (
+        <div style={{position: 'absolute',top: '50%',left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(0, 0, 0, 0.75)',color: 'white',padding: '20px', borderRadius: '8px', zIndex: 10000, maxWidth: '400px', textAlign: 'left',}}>
+          <p style={{fontSize:'lg',fontWeight:'bold', backgroundColor:'green', padding:'2px'}}>Your driver is here!</p>
+          <p><strong>Name:</strong> {location.state.driver.name}</p>
+          <p><strong>Sex:</strong> {location.state.driver.sex}</p>
+          <p><strong>Car Model:</strong> {location.state.driver.carModel}</p>
+          <p><strong>Rating:</strong> {location.state.driver.rating}</p>
+          <p><strong>Phone:</strong> <span onClick={() => copyToClipboard(location.state.driver.phone)} style={{ cursor: 'pointer', fontWeight:'bold', textDecoration: 'underline' }}>{location.state.driver.phone}</span></p>
+          <p style={{fontSize:'lg', fontWeight:'bold',backgroundColor:'yellow', padding:'2px', color:'black'}}>Confirm to start ride.</p>
+          <button onClick={handleConfirmRide} style={{ backgroundColor: 'green', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', marginRight: '5px', width: '100%',  }}>Confirm</button>
+          <button onClick={handleCancelRideFromArrivedModal} style={{ backgroundColor: 'rgb(220, 0, 0)', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', marginRight: '5px', width: '100%' }}>Cancel Ride</button>
+        </div>
+      )}
+
+
+      {showEnrouteModal && (
+        <div style={{
+          position: 'absolute',top: '20%',left: '50%',transform: 'translate(-50%, -50%)',backgroundColor: 'rgba(0, 0, 0, 0.85)',color: 'white',padding: '20px',borderRadius: '8px',zIndex: 10100,display: 'flex',alignItems: 'center',justifyContent: 'center',}}>
+          <p style={{ margin: 0, marginRight: '10px', fontWeight:'bold' }}>Enroute...</p>
+          <img src={loadingGif} alt="Enroute..." style={{ height: '50px' }} />
+        </div>
+      )}
+
+      {showRateDriverModal && (
+        <ReachedDestinationModal driver={location.state.driver} onRate={handleRateDriver} />
+      )}
+
+
+      {/* Dev Button */}
+      <button
+        style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 1000, backgroundColor: 'red', color:'white', padding:'10px' }}
+        onClick={() => navigate('/confirmRide')}>
+        Dev
+      </button>
       <button onClick={getRequests} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-28 text-white hover:bg-blue-300'>Find Rider's</button>
       <button onClick={() => makeRequest(position)} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-40 text-white hover:bg-blue-300'>Request Driver</button>
     </div>
@@ -137,3 +292,4 @@ const Map: React.FC<Props> = ({  passenger }) => {
 };
 
 export default Map;
+

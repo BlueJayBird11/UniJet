@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import EditNameButton from "@/assets/edit_name.png";
-import EditEmailButton from "@/assets/edit_email.png";
-import EditUniversityButton from "@/assets/edit_university.png";
-import LogoutButton from "@/assets/logout.png";
-import DeleteAccountButton from "@/assets/delete_account.png";
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 import { Passenger } from '@/shared/types';
-import ChangePhoneNumberButton from "@/assets/change_number.png";
-import axios from 'axios';
 
 type Props = {
     passenger: Passenger;
@@ -100,8 +93,8 @@ const Settings = ({passenger}: Props) => {
         setShowReportModal(false);
     };
 
-    const images = [EditNameButton, EditEmailButton, EditUniversityButton, LogoutButton, DeleteAccountButton, ChangePhoneNumberButton];
-    const routes = ["/edit-name", "/edit-email", "/edit-university", "/logout", "/delete-account", "/change-phone-number"];
+    const buttonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-white text-black";
+    const dangerButtonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-red-500 text-white";
 
     return (
         <div className='flex flex-col items-center bg-primary-blue-100 relative px-4 py-6'>
@@ -123,17 +116,50 @@ const Settings = ({passenger}: Props) => {
                 </div>
             </div>
             
-            {images.map((image, index) => (
-                <Link key={index} to={routes[index]}>
-                    <button>
-                        <img src={image} alt={`Button ${index+1}`} style={{width: '200px', height: '65px'}}/>
-                    </button>
-                </Link>
-            ))}
+            <Link to="/edit-name">
+                <button className={buttonStyles}>
+                    Edit Name
+                </button>
+            </Link>
+            <Link to="/edit-email">
+                <button className={buttonStyles}>
+                    Edit Email
+                </button>
+            </Link>
+            <Link to="/edit-university">
+                <button className={buttonStyles}>
+                    Edit University
+                </button>
+            </Link>
+            <Link to="/change-password">
+                <button className={buttonStyles}>
+                    Change Password
+                </button>
+            </Link>
+            <Link to="/change-phone-number">
+                <button className={buttonStyles}>
+                    Change Phone Number
+                </button>
+            </Link>
+            <Link to="/delete-account">
+                <button className={dangerButtonStyles}>
+                    Delete Account
+                </button>
+            </Link>
 
             <button onClick={() => setShowReportModal(true)} className="absolute top-0 right-0 mt-4 mr-4 bg-red-500 text-white px-4 py-2 rounded md:mt-6 md:mr-6">
                 Report Issue
             </button>
+
+            <div className="mt-10">
+                <Link to="/logout">
+                    <button className="bg-red-500 text-white font-bold py-2 px-4 rounded">
+                        Logout
+                    </button>
+                </Link>
+            </div>
+
+            
 
             {showReportModal && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
