@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700&family=Montserrat:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -11,7 +11,16 @@ body,
 .app {
     height: 100%;
     width: 100%;
-    font-family: "DM Sans", sans-serif;
+    font-family: "Roboto", sans-serif;
     @apply text-primary-black; 
 }
 /* //text-gray-500 */
+
+@layer base {
+    .font-outline-1 {
+      -webkit-text-stroke: 0.3px white;
+    }
+    .font-outline-2 {
+      -webkit-text-stroke: 2px white;
+    }
+  }
