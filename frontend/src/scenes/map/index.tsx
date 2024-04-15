@@ -13,7 +13,7 @@ interface Props {
 }
 
 const ReachedDestinationModal = ({ driver, onRate }) => {
-  const [driverRating, setDriverRating] = useState(0);
+  const [driverRating, setDriverRating] = useState(5);
 
   const renderRatingStars = () => {
     return [...Array(5)].map((_, i) => (
