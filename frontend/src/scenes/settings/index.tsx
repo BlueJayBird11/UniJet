@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
-import EditNameButton from "@/assets/edit_name.png";
-import EditEmailButton from "@/assets/edit_email.png";
-import EditUniversityButton from "@/assets/edit_university.png";
-import LogoutButton from "@/assets/logout.png";
-import DeleteAccountButton from "@/assets/delete_account.png";
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 import { Passenger } from '@/shared/types';
 
@@ -97,12 +92,12 @@ const Settings = ({passenger}: Props) => {
         setShowReportModal(false);
     };
 
-    const buttonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-white text-black";
-    const dangerButtonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-red-500 text-white";
+    const buttonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-primary-white text-primary-black";
+    const dangerButtonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-primary-red text-primary-white";
 
     return (
-        <div className='flex flex-col items-center bg-primary-blue-100 relative px-4 py-6'>
-            <div className="absolute top-0 left-0 mt-4 ml-4 flex items-center text-white">
+        <div className='flex flex-col items-center bg-primary-blue relative px-4 py-6'>
+            <div className="absolute top-0 left-0 mt-4 ml-4 flex items-center text-primary-white">
                 <Link to="/" className="flex items-center">
                     <ChevronLeftIcon className="h-5 w-5 mr-1" /> 
                     Back

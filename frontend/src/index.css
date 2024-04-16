@@ -15,12 +15,3 @@ body,
     @apply text-primary-black; 
 }
 /* //text-gray-500 */
-
-@layer base {
-    .font-outline-1 {
-      -webkit-text-stroke: 0.3px white;
-    }
-    .font-outline-2 {
-      -webkit-text-stroke: 2px white;
-    }
-  }

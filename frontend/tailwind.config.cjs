@@ -11,14 +11,15 @@ export default {
         "gray-50": "#EFE6E6",
         "gray-100": "#DFCCCC",
         "gray-500": "#5E0000",
-        "primary-blue": "#003085",
-        "primary-red": "#CA333A",
-        "primary-green-500": "#92D36E",
+        "gray-600": "#7CDEDC", // scheduler blocks
+        "primary-blue": "#003085", // background profile
+        "primary-red": "#CA333A", // nav bar 
+        "primary-green-500": "#92D36E", // nav bar circles
         "primary-green-300": "#b1e098",
         "secondary-400": "#FFCD5B",
         "secondary-500": "#FFC132",
         "primary-white": "#FFFFFF",
-        "primary-black": "#000002",
+        "primary-black": "#000002", // text/icons
       },
       fontFamily: {
         dmsans: ["DM Sans", "sans-serif"],

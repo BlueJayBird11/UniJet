@@ -107,23 +107,16 @@ const index = ({ selectedPage, setSelectedPage, passenger }: Props) => {
         </Link>
       </div>
       <div className='flex justify-center items-start'>
-        <h1 className='text-5xl font-bold text-primary-black mt-16 font-outline-1'>
+        <h1 className='text-5xl font-bold text-primary-black mt-16'>
           Hello {name}!
         </h1>
       </div>
       <div className='flex justify-center items-start'>
-        <h2 className='text-4xl font-bold text-primary-black mt-4 font-outline-1'>
+        <h2 className='text-4xl font-bold text-primary-black mt-4'>
           Rating: {rating !== null ? rating : '0.0'}
         </h2>
       </div>
-      <div className='flex justify-center items-start'>
-        <button
-          className={`text-3xl p-5 font-bold text-primary-black  rounded-full focus:outline-none mt-24 ${offlineStatus ? 'bg-primary-red' : 'bg-primary-green-500'}`}
-          onClick={handleStatusClick}
-        >
-          {offlineStatus ? 'Offline' : 'Online'}
-        </button>
-      </div>
+
     </header>
   )
 }
