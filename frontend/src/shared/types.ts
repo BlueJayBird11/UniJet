@@ -37,6 +37,7 @@ export interface Info {
 }
 
 export interface RiderType {
+  id: number;
   name: string;
   rating: number;
   position: [number, number];

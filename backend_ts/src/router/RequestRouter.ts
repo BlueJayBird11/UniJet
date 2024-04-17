@@ -1,6 +1,6 @@
 import BaseRoutes from "./base/BaseRouter";
 import pool from "../db";
-import { RiderType } from "../shared/types";
+import { OnGoingTrip, RiderType } from "../shared/types";
 
 // {
 //     name: "Ash",
@@ -11,14 +11,52 @@ import { RiderType } from "../shared/types";
 //     destination: "Chase Bank"
 // }
 
-var requests: Array<RiderType> = [
+var requests: Array<RiderType> = [];
+
+// {
+//   id: 0,
+//   name: "Ash",
+//   rating: 5.0,
+//   position: [32.541251162684404, -92.63578950465626],
+//   destination: "Chase Bank",
+// },
+
+function getTime(date:Date):string{
+  let hours=date.getHours();
+  let minutes=date.getMinutes();
+  let time: string = hours+":"+minutes;
+  console.log("Current Time: "+ time); 
+  return time;
+}
+
+function getDate(date:Date):string{
+  let day=date.getDate();
+  let month=date.getMonth()+1;
+  let year=date.getFullYear();
+  let compDate: string = month+"/"+day+"/"+year;
+  console.log("Current Date: "+ compDate); 
+  return compDate;
+}
+
+var requestIdCount = 0;
+
+var onGoing: Array<OnGoingTrip> = [
   {
-    name: "Ash",
-    rating: 5.0,
-    position: [32.541251162684404, -92.63578950465626],
-    destination: "Chase Bank",
-  },
-];
+    tripId: 1,
+    passengerId: 1,
+    driverId: 2,
+    passengerName: "Jay Reich",
+    driverName: "Josiah Norman",
+    passengerStartLocation:  [32.541251162684404, -92.63578950465626],
+    passengerLocation: [32.541251162684404, -92.63578950465626],
+    driverLocation: [32.541251162684404, -92.63578950465626],
+    destination: "IESB",
+    startTime: getTime(new Date()),
+    rideDate: getDate(new Date())
+  }
+]
+
+console.log(onGoing);
 
 class RequestRoutes extends BaseRoutes {
   routes(): void {
@@ -35,6 +73,7 @@ class RequestRoutes extends BaseRoutes {
         console.log(result.rows[0].firstname);
 
         requests.push({
+          id: result.rows[0].id,
           name: result.rows[0].firstname + " " + result.rows[0].lastname,
           rating: result.rows[0].rating,
           position: req.body.location,
@@ -60,6 +99,82 @@ class RequestRoutes extends BaseRoutes {
           data: {
             passengers: requests,
           },
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    this.router.post("/accept-request", async (req, res) => {
+      try {
+        var date: Date = new Date();
+        var tripData = {
+          tripId: requestIdCount,
+          passengerId: req.body.passengerId,
+          driverId: req.body.driverId,
+          passengerName: req.body.passengerName,
+          driverName: req.body.driverName,
+          passengerStartLocation:  req.body.passengerLocation,
+          passengerLocation: req.body.passengerLocation,
+          driverLocation: req.body.driverLocation,
+          destination: req.body.destination,
+          startTime: getTime(date),
+          rideDate: getDate(date)
+        }
+        requestIdCount++;
+
+        onGoing.push(tripData);
+
+
+        res.status(200).json({
+          status: "success",
+          data: {
+            request: tripData
+          }
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    this.router.post("/update-request-passenger", async (req, res) => {
+      try {
+        let tripData = null;
+        for (let i = 0; i < onGoing.length; i++) {
+          if(onGoing[i].tripId == req.body.tripId)
+            {
+              onGoing[i].passengerLocation = req.body.location;
+              tripData = onGoing[i];
+            }
+        }
+
+        res.status(200).json({
+          status: "success",
+          data: {
+            request: tripData
+          }
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    this.router.post("/update-request-driver", async (req, res) => {
+      try {
+        let tripData = null;
+        for (let i = 0; i < onGoing.length; i++) {
+          if(onGoing[i].tripId == req.body.tripId)
+            {
+              onGoing[i].driverLocation = req.body.location;
+              tripData = onGoing[i];
+            }
+        }
+
+        res.status(200).json({
+          status: "success",
+          data: {
+            request: tripData
+          }
         });
       } catch (err) {
         console.log(err);

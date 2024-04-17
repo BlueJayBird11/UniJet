@@ -99,6 +99,7 @@ const Map: React.FC<Props> = ({  passenger }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          id: passenger.id,
           email: passenger.email,
           location: userPosition,
           destination: "IESB"
