@@ -8,6 +8,11 @@ type Props = {
 
 const EditEmail = ({passenger}: Props) => {
   const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+
+  const validateEmail = (email: string): boolean => {
+    return email.endsWith('@email.latech.edu');
+  };
 
   const changeEmail = async() => {
     try {
@@ -26,7 +31,6 @@ const EditEmail = ({passenger}: Props) => {
       const data = await response.json();
       passenger.email = email;
       console.log('Success:', data);
-      // setShowModal(true);
 
     } catch (error) {
       console.error('Error:', error);
@@ -35,13 +39,18 @@ const EditEmail = ({passenger}: Props) => {
 
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
     setEmail(event.currentTarget.value);
+    setError('');
   };
 
   const handleSubmit = async(event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(`New email: ${email}`);
-    await changeEmail(); // Call changeEmail function to update email
-    window.history.back(); // Navigate back to previous page
+    if (validateEmail(email)) {
+      console.log(`New email: ${email}`);
+      await changeEmail();
+      window.history.back(); 
+    } else {
+      setError('Email must end with @email.latech.edu');
+    }
   };
 
   return (
@@ -66,6 +75,7 @@ const EditEmail = ({passenger}: Props) => {
             value={email}
             onChange={handleChange}
           />
+          {error && <p className="text-red-500 text-xs italic">{error}</p>}
         </div>
         <div className="flex items-center justify-between">
           <button
