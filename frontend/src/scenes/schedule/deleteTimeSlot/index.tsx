@@ -47,7 +47,7 @@ const DeleteTimeSlot = () => {
       ) : (
         <div className="flex flex-wrap justify-center gap-4">
           {data.map((slot, index) => (
-            <div key={index} className="relative max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-primary-red">
+            <div key={index} className="relative max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-viewTimeSlots">
               {/* Delete button */}
               <div className="absolute top-0 right-0 m-2 bg-primary-blue rounded-full p-1">
                 <button

@@ -102,7 +102,7 @@ const index = ({ selectedPage, setSelectedPage, passenger }: Props) => {
           <button
             onClick={() => setSelectedPage(SelectedPage.Settings)}
           >
-            <Cog6ToothIcon className='w-10 h-10 text-primary-red' />
+            <Cog6ToothIcon className='w-10 h-10 text-settingsIconColor' />
           </button>
         </Link>
       </div>

@@ -71,46 +71,52 @@ const AddTimeSlot: React.FC = () => {
       <h1 className="mb-4 text-3xl font-bold">Add Time Slot </h1>
       <div className="mt-8">
         <div className="mb-16">
-          <label htmlFor="subject" className="mr-2 text-xl">Subject:</label>
-          <select
-            id="subject"
-            className="border rounded p-2"
-            value={selectedSubject}
-            onChange={(e) => setSelectedSubject(e.target.value)}
-          >
-            <option value="">Select Subject</option>
-            {subjects.map((subject, index) => (
-              <option key={index} value={subject}>{subject}</option>
-            ))}
-          </select>
+          <div className={`bg-viewTimeSlots rounded-lg p-4`}>
+            <label htmlFor="subject" className="mr-2 text-xl">Subject:</label>
+            <select
+              id="subject"
+              className="border rounded p-2 w-full"
+              value={selectedSubject}
+              onChange={(e) => setSelectedSubject(e.target.value)}
+            >
+              <option value="">Select Subject</option>
+              {subjects.map((subject, index) => (
+                <option key={index} value={subject}>{subject}</option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="mb-16">
-          <label htmlFor="course" className="mr-2 text-xl">Course:</label>
-          <select
-            id="course"
-            className="border rounded p-2"
-            value={selectedCourse}
-            onChange={(e) => setSelectedCourse(e.target.value)}
-          >
-            <option value="">Select Course</option>
-            {courses.map((course, index) => (
-              <option key={index} value={course}>{course}</option>
-            ))}
-          </select>
+          <div className={`bg-viewTimeSlots rounded-lg p-4`}>
+            <label htmlFor="course" className="mr-2 text-xl">Course:</label>
+            <select
+              id="course"
+              className="border rounded p-2 w-full"
+              value={selectedCourse}
+              onChange={(e) => setSelectedCourse(e.target.value)}
+            >
+              <option value="">Select Course</option>
+              {courses.map((course, index) => (
+                <option key={index} value={course}>{course}</option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="mb-16">
-          <label htmlFor="section" className="mr-2 text-xl">Section:</label>
-          <select
-            id="section"
-            className="border rounded p-2"
-            value={selectedSection}
-            onChange={(e) => setSelectedSection(e.target.value)}
-          >
-            <option value="">Select Section</option>
-            {sections.map((section, index) => (
-              <option key={index} value={section}>{section}</option>
-            ))}
-          </select>
+          <div className={`bg-viewTimeSlots rounded-lg p-4`}>
+            <label htmlFor="section" className="mr-2 text-xl">Section:</label>
+            <select
+              id="section"
+              className="border rounded p-2 w-full"
+              value={selectedSection}
+              onChange={(e) => setSelectedSection(e.target.value)}
+            >
+              <option value="">Select Section</option>
+              {sections.map((section, index) => (
+                <option key={index} value={section}>{section}</option>
+              ))}
+            </select>
+          </div>
         </div>
         {/* Display submit button only when all form fields are filled */}
         {(selectedSubject && selectedCourse && selectedSection) && (

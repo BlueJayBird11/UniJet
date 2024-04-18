@@ -44,8 +44,8 @@ const getDriverId: (id: bigint) => Promise<bigint> = async (id) => {
 // Define the component for a single history entry
 const HistoryEntry = ({ date, name, totalTime, amount, userRole }: HistoryEntryProps) => {
   const entryStyle = "bg-gray-600 rounded-[20px] px-2 py-4 mb-4";
-  const textStyle = "text-black text-xl font-bold";
-  const detailTextStyle = "text-black text-lg";  
+  const textStyle = "text-primary-black text-xl font-bold";
+  const detailTextStyle = "text-primary-black text-lg";  
 
   const roleSpecificText = userRole === 'driver' ? 'Passenger: ' : 'Driver: ';
   const amountText = userRole === 'driver' ? 'Earnings: ' : 'Payment: ';
@@ -150,7 +150,7 @@ const History: React.FC<Props> = ({ selectedPage, setSelectedPage, passenger }: 
           type="date" 
           value={searchDate}
           onChange={(e) => setSearchDate(e.target.value)}
-          className="mb-4 p-2 w-full max-w-2xl mx-auto bg-gray-400 text-white" // Changed to bg-gray-400 and text-white
+          className="mb-4 p-2 w-full max-w-2xl mx-auto bg-gray-600 text-white" // Changed to bg-gray-400 and text-white
           placeholder="Search by Date"
           style={{ display: 'block' }}
         />

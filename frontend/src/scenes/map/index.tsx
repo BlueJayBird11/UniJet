@@ -342,7 +342,7 @@ const handleCancelRideFromArrivedModal = () => {
         onClick={() => navigate('/confirmRide')}>
         Dev
       </button>
-      <button onClick={getRequests} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-28 text-white hover:bg-blue-300'>Find Rider's</button>
+      <button onClick={getRequests} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-28 text-white hover:bg-blue-300'>Find Passengers</button>
       <button onClick={() => makeRequest(position)} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-40 text-white hover:bg-blue-300'>Request Driver</button>
     </div>
   );

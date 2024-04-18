@@ -27,7 +27,7 @@ const ViewTimeSlot = () => {
       ) : (
         <div className="flex flex-wrap justify-center gap-4">
           {data.map((slot, index) => (
-            <div key={index} className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-primary-red">
+            <div key={index} className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-viewTimeSlots">
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">{slot.name}</div>
                 <p className="text-slate-300 text-base">

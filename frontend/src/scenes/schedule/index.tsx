@@ -175,7 +175,7 @@ function Schedule() {
                       {row.cells.map((cell) => (
                         <td
                           {...cell.getCellProps()}
-                          className={`border border-rose-100 w-10 h-10 ${cell.value === 1 ? 'bg-primary-red' : 'bg-gray-600'}`}
+                          className={`border border-rose-100 w-10 h-10 ${cell.value === 1 ? 'bg-takenblocks' : 'bg-gray-600'}`}
                         >
                         </td>
                       ))}

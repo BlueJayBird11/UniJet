@@ -11,15 +11,18 @@ export default {
         "gray-50": "#EFE6E6",
         "gray-100": "#DFCCCC",
         "gray-500": "#5E0000",
-        "gray-600": "#7CDEDC", // scheduler blocks
-        "primary-blue": "#003085", // background profile
-        "primary-red": "#CA333A", // nav bar 
-        "primary-green-500": "#92D36E", // nav bar circles
+        "gray-600": "#2E4659", // scheduler blocks
+        "takenblocks" : "#202020", // taken blocks
+        "viewTimeSlots" : "#2E4659", // view time slot blocks
+        "primary-blue": "#202020", // background profile/ bg scheduler
+        "primary-red": "#98c1d9", // nav bar 
+        "settingsIconColor": "202020", // setting icon
+        "primary-green-500": "#2E4659", // nav bar circles
         "primary-green-300": "#b1e098",
         "secondary-400": "#FFCD5B",
         "secondary-500": "#FFC132",
         "primary-white": "#FFFFFF",
-        "primary-black": "#000002", // text/icons
+        "primary-black": "#DFDFDF", // text/icons
       },
       fontFamily: {
         dmsans: ["DM Sans", "sans-serif"],
