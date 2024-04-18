@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import placeholderData from "../MOCK_DATA.json";
 import currData from "../CURR_DATA.json";
 import { Link } from 'react-router-dom';
+import { Passenger } from '@/shared/types';
 
-const AddTimeSlot: React.FC = () => {
+type Props = {
+  passenger: Passenger;
+}
+
+const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
   const [selectedSubject, setSelectedSubject] = useState<string>('');
   const [selectedCourse, setSelectedCourse] = useState<string>('');
   const [selectedSection, setSelectedSection] = useState<string>('');
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
   const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [subjectList, setSubjectList] = useState<string[]>([]); 
+  const [courseList, setCourseList] = useState<string[]>([]); 
+  const [sectionList, setSectionList] = useState<string[]>([]); 
+
 
   // Function to handle form submission
   const handleSubmit = () => {
@@ -50,8 +59,106 @@ const AddTimeSlot: React.FC = () => {
   };
 
   // Sort subjects alphabetically
-  const subjects: string[] = [...new Set(placeholderData.map(item => item.subject))].sort();
+  //const subjects: string[] = [...new Set(placeholderData.map(item => item.subject))].sort();
+  /*const getInformation = async (passenger: Passenger) => {
+      console.log(userRole)
+      if (userRole === "driver") { 
+        try {
+          console.log("driver")
+          const id = await getDriverId(BigInt(Number(passenger.id)))
+          const response = await fetch(`http://localhost:8000/api/v1/history/passengers/${id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+  
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+          const {data} = await response.json();
+          console.log('Passenger data:', data);
+          setHistoryEntries(data.history)
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }*/
+    useEffect(() => {
+      const fetchSubjects = async () => { 
+        try {
+          const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+    
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+    
+          const { data } = await response.json();
+          console.log('Passenger data:', data.subject);
+          setSubjectList(data.subject || []); // Use default empty array if data.subject is undefined
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+    
+      fetchSubjects();
+    }, []);
 
+    useEffect(() => {
+      const fetchCourse = async () => { 
+        try {
+          console.log("RIGHT HERE")
+          console.log(selectedSubject)
+          const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/course/${selectedSubject}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+          const { data } = await response.json();
+          console.log('Passenger data:', data.course);
+          setCourseList(data.course || []); // Use default empty array if data.subject is undefined
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+    
+      fetchCourse();
+    }, [selectedSubject]);
+
+    useEffect(() => {
+      const fetchSection = async () => { 
+        try {
+          console.log("RIGHT HERE")
+          console.log(selectedSubject)
+          const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/course/section/${selectedSubject}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+          const { data } = await response.json();
+          console.log('Passenger data:', data.course);
+          setSectionList(data.course || []); // Use default empty array if data.subject is undefined
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+    
+      fetchSection();
+    }, [selectedCourse]);
+
+    /*
   // Filter courses based on selected subject and sort numerically
   const courses: string[] = selectedSubject ? [...new Set(placeholderData
     .filter(item => item.subject === selectedSubject)
@@ -65,6 +172,7 @@ const AddTimeSlot: React.FC = () => {
     .map(item => item.section)
     .sort((a, b) => parseInt(a) - parseInt(b))
   )] : [];
+  */
 
   return (
     <div className="flex flex-col justify-center items-center h-full">
@@ -79,8 +187,8 @@ const AddTimeSlot: React.FC = () => {
             onChange={(e) => setSelectedSubject(e.target.value)}
           >
             <option value="">Select Subject</option>
-            {subjects.map((subject, index) => (
-              <option key={index} value={subject}>{subject}</option>
+            {(subjectList as any[]).map((subject, index) => (
+              <option key={index} value={subject.classsubject}>{subject.classsubject}</option>
             ))}
           </select>
         </div>
@@ -93,8 +201,8 @@ const AddTimeSlot: React.FC = () => {
             onChange={(e) => setSelectedCourse(e.target.value)}
           >
             <option value="">Select Course</option>
-            {courses.map((course, index) => (
-              <option key={index} value={course}>{course}</option>
+            {(courseList as any[]).map((course, index) => (
+              <option key={index} value={course.coursenumber}>{course.coursenumber}</option>
             ))}
           </select>
         </div>
@@ -107,8 +215,8 @@ const AddTimeSlot: React.FC = () => {
             onChange={(e) => setSelectedSection(e.target.value)}
           >
             <option value="">Select Section</option>
-            {sections.map((section, index) => (
-              <option key={index} value={section}>{section}</option>
+            {(sectionList as any[]).map((section, index) => (
+              <option key={index} value={section.section}>{section.section}</option>
             ))}
           </select>
         </div>
@@ -151,6 +259,6 @@ const AddTimeSlot: React.FC = () => {
       <Link to="/schedule" className="mt-4 text-blue-500 hover:text-blue-700">Back to Schedule</Link>
     </div>
   );
-}
+  }
 
 export default AddTimeSlot;

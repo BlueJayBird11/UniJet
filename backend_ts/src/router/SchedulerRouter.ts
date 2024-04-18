@@ -32,7 +32,8 @@ class SchedulerRoutes extends BaseRoutes {
             try {
                 const subj = req.params.subj
                 const results = await pool.query(`SELECT DISTINCT
-                    classes.coursenumber \ 
+                    classes.coursenumber, \ 
+                    classes.id \
                     FROM public.classes \
                     WHERE classsubject = $1 \
                     ORDER BY classes.coursenumber ASC;`,
@@ -43,34 +44,7 @@ class SchedulerRoutes extends BaseRoutes {
                     status: "success",
                     results: results.rows.length,
                     data: {
-                        subject: results.rows
-                    },
-                });
-            } catch (err) {
-                console.error(err);
-                res.status(500).json({
-                    status: "error",
-                    message: "Internal server error"
-                });
-            }
-        });
-
-        this.router.get("/subjects/course/:subj", async (req, res) => {
-            try {
-                const subj = req.params.subj
-                const results = await pool.query(`SELECT DISTINCT
-                    classes.coursenumber \ 
-                    FROM public.classes \
-                    WHERE classsubject = $1 \
-                    ORDER BY classes.coursenumber ASC;`,
-                    [subj]);
-
-                console.log(results.rows);
-                res.status(200).json({
-                    status: "success",
-                    results: results.rows.length,
-                    data: {
-                        subject: results.rows
+                        course: results.rows
                     },
                 });
             } catch (err) {

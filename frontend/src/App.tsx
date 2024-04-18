@@ -123,7 +123,7 @@ function App() {
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/map" element={<Map passenger={passenger}/>} />
             <Route path="/viewTimeSlot" element={<ViewTimeSlot />} />
-            <Route path="/addTimeSlot" element={<AddTimeSlot />} />
+            <Route path="/addTimeSlot" element={<AddTimeSlot passenger={passenger} />} />
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />
             <Route path="/delete-account" element={<DeleteAccount passenger={passenger}/>} />
             <Route path="/edit-email" element={<EditEmail passenger={passenger}/>} />
