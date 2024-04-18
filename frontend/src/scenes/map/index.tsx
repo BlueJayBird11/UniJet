@@ -274,7 +274,7 @@ const handleCancelRideFromArrivedModal = () => {
           <Marker key={rider.name} position={rider.position}>
             <Popup className='items-center justify-center'>
               <p>Name: {rider.name}</p> 
-              <p>Rating: {rider.rating !== null ? rider.rating : '0.0 - New Account'}</p> 
+              <p>Rating: {rider.rating !== null ? rider.rating : '5.0'}</p> 
               <p>Destination: {rider.destination}</p>
               <button className='bg-blue-700 rounded-full p-2 text-white'>Accept</button>
             </Popup>
