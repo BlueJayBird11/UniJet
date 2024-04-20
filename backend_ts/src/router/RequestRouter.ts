@@ -4,15 +4,6 @@ import BaseRoutes from "./base/BaseRouter";
 import pool from "../db";
 import { OnGoingTrip, RiderType } from "../shared/types";
 
-// {
-//     name: "Ash",
-//     rating: 5.0,
-//     payMin: 9,
-//     payMax: 11,
-//     position: [32.541251162684404, -92.63578950465626],
-//     destination: "Chase Bank"
-// }
-
 var requests: Array<RiderType> = [];
 
 // {
@@ -23,10 +14,22 @@ var requests: Array<RiderType> = [];
 //   destination: "Chase Bank",
 // },
 
+// '2024-02-24 08:20:01-05'
+function timeForDB(date:Date):string{
+  let hours=date.getHours();
+  let minutes=date.getMinutes();
+  let seconds=date.getSeconds();
+  let day=date.getDate();
+  let month=date.getMonth()+1;
+  let year=date.getFullYear();
+  return (year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds+"-05");
+}
+
 function getTime(date:Date):string{
   let hours=date.getHours();
   let minutes=date.getMinutes();
-  let time: string = hours+":"+minutes;
+  let seconds=date.getSeconds();
+  let time: string = hours+":"+minutes+":"+seconds;
   console.log("Current Time: "+ time); 
   return time;
 }
@@ -215,7 +218,7 @@ class RequestRoutes extends BaseRoutes {
         const resultTrip = await pool.query(
           "INSERT INTO trip (startTime, endTime, startLoction, endLoction, rideDate, earnings) VALUES \
           ($1, $2, $3, $4, $5, $6) returning *",
-          [req.body.startTime, getTime(date), req.body.startLoction, req.body.endLoction, getDate(date), req.body.earnings]
+          [req.body.startTime, timeForDB(date), req.body.startLoction, req.body.endLoction, getDate(date), req.body.earnings]
         );
         const trip = resultTrip.rows[0]; 
         console.log(trip);
