@@ -263,7 +263,7 @@ const handleCancelRideFromArrivedModal = () => {
           <Popup>Driver Location</Popup>
         </Marker>
 
-        {routeToDestination && <Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />}
+        {/* {routeToDestination && <Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />} */}
         {routeToUser && <Polyline positions={routeToUser} weight={10} opacity={0.3} color="red" />}
 
         <ResetViewButton />

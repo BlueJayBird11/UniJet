@@ -72,9 +72,17 @@ class StatusRoutes extends BaseRoutes {
                 [req.params.id])
       
                 console.log(newResults.rows[0]);
+
+                // SELECT * FROM drivers JOIN registeredas r ON r.driverid = drivers.id WHERE r.passengerid = 2;
+              const driverResults = await pool.query("SELECT driverid FROM drivers \
+                  JOIN registeredas r ON r.driverid = drivers.id \
+                  WHERE r.passengerid = $1 ", [req.params.id]);
               // console.log(results);
               res.status(200).json({
                 status: "success",
+                data: {
+                  driverId: driverResults
+                }
               });
             } catch (err) {
               res.status(400).json({

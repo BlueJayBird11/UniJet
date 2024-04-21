@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import loadingGif from './search.gif';
+import { Passenger } from '@/shared/types';
 
-const ConfirmRide = () => {
+type Props = {
+  passenger: Passenger;
+}
+
+const ConfirmRide = ({  passenger }: Props) => {
   const navigate = useNavigate();
   const [isLookingForDriver, setIsLookingForDriver] = useState(false);
   // Use a state to store the timeout ID for cancellation
   const [timeoutId, setTimeoutId] = useState<number | null>(null);
+  const [position, setPosition] = useState<[number, number] | null>(null);
+
+  
 
   const startLookingForDriver = () => {
     setIsLookingForDriver(true);
@@ -22,6 +30,65 @@ const ConfirmRide = () => {
       clearTimeout(timeoutId);
       setIsLookingForDriver(false);
       navigate('/map', { replace: true });
+    }
+  };
+
+  useEffect(() => {
+    // Function to get user's current position
+    const getPosition = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (geoPosition) => {
+            const lat = geoPosition.coords.latitude;
+            const lon = geoPosition.coords.longitude;
+            setPosition([lat, lon]);
+          },
+          (error) => {
+            console.error('Error getting location:', error);
+          }
+        );
+      } else {
+        console.error('Geolocation is not supported by this browser.');
+      }
+    };
+
+    getPosition(); // Call getPosition when component mounts
+
+    // Cleanup function (optional)
+    return () => {
+      // Any cleanup code here, if needed
+    };
+  }, []); // Empty dependency array to run effect only once on mount
+
+
+  const makeRequest = async () => {
+    try {
+      if (!position) {
+        console.error('Position not available yet.');
+        return;
+      }
+
+      const response = await fetch('http://localhost:8000/api/v1/requests/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: passenger.id,
+          email: passenger.email,
+          location: position,
+          destination: "IESB"
+        }), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      console.log('Request sent successfully.');
+      // Handle response or update UI as needed
+    } catch (error) {
+      console.error('Error:', error);
     }
   };
 

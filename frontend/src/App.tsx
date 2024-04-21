@@ -47,6 +47,8 @@ function App() {
     carPool: false
   });
 
+  const [driverId, setDriverId] = useState(0);
+
   const handleLogin = async(info: Info) => {
     // setPassenger({
     //   id: 0,
@@ -115,9 +117,9 @@ function App() {
           <Routes>
             <Route path="/profile" element={<Profile selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
             <Route path="/history" element={<History selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
-            <Route path="/settings" element={<Settings passenger={passenger} name={''} email={''} message={''}/>} />
+            <Route path="/settings" element={<Settings passenger={passenger} name={''} email={''} message={''} driverId={driverId} setDriverId={setDriverId}/>} />
             <Route path="/findDriver" element={<FindDriver />} />
-            <Route path="/confirmRide" element={<ConfirmRide />} />
+            <Route path="/confirmRide" element={<ConfirmRide passenger={passenger}/>} />
             <Route path="/driverFound" element={<DriverFound />} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
