@@ -114,6 +114,35 @@ const Map: React.FC<Props> = ({  passenger, driverId }) => {
       console.error('Error:', error);
     }
   };
+
+  const acceptRequest = async (pId: number, pName: string, pLocation: [number, number], pDestination:string) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/requests/accept-request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          passengerId: pId,
+          driverId: driverId,
+          passengerName: pName,
+          driverName: passenger.firstName +" "+ passenger.lastName,
+          passengerLocation: pLocation,
+          driverLocation: position,
+          destination: pDestination
+        }), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      console.log('Request sent successfully.');
+      // Handle response or update UI as needed
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   
  const location = useLocation();
  const navigate = useNavigate();
@@ -272,15 +301,14 @@ const handleCancelRideFromArrivedModal = () => {
           <Popup>You are here</Popup>
         </Marker> */}
         {riders.map((rider: RiderType) => (
-          <Marker key={rider.name} position={rider.position}>
+          <Marker key={rider.id} position={rider.position}>
             <Popup className='items-center justify-center'>
               <p>Name: {rider.name}</p> 
               <p>Rating: {rider.rating !== null ? rider.rating : '5.0'}</p> 
               <p>Destination: {rider.destination}</p>
-              <button className='bg-blue-700 rounded-full p-2 text-white'>Accept</button>
+              <button onClick={() => acceptRequest(rider.id, rider.name, rider.position, rider.destination)} className='bg-blue-700 rounded-full p-2 text-white'>Accept</button>
             </Popup>
           </Marker>
-
         ))}
         {/* {routeToDestination && <Polyline positions={routeToDestination} color="blue" />}
         {routeToUser && <Polyline positions={routeToUser} color="red" />} */}

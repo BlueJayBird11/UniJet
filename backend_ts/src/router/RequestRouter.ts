@@ -96,6 +96,47 @@ class RequestRoutes extends BaseRoutes {
       }
     });
 
+    this.router.post("/request-update", async (req, res) => {
+      try {
+        // console.log(req.body);
+        var requestAccepted: boolean = false;
+
+        for (let i = 0; i < onGoing.length; i++) {
+          if(onGoing[i].passengerId == req.body.id)
+            {
+              requestAccepted = true;
+            }
+        } 
+
+        res.status(200).json({
+          status: "success",
+          accepted: requestAccepted
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    this.router.post("/cancel-request", async (req, res) => {
+      try {
+        console.log(requests);
+        for (let i = 0; i < onGoing.length; i++) {
+          if(requests[i].id == req.body.id)
+            {
+              requests.splice(i,1);
+            }
+        }
+        console.log("Removed item:");
+        console.log(requests);
+
+        res.status(200).json({
+          status: "success",
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
     this.router.get("", async (req, res) => {
       try {
         res.status(200).json({

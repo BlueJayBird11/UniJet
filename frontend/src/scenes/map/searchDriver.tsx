@@ -45,6 +45,7 @@ const ConfirmRide = ({  passenger }: Props) => {
       // Set interval to make request every 5 seconds
       intervalId = setInterval(() => {
         console.log("Ping");
+        checkRequest();
         // makeRequest();
       }, 5000);
     }
@@ -122,6 +123,36 @@ const ConfirmRide = ({  passenger }: Props) => {
       }
 
       console.log('Request sent successfully.');
+      // Handle response or update UI as needed
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const checkRequest = async () => {
+    try {
+
+      const response = await fetch('http://localhost:8000/api/v1/requests/request-update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: passenger.id,
+        }), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const data = await response.json();
+
+      console.log(data);
+      console.log(data.accepted);
+      if (data.accepted)
+        {
+          setIsLookingForDriver(false);
+        }
       // Handle response or update UI as needed
     } catch (error) {
       console.error('Error:', error);
