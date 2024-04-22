@@ -16,22 +16,58 @@ const ConfirmRide = ({  passenger }: Props) => {
 
   
 
-  const startLookingForDriver = () => {
-    setIsLookingForDriver(true);
-    const id = window.setTimeout(() => { // Using window.setTimeout to ensure it uses the browser's setTimeout
-      setIsLookingForDriver(false);
-      navigate('/driverFound', { replace: true });
-    }, 5000) as unknown as number; // Type assertion
-    setTimeoutId(id);
-  };
+  // const startLookingForDriver = () => {
+  //   setIsLookingForDriver(true);
+  //   // const id = window.setTimeout(() => { // Using window.setTimeout to ensure it uses the browser's setTimeout
+  //   //   setIsLookingForDriver(false);
+  //   //   navigate('/driverFound', { replace: true });
+  //   // }, 5000) as unknown as number; // Type assertion
+  //   // setTimeoutId(id);
+  //   makeRequest();
+  //   const intervalId = setInterval(() => {
+  //     // makeRequest();
+  //     console.log("Ping")
+  //   }, 5000); // 5000 milliseconds = 5 seconds
+
+  //   return () => {
+  //     setIsLookingForDriver(false); // Optional: Update state to reflect not looking for driver
+  //     clearInterval(intervalId); // Clear interval to stop further requests
+  //   };
+  // };
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    if (isLookingForDriver) {
+      // Start interval only if looking for driver
+      makeRequest(); // Initial request
+
+      // Set interval to make request every 5 seconds
+      intervalId = setInterval(() => {
+        console.log("Ping");
+        // makeRequest();
+      }, 5000);
+    }
+
+    return () => {
+      // Cleanup function
+      clearInterval(intervalId); // Clear interval when component unmounts or isLookingForDriver is set to false
+    };
+  }, [isLookingForDriver]); // Run effect when isLookingForDriver changes
+
 
   const cancelSearch = () => {
-    if (timeoutId !== null) {
-      clearTimeout(timeoutId);
-      setIsLookingForDriver(false);
-      navigate('/map', { replace: true });
-    }
+    // if (timeoutId !== null) {
+    //   clearTimeout(timeoutId);
+    //   setIsLookingForDriver(false);
+    //   navigate('/map', { replace: true });
+    // }
+    setIsLookingForDriver(false);
   };
+
+  const startLookingForDriver = () => {
+    setIsLookingForDriver(true);
+  }
 
   useEffect(() => {
     // Function to get user's current position
