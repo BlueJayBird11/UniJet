@@ -38,7 +38,8 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
             if (!response.ok) {
               throw new Error(`Error: ${response.status}`);
             }
-      
+            
+            setDriverId(0);
             const data = await response.json();
             passenger.email = email;
             console.log('Success:', data);

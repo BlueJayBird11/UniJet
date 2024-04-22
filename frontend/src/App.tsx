@@ -123,7 +123,7 @@ function App() {
             <Route path="/driverFound" element={<DriverFound />} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
-            <Route path="/map" element={<Map passenger={passenger}/>} />
+            <Route path="/map" element={<Map passenger={passenger} driverId={driverId}/>} />
             <Route path="/viewTimeSlot" element={<ViewTimeSlot />} />
             <Route path="/addTimeSlot" element={<AddTimeSlot />} />
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />

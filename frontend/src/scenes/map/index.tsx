@@ -10,6 +10,7 @@ import { Passenger, RiderType } from '@/shared/types';
 
 interface Props {
   passenger: Passenger;
+  driverId: number;
 }
 
 const ReachedDestinationModal = ({ driver, onRate }) => {
@@ -48,7 +49,7 @@ const destinationIcon = L.icon({
   iconSize: [32, 32], 
 });
     
-const Map: React.FC<Props> = ({  passenger }) => {
+const Map: React.FC<Props> = ({  passenger, driverId }) => {
   const [position, setPosition] = useState<[number, number] | null>(null);
   const [routeToDestination, setRouteToDestination] = useState<[number, number][] | null>(null);
   const [routeToUser, setRouteToUser] = useState<[number, number][] | null>(null);
@@ -343,8 +344,20 @@ const handleCancelRideFromArrivedModal = () => {
         onClick={() => navigate('/confirmRide')}>
         Dev
       </button>
-      <button onClick={getRequests} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-28 text-white hover:bg-blue-300'>Find Rider's</button>
-      <button onClick={() => makeRequest(position)} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-40 text-white hover:bg-blue-300'>Request Driver</button>
+      {/* <button onClick={getRequests} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-28 text-white hover:bg-blue-300'>Find Rider's</button> */}
+      {driverId !== 0 && (  
+        <button
+          onClick={getRequests}
+          className='bg-blue-700 p-2 absolute z-[400] rounded-full right-4 bottom-32 text-white hover:bg-blue-300'
+        >
+          Find Passenger
+        </button>
+      )}
+      {driverId === 0 && (  
+        <button onClick={() => makeRequest(position)} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-4 bottom-32 text-white hover:bg-blue-300'>
+          Request Driver
+        </button>
+      )}
     </div>
   );
 };
