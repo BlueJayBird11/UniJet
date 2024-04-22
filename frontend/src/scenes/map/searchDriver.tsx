@@ -152,6 +152,7 @@ const ConfirmRide = ({  passenger }: Props) => {
       if (data.accepted)
         {
           setIsLookingForDriver(false);
+          navigate('/driverFound', { replace: true });
         }
       // Handle response or update UI as needed
     } catch (error) {

@@ -137,7 +137,20 @@ const Map: React.FC<Props> = ({  passenger, driverId }) => {
         throw new Error(`Error: ${response.status}`);
       }
 
-      console.log('Request sent successfully.');
+      const data = await response.json();
+
+      console.log(data);
+      var ridersCopy:RiderType[] = riders;
+      console.log(ridersCopy);
+      for (let i = 0; i < ridersCopy.length; i++) {
+        if (ridersCopy[i].id === pId)
+          {
+            ridersCopy.splice(i,1);
+          }
+      }
+      console.log(ridersCopy);
+      setRiders(ridersCopy);
+
       // Handle response or update UI as needed
     } catch (error) {
       console.error('Error:', error);

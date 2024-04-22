@@ -3,6 +3,7 @@
 import BaseRoutes from "./base/BaseRouter";
 import pool from "../db";
 import { OnGoingTrip, RiderType } from "../shared/types";
+import { error } from "console";
 
 var requests: Array<RiderType> = [];
 
@@ -30,7 +31,7 @@ function getTime(date:Date):string{
   let minutes=date.getMinutes();
   let seconds=date.getSeconds();
   let time: string = hours+":"+minutes+":"+seconds;
-  console.log("Current Time: "+ time); 
+  // console.log("Current Time: "+ time); 
   return time;
 }
 
@@ -39,7 +40,7 @@ function getDate(date:Date):string{
   let month=date.getMonth()+1;
   let year=date.getFullYear();
   let compDate: string = year+"-"+month+"-"+day;
-  console.log("Current Date: "+ compDate); 
+  // console.log("Current Date: "+ compDate); 
   return compDate;
 }
 
@@ -77,6 +78,20 @@ class RequestRoutes extends BaseRoutes {
         console.log(result.rows[0]);
         console.log(result.rows[0].firstname);
 
+        for (let i = 0; i < requests.length; i++) {
+          if(requests[i].id == req.body.passengerId)
+            {
+              throw new Error("Cannot have more than 1 active request");
+            }
+        }
+
+        for (let i = 0; i < requests.length; i++) {
+          if(onGoing[i].passengerId == req.body.passengerId)
+            {
+              throw new Error("Cannot have more than 1 active request");
+            }
+        }
+
         requests.push({
           id: result.rows[0].id,
           name: result.rows[0].firstname + " " + result.rows[0].lastname,
@@ -100,17 +115,35 @@ class RequestRoutes extends BaseRoutes {
       try {
         // console.log(req.body);
         var requestAccepted: boolean = false;
+        var tempRequest: OnGoingTrip = 
+          {
+            tripId: 0,
+            passengerId: 0,
+            driverId: 0,
+            passengerName: "",
+            driverName: "",
+            passengerStartLocation:  [0, 0],
+            passengerLocation: [0, 0],
+            driverLocation: [0, 0],
+            destination: "",
+            startTime: getTime(new Date()),
+            rideDate: getDate(new Date())
+        };
 
         for (let i = 0; i < onGoing.length; i++) {
           if(onGoing[i].passengerId == req.body.id)
             {
               requestAccepted = true;
+              tempRequest = onGoing[i];
             }
         } 
 
         res.status(200).json({
           status: "success",
-          accepted: requestAccepted
+          accepted: requestAccepted,
+          data: {
+            request: tempRequest,
+          }
         });
       } catch (err) {
         console.log(err);
