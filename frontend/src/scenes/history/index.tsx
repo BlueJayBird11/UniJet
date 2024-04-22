@@ -150,7 +150,7 @@ const History: React.FC<Props> = ({ selectedPage, setSelectedPage, passenger }: 
           type="date" 
           value={searchDate}
           onChange={(e) => setSearchDate(e.target.value)}
-          className="mb-4 p-2 w-full max-w-2xl mx-auto bg-gray-600 text-white" // Changed to bg-gray-400 and text-white
+          className="mb-4 p-2 w-full max-w-2xl mx-auto bg-historySearch text-primary-black" // Changed to bg-gray-400 and text-white
           placeholder="Search by Date"
           style={{ display: 'block' }}
         />

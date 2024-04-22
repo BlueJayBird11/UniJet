@@ -31,9 +31,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       <div className="w-full max-w-lg">
         <h1 className="text-6xl font-bold text-center mb-2 text-white shadow-lg bg-opacity-50 bg-black px-3 py-1 rounded">UNIJET</h1>
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h2 className="text-xl font-semibold text-center mb-6">Login</h2>
+          <h2 className="text-xl text-black font-semibold text-center mb-6">Login</h2>
           <form onSubmit={handleLogin} className="space-y-4">
-            <input 
+            <input
               type="email"
               placeholder="Email"
               value={email}
@@ -55,7 +55,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-black leading-5"
               >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
@@ -66,11 +66,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               </div>
           </form>
 
-          <p className="text-center mt-4">
+          <p className="text-center text-black mt-4">
             Forgot your password? <Link to="/forgot-password" className="text-blue-500 hover:text-blue-700">Reset it</Link>
           </p>
 
-          <p className="text-center mt-4">
+          <p className="text-center text-black mt-4">
             Don't have an account? <Link to="/signup" className="text-blue-500 hover:text-blue-700">Sign up</Link>
           </p>
         </div>

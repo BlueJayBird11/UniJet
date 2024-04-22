@@ -138,13 +138,13 @@ function Schedule() {
     <div className='pt-20'>
       <div className="h-20 fixed top-0 border border-rose-100 bg-gray-600 flex justify-between items-center px-2 w-full">
         <Link to="/addTimeSlot">
-          <button className="bg-primary-red rounded px-1 py-1">Add time slot</button>
+          <button className="bg-schedulerButtons rounded px-1 py-1">Add time slot</button>
         </Link>
         <Link to="/viewTimeSlot">
-          <button className="bg-primary-red rounded px-1 py-1">View time slots</button>
+          <button className="bg-schedulerButtons rounded px-1 py-1">View time slots</button>
         </Link>
         <Link to="/deleteTimeSlot">
-          <button className="bg-primary-red rounded px-1 py-1">Delete time slots</button>
+          <button className="bg-schedulerButtons rounded px-1 py-1">Delete time slots</button>
         </Link>
       </div>
         <div className="schedule bg-primary-blue">

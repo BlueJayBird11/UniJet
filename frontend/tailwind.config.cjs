@@ -11,12 +11,14 @@ export default {
         "gray-50": "#EFE6E6",
         "gray-100": "#DFCCCC",
         "gray-500": "#5E0000",
-        "gray-600": "#2E4659", // scheduler blocks
-        "takenblocks" : "#202020", // taken blocks
+        "gray-600": "#404040", // scheduler blocks
+        "takenblocks" : "#202020", // taken scheduler blocks
+        "schedulerButtons" : "#202020", 
         "viewTimeSlots" : "#2E4659", // view time slot blocks
+        "historySearch" : "#404040", // history search bar
         "primary-blue": "#202020", // background profile/ bg scheduler
         "primary-red": "#98c1d9", // nav bar 
-        "settingsIconColor": "202020", // setting icon
+        "settingsIconColor": "#DFDFDF", // setting icon
         "primary-green-500": "#2E4659", // nav bar circles
         "primary-green-300": "#b1e098",
         "secondary-400": "#FFCD5B",
