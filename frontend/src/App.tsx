@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-import { Info, Passenger, SelectedPage } from './shared/types';
+import { FoundDriver, HoldDestination, Info, OnGoingTrip, Passenger, SelectedPage } from './shared/types';
 
 
 
@@ -48,6 +48,32 @@ function App() {
   });
 
   const [driverId, setDriverId] = useState(0);
+  const [holdDestination, setHoldDestination] = useState<HoldDestination>({
+    name: "",
+    destination: [0,0]
+  });
+
+  const [foundDriver, setFoundDriver] = useState<FoundDriver>({
+    name:"",
+    id:0,
+    rating:5.0
+  })
+
+  const [onGoingTrip, setOnGoingTrip] = useState<OnGoingTrip>({
+    tripId: 0,
+    passengerId: 0,
+    driverId: 0,
+    passengerName: "",
+    driverName: "",
+    passengerStartLocation: [0,0],
+    passengerLocation: [0,0],
+    driverLocation: [0,0],
+    destination: "",
+    destinationChoords: [0,0],
+    startTime: "",
+    rideDate: "",
+    confirmed: false
+  })
 
   const handleLogin = async(info: Info) => {
     // setPassenger({
@@ -119,11 +145,11 @@ function App() {
             <Route path="/history" element={<History selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
             <Route path="/settings" element={<Settings passenger={passenger} name={''} email={''} message={''} driverId={driverId} setDriverId={setDriverId}/>} />
             <Route path="/findDriver" element={<FindDriver />} />
-            <Route path="/confirmRide" element={<ConfirmRide passenger={passenger}/>} />
-            <Route path="/driverFound" element={<DriverFound />} />
+            <Route path="/confirmRide" element={<ConfirmRide passenger={passenger} holdDestination={holdDestination} setHoldDestination={setHoldDestination} foundDriver={foundDriver} setFoundDriver={setFoundDriver} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip}/>} />
+            <Route path="/driverFound" element={<DriverFound passenger={passenger} foundDriver={foundDriver} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip}/>} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
-            <Route path="/map" element={<Map passenger={passenger} driverId={driverId}/>} />
+            <Route path="/map" element={<Map passenger={passenger} driverId={driverId} holdDestination={holdDestination} setHoldDestination={setHoldDestination}/>} />
             <Route path="/viewTimeSlot" element={<ViewTimeSlot />} />
             <Route path="/addTimeSlot" element={<AddTimeSlot />} />
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />

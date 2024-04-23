@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import loadingGif from './search.gif';
-import { Passenger } from '@/shared/types';
+import { FoundDriver, HoldDestination, OnGoingTrip, Passenger } from '@/shared/types';
 
 type Props = {
   passenger: Passenger;
+  holdDestination: HoldDestination,
+  setHoldDestination: (value: HoldDestination) => void,
+  foundDriver: FoundDriver,
+  setFoundDriver: (value: FoundDriver) => void
+  onGoingTrip: OnGoingTrip,
+  setOnGoingTrip: (value: OnGoingTrip) => void
 }
 
-const ConfirmRide = ({  passenger }: Props) => {
+const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDriver, setFoundDriver, onGoingTrip, setOnGoingTrip }: Props) => {
   const navigate = useNavigate();
   const [isLookingForDriver, setIsLookingForDriver] = useState(false);
   // Use a state to store the timeout ID for cancellation
@@ -114,7 +120,8 @@ const ConfirmRide = ({  passenger }: Props) => {
           id: passenger.id,
           email: passenger.email,
           location: position,
-          destination: "IESB"
+          destination: holdDestination.name,
+          destinationChoords: holdDestination.destination
         }), 
       });
 
@@ -152,6 +159,26 @@ const ConfirmRide = ({  passenger }: Props) => {
       if (data.accepted)
         {
           setIsLookingForDriver(false);
+          setFoundDriver({
+            name: data.data.request.driverName,
+            id: data.data.request.driverId,
+            rating: 5.0
+          })
+          setOnGoingTrip({
+            tripId: data.data.request.tripId,
+            passengerId: passenger.id,
+            driverId: data.data.request.driverId,
+            passengerName: data.data.request.passengerName,
+            driverName: data.data.request.driverName,
+            passengerStartLocation: data.data.request.passengerStartLocation,
+            passengerLocation: data.data.request.passengerLocation,
+            driverLocation: data.data.request.driverLocation,
+            destination: data.data.request.destination,
+            destinationChoords: data.data.request.destinationChoords,
+            startTime: data.data.request.startTime,
+            rideDate: data.data.request.rideDate,
+            confirmed: false
+          })
           navigate('/driverFound', { replace: true });
         }
       // Handle response or update UI as needed

@@ -4,10 +4,12 @@ export interface RiderType {
   rating: number;
   position: [number, number];
   destination: string;
+  destinationChoords: [number, number];
 }
 
 export interface OnGoingTrip {
   tripId: number,
+  confirmed: boolean,
   passengerId: number,
   driverId: number,
   passengerName: string,
@@ -16,6 +18,7 @@ export interface OnGoingTrip {
   passengerLocation: [number, number],
   driverLocation: [number, number],
   destination: string,
+  destinationChoords: [number, number];
   startTime: string,
   rideDate: string
 }

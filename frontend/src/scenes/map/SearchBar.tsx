@@ -1,6 +1,12 @@
+import { HoldDestination } from '@/shared/types';
 import React, { useState } from 'react';
 
-const SearchBar: React.FC = () => {
+interface Props {
+  holdDestination: HoldDestination;
+  setHoldDestination: (value: HoldDestination) => void;
+}
+
+const SearchBar: React.FC<Props> = ({holdDestination, setHoldDestination}) => {
   const [searchText, setSearchText] = useState('');
   const [results, setResults] = useState<any[]>([]);
 
@@ -20,7 +26,7 @@ const SearchBar: React.FC = () => {
 
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
       text + query
-    )}.json?access_token=${accessToken}&types=poi,address&country=US&language=en&limit=5`;
+    )}.json?access_token=${accessToken}&types=poi,address&country=US&language=en&limit=5&state=LA&city=Ruston`;
 
     fetch(url)
       .then((response) => {
@@ -45,6 +51,11 @@ const SearchBar: React.FC = () => {
 
   const handleResultClick = (name: string, coordinates: number[]) => {
     console.log('Clicked:', name, coordinates);
+    setHoldDestination({
+      name: name,
+      destination: [coordinates[0], coordinates[1]]
+    })
+    console.log(holdDestination);
     // Add additional logic here (e.g., navigate to a specific location on the map)
   };
 
@@ -62,7 +73,7 @@ const SearchBar: React.FC = () => {
           {results.map((feature: any, index: number) => (
             <li key={index}>
               <button
-                className="text-blue-500 hover:underline focus:outline-none"
+                className="text-blue-500 hover:underline focus:outline-none p-2"
                 onClick={() =>
                   handleResultClick(feature.place_name, feature.center)
                 }

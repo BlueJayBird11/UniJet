@@ -6,6 +6,8 @@ import { OnGoingTrip, RiderType } from "../shared/types";
 import { error } from "console";
 
 var requests: Array<RiderType> = [];
+var onGoing: Array<OnGoingTrip> = []
+var requestIdCount = 1;
 
 // {
 //   id: 0,
@@ -44,9 +46,7 @@ function getDate(date:Date):string{
   return compDate;
 }
 
-var requestIdCount = 0;
 
-var onGoing: Array<OnGoingTrip> = []
 
 // {
 //   tripId: 1,
@@ -98,6 +98,7 @@ class RequestRoutes extends BaseRoutes {
           rating: result.rows[0].rating,
           position: req.body.location,
           destination: req.body.destination,
+          destinationChoords: req.body.destinationChoords
         });
 
         console.log(result.rows.length);
@@ -126,8 +127,10 @@ class RequestRoutes extends BaseRoutes {
             passengerLocation: [0, 0],
             driverLocation: [0, 0],
             destination: "",
+            destinationChoords: [0,0],
             startTime: getTime(new Date()),
-            rideDate: getDate(new Date())
+            rideDate: getDate(new Date()),
+            confirmed: false
         };
 
         for (let i = 0; i < onGoing.length; i++) {
@@ -200,8 +203,10 @@ class RequestRoutes extends BaseRoutes {
           passengerLocation: req.body.passengerLocation,
           driverLocation: req.body.driverLocation,
           destination: req.body.destination,
+          destinationChoords: req.body.destinationChoords,
           startTime: getTime(date),
-          rideDate: getDate(date)
+          rideDate: getDate(date),
+          confirmed: false
         }
 
         // increment count for future ids
@@ -212,7 +217,7 @@ class RequestRoutes extends BaseRoutes {
 
         // remove request from requests
         for (let i = 0; i < requests.length; i++) {
-          if(requests[i].id == req.body.passengerId)
+          if(requests[i].id === req.body.passengerId)
             {
               requests.splice(i,1);
             }
@@ -229,6 +234,49 @@ class RequestRoutes extends BaseRoutes {
       }
     });
 
+    this.router.post("/confirm-request", async (req, res) => {
+      try {
+        var tempI:number = -1;
+        for (let i = 0; i < onGoing.length; i++) {
+          console.log(`${(onGoing[i].passengerId)} === ${(req.body.id)}?`);
+
+          if(onGoing[i].passengerId === req.body.passengerId)
+            {
+              onGoing[i].confirmed = true;
+              tempI = i;
+            }
+        }
+        // if (tempI === -1)
+        //   {
+        //     throw new Error("request not found in onGoing");
+        //   }
+        res.status(200).json({
+          status: "success",
+          data: {
+            request: onGoing[tempI]
+          }
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    // onGoing[i] = {
+    //   tripId: onGoing[i].tripId,
+    //   passengerId: onGoing[i].passengerId,
+    //   driverId: onGoing[i].driverId,
+    //   passengerName: onGoing[i].passengerName,
+    //   driverName: onGoing[i].driverName,
+    //   passengerStartLocation:  onGoing[i].passengerStartLocation,
+    //   passengerLocation: onGoing[i].passengerLocation,
+    //   driverLocation: onGoing[i].driverLocation,
+    //   destination: onGoing[i].destination,
+    //   destinationChoords: onGoing[i].destinationChoords,
+    //   startTime: onGoing[i].startTime,
+    //   rideDate: onGoing[i].rideDate,
+    //   confirmed: true
+    // };
+    
     this.router.post("/update-request-passenger", async (req, res) => {
       try {
         let tripData = null;

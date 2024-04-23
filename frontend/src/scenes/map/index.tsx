@@ -4,7 +4,7 @@ import L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import { useNavigate, useLocation } from 'react-router-dom';
 import loadingGif from './car.gif';
-import { Passenger, RiderType } from '@/shared/types';
+import { HoldDestination, Passenger, RiderType } from '@/shared/types';
 import SearchBar from './SearchBar';
 // import * as dotenv from "dotenv";
 // dotenv.config();
@@ -12,6 +12,8 @@ import SearchBar from './SearchBar';
 interface Props {
   passenger: Passenger;
   driverId: number;
+  holdDestination: HoldDestination;
+  setHoldDestination: (value: HoldDestination) => void;
 }
 
 const ReachedDestinationModal = ({ driver, onRate }) => {
@@ -50,7 +52,7 @@ const destinationIcon = L.icon({
   iconSize: [32, 32], 
 });
     
-const Map: React.FC<Props> = ({  passenger, driverId }) => {
+const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDestination }) => {
   const [position, setPosition] = useState<[number, number] | null>(null);
   const [routeToDestination, setRouteToDestination] = useState<[number, number][] | null>(null);
   const [routeToUser, setRouteToUser] = useState<[number, number][] | null>(null);
@@ -116,7 +118,7 @@ const Map: React.FC<Props> = ({  passenger, driverId }) => {
     }
   };
 
-  const acceptRequest = async (pId: number, pName: string, pLocation: [number, number], pDestination:string) => {
+  const acceptRequest = async (pId: number, pName: string, pLocation: [number, number], pDestination:string, pDestinationChoords:[number,number]) => {
     try {
       const response = await fetch('http://localhost:8000/api/v1/requests/accept-request', {
         method: 'POST',
@@ -130,7 +132,8 @@ const Map: React.FC<Props> = ({  passenger, driverId }) => {
           driverName: passenger.firstName +" "+ passenger.lastName,
           passengerLocation: pLocation,
           driverLocation: position,
-          destination: pDestination
+          destination: pDestination,
+          destinationChoords: pDestinationChoords
         }), 
       });
 
@@ -151,7 +154,7 @@ const Map: React.FC<Props> = ({  passenger, driverId }) => {
       }
       console.log(ridersCopy);
       setRiders(ridersCopy);
-
+      setShowAcceptedDriverModal(true);
       // Handle response or update UI as needed
     } catch (error) {
       console.error('Error:', error);
@@ -176,6 +179,8 @@ const Map: React.FC<Props> = ({  passenger, driverId }) => {
   };
  const [showEnrouteModal, setShowEnrouteModal] = useState(false);
  const [showRateDriverModal, setShowRateDriverModal] = useState(false);
+ const [showAcceptedDriverModal, setShowAcceptedDriverModal] = useState(false);
+
 
 
  useEffect(() => {
@@ -290,7 +295,7 @@ const handleCancelRideFromArrivedModal = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
         />
-        <SearchBar />
+        <SearchBar holdDestination={holdDestination} setHoldDestination={setHoldDestination} />
         {/* White outline marker */}
         <CircleMarker center={position} radius={6} color="white" fillColor="white" fillOpacity={1} />
 
@@ -322,7 +327,7 @@ const handleCancelRideFromArrivedModal = () => {
               <p>Name: {rider.name}</p> 
               <p>Rating: {rider.rating !== null ? rider.rating : '5.0'}</p> 
               <p>Destination: {rider.destination}</p>
-              <button onClick={() => acceptRequest(rider.id, rider.name, rider.position, rider.destination)} className='bg-blue-700 rounded-full p-2 text-white'>Accept</button>
+              <button onClick={() => acceptRequest(rider.id, rider.name, rider.position, rider.destination, rider.destinationChoords)} className='bg-blue-700 rounded-full p-2 text-white'>Accept</button>
             </Popup>
           </Marker>
         ))}
@@ -375,6 +380,13 @@ const handleCancelRideFromArrivedModal = () => {
           position: 'absolute',top: '20%',left: '50%',transform: 'translate(-50%, -50%)',backgroundColor: 'rgba(0, 0, 0, 0.85)',color: 'white',padding: '20px',borderRadius: '8px',zIndex: 10100,display: 'flex',alignItems: 'center',justifyContent: 'center',}}>
           <p style={{ margin: 0, marginRight: '10px', fontWeight:'bold' }}>Enroute...</p>
           <img src={loadingGif} alt="Enroute..." style={{ height: '50px' }} />
+        </div>
+      )}
+
+      {showAcceptedDriverModal && (
+        <div style={{
+          position: 'absolute',top: '20%',left: '50%',transform: 'translate(-50%, -50%)',backgroundColor: 'rgba(0, 0, 0, 0.85)',color: 'white',padding: '20px',borderRadius: '8px',zIndex: 10100,display: 'flex',alignItems: 'center',justifyContent: 'center',}}>
+          <p style={{ margin: 0, marginRight: '10px', fontWeight:'bold' }}>Waiting for comfirmation...</p>
         </div>
       )}
 
