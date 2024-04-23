@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 import { useNavigate, useLocation } from 'react-router-dom';
 import loadingGif from './car.gif';
 import { Passenger, RiderType } from '@/shared/types';
+import SearchBar from './SearchBar';
 // import * as dotenv from "dotenv";
 // dotenv.config();
 
@@ -277,7 +278,8 @@ const handleCancelRideFromArrivedModal = () => {
   };
 
   return (
-    <div className="h-screen relative">
+    //relative
+    <div className="flex flex-col h-screen"> 
       <MapContainer style={{ width: '100%', height: '90.5%' }} center={position} zoom={13} scrollWheelZoom={true} className="relative">
 
 
@@ -288,6 +290,7 @@ const handleCancelRideFromArrivedModal = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
         />
+        <SearchBar />
         {/* White outline marker */}
         <CircleMarker center={position} radius={6} color="white" fillColor="white" fillOpacity={1} />
 
@@ -326,6 +329,7 @@ const handleCancelRideFromArrivedModal = () => {
         {/* {routeToDestination && <Polyline positions={routeToDestination} color="blue" />}
         {routeToUser && <Polyline positions={routeToUser} color="red" />} */}
       </MapContainer>
+
 
       {showDriverOnTheWay && (
         <div style={{position: 'absolute',top: '40%',left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(0, 0, 0, 0.75)',color: 'white',padding: '20px', borderRadius: '8px', zIndex: 10000, maxWidth: '400px', textAlign: 'center',}}>
