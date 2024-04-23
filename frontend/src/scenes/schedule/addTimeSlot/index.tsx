@@ -68,11 +68,11 @@ const AddTimeSlot: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center items-center h-full">
-      <h1 className="mb-4 text-3xl font-bold">Add Time Slot </h1>
+      <h1 className="mb-4 text-primary-black text-3xl font-bold">Add Time Slot </h1>
       <div className="mt-8">
         <div className="mb-16">
           <div className={`bg-viewTimeSlots rounded-lg p-4`}>
-            <label htmlFor="subject" className="mr-2 text-xl">Subject:</label>
+            <label htmlFor="subject" className="mr-2 text-primary-black text-xl">Subject:</label>
             <select
               id="subject"
               className="border rounded p-2 w-full"

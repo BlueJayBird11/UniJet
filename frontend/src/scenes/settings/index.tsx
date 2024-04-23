@@ -71,12 +71,12 @@ const Settings = ({passenger}: Props) => {
 
     return (
         
-        <div className="flex flex-col bg-gray-100 h-screen font-sans">
-            <div className="bg-blue-500 text-white py-4 px-6 flex items-center justify-between">
+        <div className="flex flex-col bg-primary-blue h-screen font-sans">
+            <div className="bg-gray-600 text-white py-4 px-6 flex items-center justify-between">
                 <Link to="/" className="mr-4">
                     <ChevronLeftIcon className="h-6 w-6" />
                 </Link>
-                <h1 className="text-xl font-bold">Settings</h1>
+                <h1 className="text-xl text-primary-black font-bold">Settings</h1>
                 <button
                     onClick={() => setShowReportModal(true)}
                     className="bg-red-500 text-white rounded-lg shadow-md px-4 py-2 flex items-center space-x-1"
@@ -90,13 +90,13 @@ const Settings = ({passenger}: Props) => {
                     <div className="flex mt-4">
                         <button
                             onClick={() => changeRoleTo('driver')}
-                            className={`mx-2 px-4 py-2 ${userRole === 'driver' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                            className={`mx-2 px-4 py-2 ${userRole === 'driver' ? 'bg-blue-500 text-white' : 'bg-gray-600'}`}
                         >
                             Driver
                         </button>
                         <button
                             onClick={() => changeRoleTo('passenger')}
-                            className={`mx-2 px-4 py-2 ${userRole === 'passenger' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                            className={`mx-2 px-4 py-2 ${userRole === 'passenger' ? 'bg-blue-500 text-white' : 'bg-gray-600'}`}
                         >
                             Passenger
                         </button>
@@ -105,27 +105,27 @@ const Settings = ({passenger}: Props) => {
             </div>
             <div className="p-4">
                 <Link to="/change-password" className="block mb-2">
-                    <div className="bg-white rounded-lg shadow-md p-4">
+                    <div className="bg-gray-600 rounded-lg shadow-md p-4">
                         <p className="text-lg font-medium">Change Password</p>
                     </div>
                 </Link>
                 <Link to="/edit-name" className="block mb-2">
-                    <div className="bg-white rounded-lg shadow-md p-4">
+                    <div className="bg-gray-600 rounded-lg shadow-md p-4">
                         <p className="text-lg font-medium">Edit Name</p>
                     </div>
                 </Link>
                 <Link to="/edit-email" className="block mb-2">
-                    <div className="bg-white rounded-lg shadow-md p-4">
+                    <div className="bg-gray-600 rounded-lg shadow-md p-4">
                         <p className="text-lg font-medium">Edit Email</p>
                     </div>
                 </Link>
                 <Link to="/edit-university" className="block mb-2">
-                    <div className="bg-white rounded-lg shadow-md p-4">
+                    <div className="bg-gray-600 rounded-lg shadow-md p-4">
                         <p className="text-lg font-medium">Edit University</p>
                     </div>
                 </Link>
                 <Link to="/change-phone-number" className="block mb-2">
-                    <div className="bg-white rounded-lg shadow-md p-4">
+                    <div className="bg-gray-600 rounded-lg shadow-md p-4">
                         <p className="text-lg font-medium">Change Phone Number</p>
                     </div>
                 </Link>

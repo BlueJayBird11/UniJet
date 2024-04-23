@@ -12,14 +12,17 @@ export default {
         "gray-100": "#DFCCCC",
         "gray-500": "#5E0000",
         "gray-600": "#404040", // scheduler blocks
-        "takenblocks" : "#202020", // taken scheduler blocks
-        "schedulerButtons" : "#202020", 
-        "viewTimeSlots" : "#2E4659", // view time slot blocks
+        "takenblocks" : "#C23345", // taken scheduler blocks
+        "schedulerButtons" : "#C23345", 
+        "viewTimeSlots" : "#404040", // view time slot blocks
         "historySearch" : "#404040", // history search bar
         "primary-blue": "#202020", // background profile/ bg scheduler
-        "primary-red": "#98c1d9", // nav bar 
+        "primary-red": "#6A0D19", // nav bar 
+        "schedulerDays": "#6A0D19", // scheduler days
+        "schedulerTimes": "#202020", // scheduler times
         "settingsIconColor": "#DFDFDF", // setting icon
-        "primary-green-500": "#2E4659", // nav bar circles
+        "primary-green-500": "#C23345", // nav bar circles
+        "navBarIcons": "#FFE4C4", // nav bar icons
         "primary-green-300": "#b1e098",
         "secondary-400": "#FFCD5B",
         "secondary-500": "#FFC132",
