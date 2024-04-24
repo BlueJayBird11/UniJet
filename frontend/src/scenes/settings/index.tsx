@@ -71,76 +71,74 @@ const Settings = ({passenger}: Props) => {
 
     return (
         
-        <div className="flex flex-col bg-primary-blue h-screen font-sans">
-            <div className="bg-gray-600 text-white py-4 px-6 flex items-center justify-between">
+        <div className="flex flex-col bg-primary-blue font-sans">
+            <div className="bg-gray-600 text-primary-black py-4 px-6 flex items-center justify-between fixed top-0 w-full">
                 <Link to="/" className="mr-4">
                     <ChevronLeftIcon className="h-6 w-6" />
                 </Link>
                 <h1 className="text-xl text-primary-black font-bold">Settings</h1>
                 <button
                     onClick={() => setShowReportModal(true)}
-                    className="bg-red-500 text-white rounded-lg shadow-md px-4 py-2 flex items-center space-x-1"
+                    className="bg-red-500 text-primary-black rounded-lg shadow-md px-4 py-2 flex items-center space-x-1"
                 >
                     <EnvelopeIcon className="h-5 w-5" /> 
                 </button>
             </div>
-            <div className="p-2 flex-grow flex justify-center"> {/* Center the buttons */}
+            <div className="p-2 flex-grow flex justify-center mt-16"> {/* Center the buttons and consider banner height */}
                 <div className="my-6">
-                    <h2 className="text-lg font-semibold">Your role is {userRole}</h2>
+                    <h2 className="text-lg text-primary-black font-semibold">Your role is {userRole}</h2>
                     <div className="flex mt-4">
                         <button
                             onClick={() => changeRoleTo('driver')}
-                            className={`mx-2 px-4 py-2 ${userRole === 'driver' ? 'bg-blue-500 text-white' : 'bg-gray-600'}`}
+                            className={`mx-2 px-4 py-2 text-primary-black ${userRole === 'driver' ? 'bg-settingsButtons text-primary-black' : 'bg-gray-600'}`}
                         >
                             Driver
                         </button>
                         <button
                             onClick={() => changeRoleTo('passenger')}
-                            className={`mx-2 px-4 py-2 ${userRole === 'passenger' ? 'bg-blue-500 text-white' : 'bg-gray-600'}`}
+                            className={`mx-2 px-4 py-2 text-primary-black ${userRole === 'passenger' ? 'bg-settingsButtons text-primary-black' : 'bg-gray-600'}`}
                         >
                             Passenger
                         </button>
                     </div>
                 </div>
             </div>
-            <div className="p-4">
+            <div className="p-4 text-primary-black">
                 <Link to="/change-password" className="block mb-2">
                     <div className="bg-gray-600 rounded-lg shadow-md p-4">
-                        <p className="text-lg font-medium">Change Password</p>
+                        <p className="text-lg text-primary-black font-medium">Change Password</p>
                     </div>
                 </Link>
                 <Link to="/edit-name" className="block mb-2">
                     <div className="bg-gray-600 rounded-lg shadow-md p-4">
-                        <p className="text-lg font-medium">Edit Name</p>
+                        <p className="text-lg text-primary-black font-medium">Edit Name</p>
                     </div>
                 </Link>
                 <Link to="/edit-email" className="block mb-2">
                     <div className="bg-gray-600 rounded-lg shadow-md p-4">
-                        <p className="text-lg font-medium">Edit Email</p>
+                        <p className="text-lg text-primary-black font-medium">Edit Email</p>
                     </div>
                 </Link>
                 <Link to="/edit-university" className="block mb-2">
                     <div className="bg-gray-600 rounded-lg shadow-md p-4">
-                        <p className="text-lg font-medium">Edit University</p>
+                        <p className="text-lg text-primary-black font-medium">Edit University</p>
                     </div>
                 </Link>
                 <Link to="/change-phone-number" className="block mb-2">
                     <div className="bg-gray-600 rounded-lg shadow-md p-4">
-                        <p className="text-lg font-medium">Change Phone Number</p>
+                        <p className="text-lg text-primary-black font-medium">Change Phone Number</p>
                     </div>
                 </Link>
-                <Link to="/delete-account" className="block mt-4">
-                    <div className="bg-red-500 text-white rounded-lg shadow-md p-4">
-                        <p className="text-lg font-medium">Delete Account</p>
+                <Link to="/delete-account" className="block mb-2">
+                    <div className="bg-red-500 rounded-lg shadow-md p-4">
+                        <p className="text-lg text-primary-black font-medium">Delete Account</p>
                     </div>
                 </Link>
-                <div className="mt-4">
-                    <Link to="/logout">
-                        <button className="bg-red-500 text-white font-bold py-2 px-4 rounded w-full">
-                            Logout
-                        </button>
-                    </Link>
-                </div>
+                <Link to="/logout" className="block mb-2">
+                    <div className="bg-red-500 rounded-lg shadow-md p-4">
+                        <p className="text-lg text-primary-black font-medium">Logout</p>
+                    </div>
+                </Link>
             </div>
 
             {showReportModal && (
@@ -175,13 +173,13 @@ const Settings = ({passenger}: Props) => {
                                 <button
                                     type="button"
                                     onClick={() => setShowReportModal(false)}
-                                    className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mr-2"
+                                    className="bg-gray-500 hover:bg-gray-600 text-primary-black font-bold py-2 px-4 rounded mr-2"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                    className="bg-blue-500 hover:bg-blue-700 text-primary-black font-bold py-2 px-4 rounded"
                                 >
                                     Submit
                                 </button>

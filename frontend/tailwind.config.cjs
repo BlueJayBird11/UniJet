@@ -13,7 +13,9 @@ export default {
         "gray-500": "#5E0000",
         "gray-600": "#404040", // scheduler blocks
         "takenblocks" : "#C23345", // taken scheduler blocks
-        "schedulerButtons" : "#C23345", 
+        "schedulerButtons" : "#C23345", // scheduler buttons
+        "settingsButtons" : "#C23345", // settings subpage buttons
+        "settingsButtonsPressed" : "#c14757", // settings subpage buttons when pressed
         "viewTimeSlots" : "#404040", // view time slot blocks
         "historySearch" : "#404040", // history search bar
         "primary-blue": "#202020", // background profile/ bg scheduler

@@ -32,7 +32,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
         <h1 className="text-6xl font-bold text-center mb-2 text-white shadow-lg bg-opacity-50 bg-black px-3 py-1 rounded">UNIJET</h1>
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <h2 className="text-xl text-black font-semibold text-center mb-6">Login</h2>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="text-gray-700 space-y-4">
             <input
               type="email"
               placeholder="Email"
