@@ -149,7 +149,7 @@ function App() {
             <Route path="/driverFound" element={<DriverFound passenger={passenger} foundDriver={foundDriver} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip}/>} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
-            <Route path="/map" element={<Map passenger={passenger} driverId={driverId} holdDestination={holdDestination} setHoldDestination={setHoldDestination}/>} />
+            <Route path="/map" element={<Map passenger={passenger} driverId={driverId} holdDestination={holdDestination} setHoldDestination={setHoldDestination} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip}/>} />
             <Route path="/viewTimeSlot" element={<ViewTimeSlot />} />
             <Route path="/addTimeSlot" element={<AddTimeSlot />} />
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />

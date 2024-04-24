@@ -3,10 +3,9 @@
 import BaseRoutes from "./base/BaseRouter";
 import pool from "../db";
 import { OnGoingTrip, RiderType } from "../shared/types";
-import { error } from "console";
 
 var requests: Array<RiderType> = [];
-var onGoing: Array<OnGoingTrip> = []
+var onGoing: Array<OnGoingTrip> = [];
 var requestIdCount = 1;
 
 // {
@@ -238,18 +237,19 @@ class RequestRoutes extends BaseRoutes {
       try {
         var tempI:number = -1;
         for (let i = 0; i < onGoing.length; i++) {
-          console.log(`${(onGoing[i].passengerId)} === ${(req.body.id)}?`);
+          console.log(`'${(onGoing[i].passengerId)}' == '${(req.body.id)}'?`);
 
-          if(onGoing[i].passengerId === req.body.passengerId)
+          if(onGoing[i].passengerId == req.body.id)
             {
+              console.log("SWITCH OCCURED");
               onGoing[i].confirmed = true;
               tempI = i;
             }
         }
-        // if (tempI === -1)
-        //   {
-        //     throw new Error("request not found in onGoing");
-        //   }
+        if (tempI === -1)
+          {
+            throw new Error("request not found in onGoing");
+          }
         res.status(200).json({
           status: "success",
           data: {

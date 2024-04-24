@@ -1,5 +1,6 @@
 import { HoldDestination } from '@/shared/types';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   holdDestination: HoldDestination;
@@ -9,6 +10,7 @@ interface Props {
 const SearchBar: React.FC<Props> = ({holdDestination, setHoldDestination}) => {
   const [searchText, setSearchText] = useState('');
   const [results, setResults] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   const handleSearch = (text: string) => {
     setSearchText(text); // Update search text as user types
@@ -56,6 +58,7 @@ const SearchBar: React.FC<Props> = ({holdDestination, setHoldDestination}) => {
       destination: [coordinates[0], coordinates[1]]
     })
     console.log(holdDestination);
+    navigate('/confirmRide');
     // Add additional logic here (e.g., navigate to a specific location on the map)
   };
 

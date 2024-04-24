@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Marker, Popup, Polyline, useMap } from 'react-leaflet';
-import L from 'leaflet';
+import 'leaflet';
 import "leaflet/dist/leaflet.css";
+declare let L;
 import { useNavigate, useLocation } from 'react-router-dom';
 import loadingGif from './car.gif';
-import { HoldDestination, Passenger, RiderType } from '@/shared/types';
+import { HoldDestination, OnGoingTrip, Passenger, RiderType } from '@/shared/types';
 import SearchBar from './SearchBar';
+import RouteToUser from './RouteToUser';
 // import * as dotenv from "dotenv";
 // dotenv.config();
 
@@ -14,6 +16,8 @@ interface Props {
   driverId: number;
   holdDestination: HoldDestination;
   setHoldDestination: (value: HoldDestination) => void;
+  onGoingTrip: OnGoingTrip;
+  setOnGoingTrip: (value: OnGoingTrip) => void;
 }
 
 const ReachedDestinationModal = ({ driver, onRate }) => {
@@ -52,7 +56,7 @@ const destinationIcon = L.icon({
   iconSize: [32, 32], 
 });
     
-const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDestination }) => {
+const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDestination, onGoingTrip, setOnGoingTrip }) => {
   const [position, setPosition] = useState<[number, number] | null>(null);
   const [routeToDestination, setRouteToDestination] = useState<[number, number][] | null>(null);
   const [routeToUser, setRouteToUser] = useState<[number, number][] | null>(null);
@@ -83,7 +87,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-
+      
       const data = await response.json();
       console.log('Success:');
       console.log(data);
@@ -117,7 +121,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       console.error('Error:', error);
     }
   };
-
+  
   const acceptRequest = async (pId: number, pName: string, pLocation: [number, number], pDestination:string, pDestinationChoords:[number,number]) => {
     try {
       const response = await fetch('http://localhost:8000/api/v1/requests/accept-request', {
@@ -144,6 +148,21 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       const data = await response.json();
 
       console.log(data);
+      setOnGoingTrip({
+        tripId: data.data.request.tripId,
+        passengerId: passenger.id,
+        driverId: data.data.request.driverId,
+        passengerName: data.data.request.passengerName,
+        driverName: data.data.request.driverName,
+        passengerStartLocation: data.data.request.passengerStartLocation,
+        passengerLocation: data.data.request.passengerLocation,
+        driverLocation: data.data.request.driverLocation,
+        destination: data.data.request.destination,
+        destinationChoords: data.data.request.destinationChoords,
+        startTime: data.data.request.startTime,
+        rideDate: data.data.request.rideDate,
+        confirmed: false
+      })
       var ridersCopy:RiderType[] = riders;
       console.log(ridersCopy);
       for (let i = 0; i < ridersCopy.length; i++) {
@@ -155,6 +174,43 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       console.log(ridersCopy);
       setRiders(ridersCopy);
       setShowAcceptedDriverModal(true);
+      // Handle response or update UI as needed
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const checkRequest = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/requests/update-request-driver', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tripId: onGoingTrip.tripId,
+          location: position
+        }), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      console.log(data);
+      if (data.data.request.confirmed)
+        {
+          setShowAcceptedDriverModal(false);
+          console.log(onGoingTrip.passengerLocation);
+          console.log(onGoingTrip.driverLocation);
+          console.log(onGoingTrip.destinationChoords);
+
+          fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+          fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
+          // show routes
+        }
       // Handle response or update UI as needed
     } catch (error) {
       console.error('Error:', error);
@@ -183,14 +239,47 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
 
 
 
- useEffect(() => {
+//  useEffect(() => {
+//   isMounted.current = true;
+//   const watchId = navigator.geolocation.watchPosition(
+//       (position) => {
+//         const { latitude, longitude } = position.coords;
+//         setPosition([latitude, longitude]);
+//         fetchRoute(latitude, longitude, placeholderLocation[0], placeholderLocation[1], setRouteToDestination);
+//         fetchRoute(driverLocation[0], driverLocation[1], latitude, longitude, setRouteToUser); // Fetch reverse route
+//       },
+//       (error) => console.error('Error watching position:', error),
+//       { enableHighAccuracy: true, maximumAge: 0 }
+//     );
+
+//     if (location.state?.driverOnTheWay) {
+//       setShowDriverOnTheWay(true);
+
+//       // Instead of directly modifying state after a timeout, check if component is still mounted
+//       const timeoutId = setTimeout(() => {
+//         if (isMounted.current) {
+//           setShowDriverOnTheWay(false);
+//           setShowDriverArrivedModal(true);
+//         }
+//       }, 10000);
+
+//       return () => {
+//         clearTimeout(timeoutId);
+//         isMounted.current = false;
+//       };
+//     }
+  
+//     return () => {navigator.geolocation.clearWatch(watchId);isMounted.current = false;};
+//   }, [location.state]);
+
+useEffect(() => {
   isMounted.current = true;
   const watchId = navigator.geolocation.watchPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         setPosition([latitude, longitude]);
-        fetchRoute(latitude, longitude, placeholderLocation[0], placeholderLocation[1], setRouteToDestination);
-        fetchRoute(driverLocation[0], driverLocation[1], latitude, longitude, setRouteToUser); // Fetch reverse route
+        // fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[0], onGoingTrip.destinationChoords[1], setRouteToDestination);
+        // fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser); // Fetch reverse route
       },
       (error) => console.error('Error watching position:', error),
       { enableHighAccuracy: true, maximumAge: 0 }
@@ -215,6 +304,27 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
   
     return () => {navigator.geolocation.clearWatch(watchId);isMounted.current = false;};
   }, [location.state]);
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    if (showAcceptedDriverModal) {
+      // Start interval only if looking for driver
+      // makeRequest(); // Initial request
+
+      // Set interval to make request every 5 seconds
+      intervalId = setInterval(() => {
+        console.log("Ping");
+        checkRequest();
+        // makeRequest();
+      }, 5000);
+    }
+
+    return () => {
+      // Cleanup function
+      clearInterval(intervalId); // Clear interval when component unmounts or isLookingForDriver is set to false
+    };
+  }, [showAcceptedDriverModal]); // Run effect when isLookingForDriver changes
 
 //   return () => {navigator.geolocation.clearWatch(watchId);isMounted.current = false;};
 // }, [location.state]);
@@ -282,6 +392,10 @@ const handleCancelRideFromArrivedModal = () => {
     );
   };
 
+
+
+  
+
   return (
     //relative
     <div className="flex flex-col h-screen"> 
@@ -314,9 +428,11 @@ const handleCancelRideFromArrivedModal = () => {
           <Popup>Driver Location</Popup>
         </Marker>
 
-        {/* {routeToDestination && <Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />} */}
+        {routeToDestination && <Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />}
         {routeToUser && <Polyline positions={routeToUser} weight={10} opacity={0.3} color="red" />}
-
+        {/* {routeToUser && (
+           <Polyline positions={routeToUser} weight={10} opacity={0.3} color="blue" />
+        )} */}
         <ResetViewButton />
         {/* <Marker position={position}>
           <Popup>You are here</Popup>
