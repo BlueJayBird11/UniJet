@@ -7,9 +7,11 @@ type Props = {
   foundDriver: FoundDriver,
   onGoingTrip: OnGoingTrip,
   setOnGoingTrip: (value: OnGoingTrip) => void
+  showDriverPath: boolean,
+  setShowDriverPath: (value: boolean) => void,
 }
 
-const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip}: Props) => {
+const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip, showDriverPath, setShowDriverPath}: Props) => {
   const navigate = useNavigate();
   // const driver = {
   //   name: "Alex Smith",
@@ -21,7 +23,7 @@ const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip}: Prop
 
   // Confirm driver and navigate to map with driver details
   const handleConfirmDriver = () => {
-    navigate('/map', { state: { driverOnTheWay: true, foundDriver } });
+    navigate('/map', { state: { showDriverPath: true, foundDriver } });
   };
 
   // Navigate to confirm ride for another search
@@ -49,7 +51,10 @@ const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip}: Prop
       const data = await response.json();
 
       console.log(data);
-      console.log(data.data.confirmed);
+      // console.log(data.data.confirmed);
+      setShowDriverPath(true);
+      navigate('/map', { state: { showDriverPath: true, foundDriver } });
+
       
       // Handle response or update UI as needed
     } catch (error) {

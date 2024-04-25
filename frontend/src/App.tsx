@@ -36,6 +36,8 @@ import DriverFound from './scenes/map/driverFound';
 function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.Profile);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showActiveRide, setShowActiveRide] = useState(false);
+  const [showDriverPath, setShowDriverPath] = useState(false);
   const [passenger, setPassenger] = useState<Passenger>({
     id: 0,
     birthDate: "", 
@@ -146,10 +148,10 @@ function App() {
             <Route path="/settings" element={<Settings passenger={passenger} name={''} email={''} message={''} driverId={driverId} setDriverId={setDriverId}/>} />
             <Route path="/findDriver" element={<FindDriver />} />
             <Route path="/confirmRide" element={<ConfirmRide passenger={passenger} holdDestination={holdDestination} setHoldDestination={setHoldDestination} foundDriver={foundDriver} setFoundDriver={setFoundDriver} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip}/>} />
-            <Route path="/driverFound" element={<DriverFound passenger={passenger} foundDriver={foundDriver} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip}/>} />
+            <Route path="/driverFound" element={<DriverFound passenger={passenger} foundDriver={foundDriver} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip} showDriverPath={showDriverPath} setShowDriverPath={setShowDriverPath}/>} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
-            <Route path="/map" element={<Map passenger={passenger} driverId={driverId} holdDestination={holdDestination} setHoldDestination={setHoldDestination} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip}/>} />
+            <Route path="/map" element={<Map passenger={passenger} driverId={driverId} holdDestination={holdDestination} setHoldDestination={setHoldDestination} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip} showDriverPath={showDriverPath} setShowDriverPath={setShowDriverPath} showActiveRide={showActiveRide} setShowActiveRide={setShowActiveRide}/>} />
             <Route path="/viewTimeSlot" element={<ViewTimeSlot />} />
             <Route path="/addTimeSlot" element={<AddTimeSlot />} />
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />

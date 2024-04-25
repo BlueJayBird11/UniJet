@@ -203,7 +203,7 @@ class RequestRoutes extends BaseRoutes {
           driverLocation: req.body.driverLocation,
           destination: req.body.destination,
           destinationChoords: req.body.destinationChoords,
-          startTime: getTime(date),
+          startTime: timeForDB(date),
           rideDate: getDate(date),
           confirmed: false
         }
@@ -340,7 +340,7 @@ class RequestRoutes extends BaseRoutes {
         const resultTrip = await pool.query(
           "INSERT INTO trip (startTime, endTime, startLoction, endLoction, rideDate, earnings) VALUES \
           ($1, $2, $3, $4, $5, $6) returning *",
-          [req.body.startTime, timeForDB(date), req.body.startLoction, req.body.endLoction, getDate(date), req.body.earnings]
+          [req.body.startTime, timeForDB(date), req.body.startLocation.toString(), req.body.startLocation.toString(), getDate(date), req.body.earnings]
         );
         const trip = resultTrip.rows[0]; 
         console.log(trip);
@@ -349,7 +349,7 @@ class RequestRoutes extends BaseRoutes {
         const resultHistory = await pool.query(
           "INSERT INTO history (passengerID, driverID, tripID) VALUES \
           ($1, $2, $3) returning *",
-          [req.body.passengerId, req.body.driverId, req.body.tripId]
+          [req.body.passengerId, req.body.driverId, trip.tripId]
         );
         const history = resultHistory.rows[0]; 
         console.log(history);
