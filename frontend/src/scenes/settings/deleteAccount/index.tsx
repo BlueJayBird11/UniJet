@@ -7,19 +7,6 @@ type Props = {
   passenger: Passenger;
 };
 
-const Banner = () => {
-  return (
-    <div className="bg-gray-600 text-primary-black py-5 px-6 flex items-center justify-between">
-      <Link to="/settings" className="mr-4">
-        <ChevronLeftIcon className="h-6 w-6" />
-      </Link>
-      <div className="flex-grow flex items-center justify-center">
-        <h1 className="text-xl text-primary-black font-bold mr-10">Delete Account</h1>
-      </div>
-    </div>
-  );
-};
-
 const DeleteAccount = ({ passenger }: Props) => {
   const [confirmation, setConfirmation] = useState('');
 
@@ -56,7 +43,14 @@ const DeleteAccount = ({ passenger }: Props) => {
 
   return (
     <>
-      <Banner />
+      <div className="bg-gray-600 text-primary-black py-5 px-6 flex items-center justify-between">
+      <Link to="/settings" className="mr-4">
+        <ChevronLeftIcon className="h-6 w-6" />
+      </Link>
+      <div className="flex-grow flex items-center justify-center">
+        <h1 className="text-xl text-primary-black font-bold mr-10">Delete Account</h1>
+      </div>
+    </div>
       <div className="py-10 flex justify-center items-center">
         <div className="w-full max-w-xs text-center">
           <p className="text-primary-black mb-6">Are you sure you want to delete your account? This action cannot be undone.</p>

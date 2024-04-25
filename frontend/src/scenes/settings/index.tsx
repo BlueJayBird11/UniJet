@@ -86,17 +86,19 @@ const Settings = ({passenger}: Props) => {
             </div>
             <div className="p-2 flex-grow flex justify-center mt-16"> {/* Center the buttons and consider banner height */}
                 <div className="my-6">
-                    <h2 className="text-lg text-primary-black font-semibold">Your role is {userRole}</h2>
+                    <h2 className="text-lg text-primary-black text-center font-semibold">Your role is {userRole}.</h2>
                     <div className="flex mt-4">
                         <button
                             onClick={() => changeRoleTo('driver')}
-                            className={`mx-2 px-4 py-2 text-primary-black ${userRole === 'driver' ? 'bg-settingsButtons text-primary-black' : 'bg-gray-600'}`}
+                            className={`mx-2 px-4 py-2 rounded-lg shadow-md text-primary-black ${userRole === 'driver' ? 'bg-settingsButtons text-primary-black' : 'bg-gray-600'}`}
+                            style={{ width: '120px' }}
                         >
                             Driver
                         </button>
                         <button
                             onClick={() => changeRoleTo('passenger')}
-                            className={`mx-2 px-4 py-2 text-primary-black ${userRole === 'passenger' ? 'bg-settingsButtons text-primary-black' : 'bg-gray-600'}`}
+                            className={`mx-2 px-4 py-2 rounded-lg shadow-md text-primary-black ${userRole === 'passenger' ? 'bg-settingsButtons text-primary-black' : 'bg-gray-600'}`}
+                            style={{ width: '120px' }}
                         >
                             Passenger
                         </button>
@@ -142,16 +144,16 @@ const Settings = ({passenger}: Props) => {
             </div>
 
             {showReportModal && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-4 rounded w-full max-w-md">
-                        <h3 className="text-lg font-bold mb-2">Report an Issue</h3>
+                <div className="fixed inset-0 bg-primary-blue text-primary-blue bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-primary-black p-4 rounded w-full max-w-sm">
+                        <h3 className="text-lg text-primary-blue font-bold mb-2">Report an issue</h3>
                         <form onSubmit={handleReportSubmit}>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className="w-full p-2 border rounded mb-2"
-                                placeholder="Your Name"
+                                placeholder="Your name"
                                 required
                             />
                             <input
@@ -169,17 +171,17 @@ const Settings = ({passenger}: Props) => {
                                 placeholder="Describe the issue..."
                                 required
                             ></textarea>
-                            <div className="flex justify-end mt-2">
+                            <div className="flex justify-center mt-2">
                                 <button
                                     type="button"
                                     onClick={() => setShowReportModal(false)}
-                                    className="bg-gray-500 hover:bg-gray-600 text-primary-black font-bold py-2 px-4 rounded mr-2"
+                                    className="bg-red-500 hover:bg-red-300 text-primary-black font-bold py-2 px-4 rounded mr-2"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="bg-blue-500 hover:bg-blue-700 text-primary-black font-bold py-2 px-4 rounded"
+                                    className="bg-gray-600 hover:bg-gray-400 text-primary-black font-bold py-2 px-4 rounded"
                                 >
                                     Submit
                                 </button>

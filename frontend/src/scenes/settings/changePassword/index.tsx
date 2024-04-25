@@ -3,18 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
 
-const Banner = () => {
-  return (
-    <div className="bg-gray-600 text-primary-black py-5 px-6 flex items-center justify-between">
-      <Link to="/settings" className="mr-4">
-        <ChevronLeftIcon className="h-6 w-6" />
-      </Link>
-      <div className="flex-grow flex items-center justify-center"> 
-        <h1 className="text-xl text-primary-black font-bold mr-10">Change Password</h1>
-      </div>
-    </div>
-  );
-};
+
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -33,10 +22,17 @@ const ChangePassword = () => {
     // Placeholder for actual submission logic
     console.log("Submitted Change Password Request");
   };
-
+  
   return (
     <>
-      <Banner />
+      <div className="bg-gray-600 text-primary-black py-5 px-6 flex items-center justify-between">
+      <Link to="/settings" className="mr-4">
+        <ChevronLeftIcon className="h-6 w-6" />
+      </Link>
+      <div className="flex-grow flex items-center justify-center"> 
+        <h1 className="text-xl text-primary-black font-bold mr-10">Change Password</h1>
+      </div>
+    </div>
       <div className="p-4">
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -85,7 +81,6 @@ const ChangePassword = () => {
                 className="w-full p-2 border rounded mb-2" 
                 required 
               />
-              {/* Empty element with the same styling as the "show" button */}
               <button type="button" className="invisible ml-2 text-primary-black" style={{ width: '60px' }}>Hide</button>
             </div>
           </div>
