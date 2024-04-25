@@ -8,34 +8,39 @@ type Props = {
   passenger: Passenger;
 }
 
+type sectionList = { 
+  section: string;
+  sectionid: number;
+}
+
+type courseList = { 
+  coursenumber: string;
+  id: number;
+}
+
+type selectedClass = { 
+  buildingname: string;
+  classname: string;
+  daysofweek: string;
+  endtime: string;
+  starttime: string;
+}
+
+let classId: number = 0;
+
 const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
   const [selectedSubject, setSelectedSubject] = useState<string>('');
   const [selectedCourse, setSelectedCourse] = useState<string>('');
   const [selectedSection, setSelectedSection] = useState<string>('');
+  const [selectedClass, setSelectedClass] = useState<selectedClass>();
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [subjectList, setSubjectList] = useState<string[]>([]); 
-  const [courseList, setCourseList] = useState<string[]>([]); 
-  const [sectionList, setSectionList] = useState<string[]>([]); 
+  const [courseList, setCourseList] = useState<courseList[]>([]); 
+  const [sectionList, setSectionList] = useState<sectionList[]>([]); 
 
 
   // Function to handle form submission
-  const handleSubmit = () => {
-    setFormSubmitted(true);
-    filterData();
-  };
-
-  // Function to filter data based on selected subject, course, and section
-  const filterData = () => {
-    const filtered = placeholderData.filter(item => {
-      return (
-        (!selectedSubject || item.subject === selectedSubject) &&
-        (!selectedCourse || item.course === selectedCourse) &&
-        (!selectedSection || item.section === selectedSection)
-      );
-    });
-    setFilteredData(filtered);
-  };
 
   // Function to reset form
   const handleReset = () => {
@@ -58,31 +63,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
     // This is where you can save newData to CURR_DATA.json or take any further actions
   };
 
-  // Sort subjects alphabetically
-  //const subjects: string[] = [...new Set(placeholderData.map(item => item.subject))].sort();
-  /*const getInformation = async (passenger: Passenger) => {
-      console.log(userRole)
-      if (userRole === "driver") { 
-        try {
-          console.log("driver")
-          const id = await getDriverId(BigInt(Number(passenger.id)))
-          const response = await fetch(`http://localhost:8000/api/v1/history/passengers/${id}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-  
-          if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-          }
-          const {data} = await response.json();
-          console.log('Passenger data:', data);
-          setHistoryEntries(data.history)
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      }*/
     useEffect(() => {
       const fetchSubjects = async () => { 
         try {
@@ -132,24 +112,29 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
     
       fetchCourse();
     }, [selectedSubject]);
-
+    
     useEffect(() => {
       const fetchSection = async () => { 
         try {
           console.log("RIGHT HERE")
-          console.log(selectedSubject)
-          const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/course/section/${selectedSubject}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-          if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
+          console.log(courseList)
+          const foundCourse = courseList.find(course => course.coursenumber === selectedCourse);
+          if (foundCourse != undefined) { 
+            classId = foundCourse.id
+            const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/course/section/${classId}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+            if (!response.ok) {
+              throw new Error(`Error: ${response.status}`);
+            }
+            const { data } = await response.json();
+            console.log('Passenger data:', data.section);
+            setSectionList(data.section || []); // Use default empty array if data.subject is undefined
+            console.log(sectionList)
           }
-          const { data } = await response.json();
-          console.log('Passenger data:', data.course);
-          setSectionList(data.course || []); // Use default empty array if data.subject is undefined
         } catch (error) {
           console.error('Error:', error);
         }
@@ -158,21 +143,45 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
       fetchSection();
     }, [selectedCourse]);
 
-    /*
-  // Filter courses based on selected subject and sort numerically
-  const courses: string[] = selectedSubject ? [...new Set(placeholderData
-    .filter(item => item.subject === selectedSubject)
-    .map(item => item.course)
-    .sort((a, b) => parseInt(a) - parseInt(b))
-  )] : [];
+    const handleSubmit = async () => {
+      try {
+        await fetchSelectedClass();
+        setFormSubmitted(true);
+        console.log("HERE")
+        console.log(selectedClass)
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
 
-  // Filter sections based on selected subject and course, and sort numerically
-  const sections: string[] = selectedCourse ? [...new Set(placeholderData
-    .filter(item => item.subject === selectedSubject && item.course === selectedCourse)
-    .map(item => item.section)
-    .sort((a, b) => parseInt(a) - parseInt(b))
-  )] : [];
-  */
+    const fetchSelectedClass = async () => { 
+      try {
+        const foundSection = sectionList.find(course => course.section === selectedSection);
+        console.log(foundSection)
+        if (foundSection != undefined) { 
+          const section = foundSection.sectionid
+          const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/course/section/submit/${classId}/${section}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+      
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+      
+          const { data } = await response.json();
+          console.log('Passenger data:', data.slot);
+          setSelectedClass(data.slot)
+        } 
+      } catch (error) {
+        throw new Error(`Error: ${error}`);
+      }
+    };
+    useEffect(() => {
+      console.log(selectedClass);
+    }, [selectedClass]);
 
   return (
     <div className="flex flex-col justify-center items-center h-full">
@@ -228,23 +237,21 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
         )}
       </div>
       {/* Display filtered data only after form submission */}
-      {formSubmitted && (
+      {formSubmitted && selectedClass && (
         <div className="mt-8">
           <h2>Selected Class:</h2>
           <div className="flex flex-wrap justify-center gap-4">
-            {filteredData.map((item, index) => (
-              <div key={index} className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-primary-red">
+              <div className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-primary-red">
                 <div className="px-6 py-4">
-                  <div className="font-bold text-xl mb-2">{item.name}</div>
+                  <div className="font-bold text-xl mb-2">{selectedClass && selectedClass[0].classname}</div>
                   <p className="text-slate-300 text-base">
-                    Type: {item.type}<br />
-                    Days: {item.days}<br />
-                    Location: {item.location}<br />
-                    Time: {item.startTime}-{item.endTime}
+                    Type: class <br />
+                    Days: {selectedClass && selectedClass[0].daysofweek}<br />
+                    Location: {selectedClass && selectedClass[0].buildingname}<br />
+                    Time: {selectedClass && selectedClass[0].starttime}-{selectedClass[0].endtime}
                   </p>
                 </div>
               </div>
-            ))}
           </div>
           <div className="mt-4">
             <button onClick={handleAddTimeSlot} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
