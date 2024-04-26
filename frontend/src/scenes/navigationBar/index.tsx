@@ -20,7 +20,7 @@ const Navbar = ({selectedPage, setSelectedPage}: Props) => {
     const iconStyle = "h-10 w-10 text-navBarIcons";
     return (
     <nav>
-        <div className='bg-primary-red flex w-full items-center justify-between fixed bottom-0 py-2 px-6 gap-2 z-[400]'>
+        <div id="navbar" className='bg-primary-red flex w-full items-center justify-between fixed bottom-0 py-2 px-6 gap-2 z-[400]'>
             <Link to ="/schedule">
                 <button className={`${buttonStyle} ${checkIfIsSelectedPage(SelectedPage.Schedule)}`} 
                     onClick={() => setSelectedPage(SelectedPage.Schedule)}

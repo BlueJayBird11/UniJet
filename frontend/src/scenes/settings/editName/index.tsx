@@ -7,10 +7,11 @@ type Props = {
   passenger: Passenger;
 }
 
-const EditName = ({ passenger }: Props) => {
-  const [name, setName] = useState(passenger.firstName);
-  const [lastName, setLastName] = useState(passenger.lastName);
-
+const EditName = ({passenger}: Props) => {
+  const [name, setName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const changeName = async () => {
     console.log(passenger.id);
     console.log({ firstName: name, lastName: lastName });
@@ -24,26 +25,42 @@ const EditName = ({ passenger }: Props) => {
       });
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        throw new Error(`HTTP status ${response.status}`);
       }
 
       const data = await response.json();
       passenger.firstName = name;
       passenger.lastName = lastName;
-      console.log('Success:', data);
-      window.history.back();
+      setSuccess('Name updated successfully!');
+      setTimeout(() => {
+        setSuccess('');
+        window.history.back();
+      }, 3000);
+       // Navigate back to previous page after successful PUT request
 
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error('Error:', error);
+          setError(`Failed to update name: ${error.message}`);
+        } else {
+          console.error('Error:', error);
+          setError('Failed to update name: An unexpected error occurred');
+        }
+        setTimeout(() => setError(''), 3000);
+      }
+    };
 
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
     setName(event.currentTarget.value);
+    setError('');
+    setSuccess('');
+
   };
 
   const handleLastNameChange = (event: FormEvent<HTMLInputElement>) => {
     setLastName(event.currentTarget.value);
+    setError('');
+    setSuccess('');
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -58,9 +75,43 @@ const EditName = ({ passenger }: Props) => {
       <Link to="/settings" className="mr-4">
         <ChevronLeftIcon className="h-6 w-6" />
       </Link>
-      <div className="flex-grow flex items-center justify-center"> 
-        <h1 className="text-xl text-primary-black font-bold mr-10">Edit Name</h1>
-      </div>
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8">
+        <div className="flex-grow flex items-center justify-center"> 
+          <h2 className="text-xl text-primary-black font-bold mr-10">Edit Name</h2>
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+            New Name:
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="name"
+            type="name"
+            placeholder="Enter your first name"
+            value={name}
+            onChange={handleChange}
+          />
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
+            id="lastName"
+            type="lastName"
+            placeholder="Enter your last name"
+            value={lastName}
+            onChange={handleLastNameChange}
+          />
+          {error && <p className="text-red-500 text-xs italic">{error}</p>}
+          {success && <p className="text-green-500 text-xs italic">{success}</p>}
+          </div>
+        <div className="flex items-center justify-center">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
     </div>
       <div className="p-4">
         <form onSubmit={handleSubmit}>
