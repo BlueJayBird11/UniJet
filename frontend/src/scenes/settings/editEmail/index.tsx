@@ -8,6 +8,13 @@ type Props = {
 
 const EditEmail = ({passenger}: Props) => {
   const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [navigateBack, setNavigateBack] = useState(false);
+
+  const validateEmail = (email: string): boolean => {
+    return email.endsWith('@email.latech.edu');
+  };
 
   const changeEmail = async() => {
     try {
@@ -25,24 +32,39 @@ const EditEmail = ({passenger}: Props) => {
 
       const data = await response.json();
       passenger.email = email;
-      console.log('Success:', data);
-      // setShowModal(true);
+      setSuccess('Email updated successfully!');
+      setTimeout(() => {
+        setSuccess('');
+        setNavigateBack(true);
+      }, 3000);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error:', error);
+      setError(`Failed to update email: ${error.message}`);
+      setTimeout(() => setError(''), 3000);
     }
   };
 
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
     setEmail(event.currentTarget.value);
+    setError('');
+    setSuccess('');
   };
 
   const handleSubmit = async(event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(`New email: ${email}`);
-    await changeEmail(); // Call changeEmail function to update email
-    window.history.back(); // Navigate back to previous page
+    if (validateEmail(email)) {
+      console.log(`New email: ${email}`);
+      await changeEmail(); 
+    } else {
+      setError('Email must end with @email.latech.edu');
+    }
   };
+
+  
+  if (navigateBack) {
+    window.history.back(); 
+  }
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -66,6 +88,8 @@ const EditEmail = ({passenger}: Props) => {
             value={email}
             onChange={handleChange}
           />
+          {error && <p className="text-red-500 text-xs italic">{error}</p>}
+          {success && <p className="text-green-500 text-xs italic">{success}</p>}
         </div>
         <div className="flex items-center justify-between">
           <button
