@@ -349,7 +349,7 @@ class RequestRoutes extends BaseRoutes {
         const resultHistory = await pool.query(
           "INSERT INTO history (passengerID, driverID, tripID) VALUES \
           ($1, $2, $3) returning *",
-          [req.body.passengerId, req.body.driverId, trip.tripId]
+          [req.body.passengerId, req.body.driverId, trip.id]
         );
         const history = resultHistory.rows[0]; 
         console.log(history);
