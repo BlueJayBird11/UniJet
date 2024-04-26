@@ -17,7 +17,7 @@ const Navbar = ({selectedPage, setSelectedPage}: Props) => {
     }
     
     const buttonStyle = "rounded-full p-4 border-solid border-black"
-    const iconStyle = "h-10 w-10 text-black";
+    const iconStyle = "h-10 w-10 text-navBarIcons";
     return (
     <nav>
         <div id="navbar" className='bg-primary-red flex w-full items-center justify-between fixed bottom-0 py-2 px-6 gap-2 z-[400]'>

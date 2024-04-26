@@ -148,8 +148,8 @@ const SignupPage: React.FC = () => {
       <div className="w-full max-w-lg">
         <h1 className="text-6xl font-bold text-center mb-2 text-white shadow-lg bg-opacity-50 bg-black px-3 py-1 rounded">UNIJET</h1>
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h2 className="text-xl font-semibold text-center mb-6">Sign Up</h2>
-          <form onSubmit={handleSignup} className="space-y-4">
+          <h2 className="text-xl font-semibold text-center text-black mb-6">Sign Up</h2>
+          <form onSubmit={handleSignup} className="text-gray-700 space-y-4">
             <input
               type="email"
               placeholder="Enter your email"
@@ -161,10 +161,10 @@ const SignupPage: React.FC = () => {
               className="w-full p-2 border rounded"
             />
 
-            <div className="relative mb-4">
+            <div className="relative text-black mb-4">
               <input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter Password"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -190,7 +190,7 @@ const SignupPage: React.FC = () => {
             {passwordError && <div className="text-red-500 text-sm">{passwordError}</div>}
             <input
               type="text"
-              placeholder="Your First Name"
+              placeholder="Enter your first name"
               value={FirstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
@@ -198,13 +198,13 @@ const SignupPage: React.FC = () => {
             />
             <input
               type="text"
-              placeholder="Your Last Name"
+              placeholder="Enter your last name"
               value={LastName}
               onChange={(e) => setLastName(e.target.value)}
               required
               className="w-full p-2 border rounded"
             />
-            <label htmlFor="dob" className="block text-gray-700 text-sm font-bold mb-2">Enter your date of birth here: </label>
+            <label htmlFor="dob" className="block text-gray-700 text-sm font-bold mb-2">Enter your date of birth: </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-1 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               type="date"
@@ -223,7 +223,7 @@ const SignupPage: React.FC = () => {
             />
             <button type="submit" className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Sign Up</button>
           </form>
-          <p className="text-center text-sm mt-4">
+          <p className="text-center text-sm text-black mt-4">
             Already have an account? <Link to="/login" className="text-blue-500 hover:text-blue-800">Login</Link>
           </p>
         </div>

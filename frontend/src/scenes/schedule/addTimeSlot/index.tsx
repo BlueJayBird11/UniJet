@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import placeholderData from "../MOCK_DATA.json";
 import currData from "../CURR_DATA.json";
 import { Link } from 'react-router-dom';
+import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
 import { Passenger } from '@/shared/types';
 
 type Props = {
@@ -197,14 +198,24 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
     }, [selectedClass]);
 
   return (
+    <>
+      <div className="bg-primary-green-500 text-primary-black py-5 px-6 flex items-center justify-between fixed top-0 w-full z-10">
+      <Link to="/schedule" className="mr-4">
+        <ChevronLeftIcon className="h-6 w-6" />
+      </Link>
+      <div className="flex-grow flex items-center justify-center">
+        <h1 className="text-xl text-primary-black font-bold mr-10">Add Time Slots</h1>
+      </div>
+    </div>
     <div className="flex flex-col justify-center items-center h-full">
-      <h1 className="mb-4 text-3xl font-bold">Add Time Slot </h1>
+      <h1 className="mb-4 text-primary-black text-3xl font-bold">Add Time Slot </h1>
       <div className="mt-8">
         <div className="mb-16">
-          <label htmlFor="subject" className="mr-2 text-xl">Subject:</label>
+          <div className={`bg-viewTimeSlots rounded-lg p-4`}>
+          <label htmlFor="subject" className="mr-2 text-primary-black text-xl">Subject:</label>
           <select
             id="subject"
-            className="border rounded p-2"
+            className="text-primary-blue border rounded p-2 w-full"
             value={selectedSubject}
             onChange={(e) => setSelectedSubject(e.target.value)}
           >
@@ -213,12 +224,14 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
               <option key={index} value={subject.classsubject}>{subject.classsubject}</option>
             ))}
           </select>
+         </div>
         </div>
         <div className="mb-16">
-          <label htmlFor="course" className="mr-2 text-xl">Course:</label>
+          <div className={`bg-viewTimeSlots rounded-lg p-4`}>
+          <label htmlFor="course" className="mr-2 text-primary-black text-xl">Course:</label>
           <select
             id="course"
-            className="border rounded p-2"
+            className="text-primary-blue border rounded p-2 w-full"
             value={selectedCourse}
             onChange={(e) => setSelectedCourse(e.target.value)}
           >
@@ -227,12 +240,14 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
               <option key={index} value={course.coursenumber}>{course.coursenumber}</option>
             ))}
           </select>
+          </div>
         </div>
         <div className="mb-16">
-          <label htmlFor="section" className="mr-2 text-xl">Section:</label>
+          <div className={`bg-viewTimeSlots rounded-lg p-4`}>
+          <label htmlFor="section" className="mr-2 text-primary-black text-xl">Section:</label>
           <select
             id="section"
-            className="border rounded p-2"
+            className="text-primary-blue border rounded p-2 w-full"
             value={selectedSection}
             onChange={(e) => setSelectedSection(e.target.value)}
           >
@@ -241,23 +256,24 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
               <option key={index} value={section.section}>{section.section}</option>
             ))}
           </select>
+         </div>
         </div>
         {/* Display submit button only when all form fields are filled */}
         {(selectedSubject && selectedCourse && selectedSection) && (
-          <button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          <button onClick={handleSubmit} className="bg-settingsButtons hover:bg-settingsButtonsPressed text-primary-black font-bold py-2 px-4 rounded">
             Submit
           </button>
         )}
       </div>
       {/* Display filtered data only after form submission */}
       {formSubmitted && selectedClass && (
-        <div className="mt-8">
+        <div className="mt-8 text-primary-black">
           <h2>Selected Class:</h2>
           <div className="flex flex-wrap justify-center gap-4">
               <div className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-primary-red">
                 <div className="px-6 py-4">
                   <div className="font-bold text-xl mb-2">{selectedClass && selectedClass[0].classname}</div>
-                  <p className="text-slate-300 text-base">
+                  <p className="text-primary-black text-base">
                     Type: class <br />
                     Days: {selectedClass && selectedClass[0].daysofweek}<br />
                     Location: {selectedClass && selectedClass[0].buildingname}<br />
@@ -276,8 +292,8 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
           </div>
         </div>
       )}
-      <Link to="/schedule" className="mt-4 text-blue-500 hover:text-blue-700">Back to Schedule</Link>
     </div>
+   </>
   );
   }
 
