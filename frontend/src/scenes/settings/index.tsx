@@ -14,9 +14,11 @@ type Props = {
     name: string;
     email: string;
     message: string;
+    driverId: number;
+    setDriverId: (value: number) => void;
 }
 
-const Settings = ({passenger}: Props) => {
+const Settings = ({passenger, driverId, setDriverId}: Props) => {
     const { userRole, setUserRole } = useUserRole();
     const [showReportModal, setShowReportModal] = useState(false);
     const [reportSuccess, setReportSuccess] = useState(false);
@@ -37,7 +39,8 @@ const Settings = ({passenger}: Props) => {
             if (!response.ok) {
               throw new Error(`Error: ${response.status}`);
             }
-      
+            
+            setDriverId(0);
             const data = await response.json();
             passenger.email = email;
             console.log('Success:', data);
@@ -65,6 +68,12 @@ const Settings = ({passenger}: Props) => {
           const data = await response.json();
           passenger.email = email;
           console.log('Success:', data);
+
+          // set driverId
+          // console.log(data.data.driverId.rows[0].driverid);
+          setDriverId(data.data.driverId.rows[0].driverid);
+          console.log(driverId)
+
           handleRoleChange('driver');
     
         } catch (error) {

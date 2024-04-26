@@ -19,6 +19,7 @@
     "dotenv": "^16.4.5",
     "framer-motion": "^10.17.12",
     "leaflet": "^1.9.4",
+    "leaflet-control-geocoder": "^2.4.0",
     "react": "^18.2.0",
     "react-anchor-link-smooth-scroll": "^1.0.12",
     "react-calendar": "^4.8.0",
