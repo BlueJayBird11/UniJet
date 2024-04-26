@@ -119,6 +119,47 @@ class SchedulerRoutes extends BaseRoutes {
                 });
             }
         });
+        /*
+        selectedClass && selectedClass[0].classname}</div>
+                  <p className="text-slate-300 text-base">
+                    Type: class <br />
+                    Days: {selectedClass && selectedClass[0].daysofweek}<br />
+                    Location: {selectedClass && selectedClass[0].buildingname}<br />
+                    Time: {selectedClass && selectedClass[0].starttime}-{selectedClass[0].endtime}
+        */
+
+        this.router.get("/addCourse/:classid/:sectionid/:className/:buildingname/:daysofweek/:starttime/:endtime/:passengerid", async (req, res) => {
+            try {
+                const classid = req.params.classid
+                const sectionid = req.params.sectionid
+                const classname = req.params.className
+                const buildingname = req.params.buildingname
+                const daysofweek = req.params.daysofweek
+                const starttime = req.params.starttime
+                const endtime = req.params.endtime
+                const passengerid = req.params.passengerid
+                const results = await pool.query(`UPDATE public.passengers
+                SET schedule = COALESCE(schedule, '[]'::jsonb) || 
+                              jsonb_build_array(
+                                jsonb_build_object(
+                                  'classid', $1::int,
+                                  'sectionid', $2::int,
+                                  'classname', $3::text,
+                                  'buildingname', $4::text,
+                                  'daysofweek', $5::text,
+                                  'starttime', $6::text,
+                                  'endtime', $7::text
+                                )
+                              )
+                WHERE id = $8::int;`,
+                [classid, sectionid, classname, buildingname, daysofweek, starttime, endtime, passengerid],);
+                res.status(200).send(results);
+                } catch (error) {
+                console.error('Error while updating schedule:', error);
+                res.status(500).send('Internal Server Error');
+            }
+        });
+     
     }
 }
 

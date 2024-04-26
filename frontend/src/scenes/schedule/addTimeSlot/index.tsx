@@ -27,6 +27,7 @@ type selectedClass = {
 }
 
 let classId: number = 0;
+let section: number = 0;
 
 const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
   const [selectedSubject, setSelectedSubject] = useState<string>('');
@@ -38,7 +39,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
   const [subjectList, setSubjectList] = useState<string[]>([]); 
   const [courseList, setCourseList] = useState<courseList[]>([]); 
   const [sectionList, setSectionList] = useState<sectionList[]>([]); 
-
 
   // Function to handle form submission
 
@@ -52,16 +52,29 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
   };
 
   // Function to add time slot to current data
-  const handleAddTimeSlot = () => {
-    const newData = [...currData, ...filteredData];
-    // You might want to add additional logic to prevent duplicates or handle conflicts
-    // For simplicity, this example just appends the filtered data to the current data
-    // You can implement more sophisticated logic based on your requirements
-    // For example, checking for duplicates before adding
-    console.log(newData);
-    handleReset()
-    // This is where you can save newData to CURR_DATA.json or take any further actions
-  };
+  const handleAddTimeSlot = async () => {
+    if (selectedClass !== undefined) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/scheduler/addCourse/${classId}/${section}/${selectedClass[0].classname}/${selectedClass[0].buildingname}/${selectedClass[0].daysofweek}/${selectedClass[0].starttime}/${selectedClass[0].endtime}/${passenger.passenger.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+
+        const { data } = await response.json();
+        console.log('Passenger data:', data.subject);
+        setSubjectList(data.subject || []); // Use default empty array if data.subject is undefined
+      } catch (error) {
+        console.error('Error:', error);
+      }
+      handleReset()
+    };
+}
 
     useEffect(() => {
       const fetchSubjects = async () => { 
@@ -159,7 +172,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
         const foundSection = sectionList.find(course => course.section === selectedSection);
         console.log(foundSection)
         if (foundSection != undefined) { 
-          const section = foundSection.sectionid
+          section = foundSection.sectionid
           const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/course/section/submit/${classId}/${section}`, {
             method: 'GET',
             headers: {
