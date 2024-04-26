@@ -85,7 +85,7 @@ const AddTimeSlot: React.FC = () => {
             <label htmlFor="subject" className="mr-2 text-primary-black text-xl">Subject:</label>
             <select
               id="subject"
-              className="border rounded p-2 w-full"
+              className="text-primary-blue border rounded p-2 w-full"
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value)}
             >
@@ -101,7 +101,7 @@ const AddTimeSlot: React.FC = () => {
             <label htmlFor="course" className="mr-2 text-xl">Course:</label>
             <select
               id="course"
-              className="border rounded p-2 w-full"
+              className="text-primary-blue border rounded p-2 w-full"
               value={selectedCourse}
               onChange={(e) => setSelectedCourse(e.target.value)}
             >
@@ -117,7 +117,7 @@ const AddTimeSlot: React.FC = () => {
             <label htmlFor="section" className="mr-2 text-xl">Section:</label>
             <select
               id="section"
-              className="border rounded p-2 w-full"
+              className="text-primary-blue border rounded p-2 w-full"
               value={selectedSection}
               onChange={(e) => setSelectedSection(e.target.value)}
             >
@@ -130,7 +130,7 @@ const AddTimeSlot: React.FC = () => {
         </div>
         {/* Display submit button only when all form fields are filled */}
         {(selectedSubject && selectedCourse && selectedSection) && (
-          <button onClick={handleSubmit} className="bg-settingsButtons hover:bg-settingsButtonsPressed text-white font-bold py-2 px-4 rounded">
+          <button onClick={handleSubmit} className="bg-settingsButtons hover:bg-settingsButtonsPressed text-primary-black font-bold py-2 px-4 rounded">
             Submit
           </button>
         )}
