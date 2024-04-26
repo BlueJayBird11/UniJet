@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
-import placeholderData from "../CURR_DATA.json";
 import { Passenger } from '@/shared/types';
 
 // Define an interface for the JSON data
@@ -47,9 +46,6 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
     fetchSchedule();
   
   }, [passenger.passenger.id]);
-  
-  
-  
 
   return (
     <div className="flex flex-col items-center">

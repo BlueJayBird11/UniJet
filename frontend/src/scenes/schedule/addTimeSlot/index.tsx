@@ -74,7 +74,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
       }
       handleReset()
     };
-}
+  }
 
     useEffect(() => {
       const fetchSubjects = async () => { 
