@@ -78,7 +78,7 @@ const EditEmail = ({passenger}: Props) => {
       <div className="flex-grow flex items-center justify-center"> 
         <h1 className="text-xl text-primary-black font-bold mr-10">Edit Email</h1>
       </div>
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      {/* <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-2xl font-bold mb-4">Edit Email</h2>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
@@ -103,7 +103,7 @@ const EditEmail = ({passenger}: Props) => {
             Submit
           </button>
         </div>
-      </form>
+      </form> */}
     </div>
       <div className="p-4">
         <form onSubmit={handleSubmit}>

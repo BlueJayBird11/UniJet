@@ -75,8 +75,11 @@ const EditName = ({passenger}: Props) => {
       <Link to="/settings" className="mr-4">
         <ChevronLeftIcon className="h-6 w-6" />
       </Link>
+      <div className="flex-grow flex items-center justify-center"> 
+          <h2 className="text-xl text-primary-black font-bold mr-10">Edit Name</h2>
+        </div>
       {/* Form */}
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8">
+      {/* <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8">
         <div className="flex-grow flex items-center justify-center"> 
           <h2 className="text-xl text-primary-black font-bold mr-10">Edit Name</h2>
         </div>
@@ -111,7 +114,7 @@ const EditName = ({passenger}: Props) => {
             Submit
           </button>
         </div>
-      </form>
+      </form> */}
     </div>
       <div className="p-4">
         <form onSubmit={handleSubmit}>

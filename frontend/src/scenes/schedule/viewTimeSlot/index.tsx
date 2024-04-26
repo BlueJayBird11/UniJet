@@ -21,8 +21,7 @@ type Props = {
 }
 
 const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
-  const [schedule, setSchedule] = useState
-  <Slot[]>([]); // Initialize schedule as an empty array of Slot objects
+  const [schedule, setSchedule] = useState<Slot[]>([]); // Initialize schedule as an empty array of Slot objects
 
   useEffect(() => {
     const fetchSchedule = async () => {
@@ -53,12 +52,14 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
   return (
     <>
       <div className="bg-primary-green-500 text-primary-black py-5 px-6 flex items-center justify-between fixed top-0 w-full z-10">
-      <Link to="/schedule" className="mr-4">
-        <ChevronLeftIcon className="h-6 w-6" />
-      </Link>
-      <div className="flex-grow flex items-center justify-center">
-        <h1 className="text-xl text-primary-black font-bold mr-10">Current Schedule</h1>
-      </div>
+        <Link to="/schedule" className="mr-4">
+          <ChevronLeftIcon className="h-6 w-6" />
+        </Link>
+        <div className="flex-grow flex items-center justify-center">
+          <h1 className="text-xl text-primary-black font-bold mr-10">Current Schedule</h1>
+        </div>
+        </div>
+        <div className="flex flex-col justify-center items-center h-full pt-20">
       {schedule.length === 0 ? (
         <p className="text-red-500 text-2xl">The schedule is currently empty.</p>
       ) : (
@@ -78,8 +79,7 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
           ))}
         </div>
       )}
-      <Link to="/schedule" className="mt-4 text-blue-500 hover:text-blue-700">Back to Schedule</Link>
-    </div>
+     </div>
     </>
   );
 };
