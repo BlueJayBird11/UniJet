@@ -73,9 +73,9 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
             setReportSuccess(true);
             setTimeout(() => setReportSuccess(false), 3000); // Hide the confirmation message after 3 seconds
             }
-        } catch (error) {
+        catch (error) {
             console.error('Error:', error);
-        }
+        };
     };
     const buttonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-white text-black";
     const dangerButtonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-red-500 text-white";
