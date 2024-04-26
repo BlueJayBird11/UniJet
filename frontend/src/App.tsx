@@ -77,7 +77,7 @@ function App() {
     confirmed: false
   })
 
-  const handleLogin = async(info: Info) => {
+  const handleLogin = async(info: Info): Promise<boolean> => {
     // setPassenger({
     //   id: 0,
     //   birthDate: "",
@@ -117,9 +117,10 @@ function App() {
           carPool: false,
         });
         setIsLoggedIn(true);
-    
+        return true;
     } catch (error) {
       console.error('Error:', error);
+      return false;
     }
   };
 
