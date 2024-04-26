@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
-import EditNameButton from "@/assets/edit_name.png";
-import EditEmailButton from "@/assets/edit_email.png";
-import EditUniversityButton from "@/assets/edit_university.png";
-import LogoutButton from "@/assets/logout.png";
-import DeleteAccountButton from "@/assets/delete_account.png";
+import { ChevronLeftIcon, EnvelopeIcon } from '@heroicons/react/24/solid'; 
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
 import { Passenger } from '@/shared/types';
 
@@ -26,61 +21,30 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
 
-    const changeRoleToPassenger = async() => {
+    const changeRoleTo = async (role: 'passenger' | 'driver') => {
+        const newStatus = role === 'driver' ? 1 : 0;
+        const endpoint = role === 'driver' ? 'status-driver' : 'status';
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/settings/status/${passenger.id}`, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({"newStatus": 1}), // Convert the passenger object to JSON
+            const response = await fetch(`http://localhost:8000/api/v1/settings/${endpoint}/${passenger.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ newStatus }), // Convert the passenger object to JSON
             });
-      
+
             if (!response.ok) {
-              throw new Error(`Error: ${response.status}`);
+                throw new Error(`Error: ${response.status}`);
             }
-            
             setDriverId(0);
             const data = await response.json();
-            passenger.email = email;
+            passenger.email = email; 
             console.log('Success:', data);
-            handleRoleChange('passenger');
-      
+            handleRoleChange(role)
           } catch (error) {
             console.error('Error:', error);
           }
       }; 
-
-      const changeRoleToDriver = async() => {
-        try {
-          const response = await fetch(`http://localhost:8000/api/v1/settings/status-driver/${passenger.id}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({"newStatus": 1}), // Convert the passenger object to JSON
-          });
-    
-          if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-          }
-    
-          const data = await response.json();
-          passenger.email = email;
-          console.log('Success:', data);
-
-          // set driverId
-          // console.log(data.data.driverId.rows[0].driverid);
-          setDriverId(data.data.driverId.rows[0].driverid);
-          console.log(driverId)
-
-          handleRoleChange('driver');
-    
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      };
-
     const handleRoleChange = (newRole: 'passenger' | 'driver') => {
         setUserRole(newRole);
     };
@@ -102,14 +66,12 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
                 },
                 body: JSON.stringify(formData),
             });
-
-            if (response.ok) {
-                setName('');
-                setEmail('');
-                setMessage('');
-                setShowReportModal(false);
-                setReportSuccess(true);
-                setTimeout(() => setReportSuccess(false), 3000); // Hide the confirmation message after 3 seconds
+            setName('');
+            setEmail('');
+            setMessage('');
+            setShowReportModal(false);
+            setReportSuccess(true);
+            setTimeout(() => setReportSuccess(false), 3000); // Hide the confirmation message after 3 seconds
             }
         } catch (error) {
             console.error('Error:', error);
@@ -117,73 +79,77 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
     };
     const buttonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-white text-black";
     const dangerButtonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-red-500 text-white";
-
     return (
-        <div className='flex flex-col items-center bg-primary-blue-100 relative px-4 py-6'>
-            <div className="absolute top-0 left-0 mt-4 ml-4 flex items-center text-white">
-                <Link to="/" className="flex items-center">
-                    <ChevronLeftIcon className="h-5 w-5 mr-1" /> 
-                    Back
+        
+        <div className="flex flex-col bg-primary-blue font-sans">
+            <div className="bg-gray-600 text-primary-black py-4 px-6 flex items-center justify-between fixed top-0 w-full">
+                <Link to="/" className="mr-4">
+                    <ChevronLeftIcon className="h-6 w-6" />
                 </Link>
+                <h1 className="text-xl text-primary-black font-bold">Settings</h1>
+                <button
+                    onClick={() => setShowReportModal(true)}
+                    className="bg-red-500 text-primary-black rounded-lg shadow-md px-4 py-2 flex items-center space-x-1"
+                >
+                    <EnvelopeIcon className="h-5 w-5" /> 
+                </button>
             </div>
-            <div className='my-8'>
-                <h2 className='text-2xl font-bold text-primary-black'>Your role is {userRole}</h2>
-                <div className='flex mt-4'>
-                    <button 
-                        onClick={changeRoleToDriver} 
-                        className={`mx-2 px-4 py-2 ${userRole === 'driver' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                    >
-                        Driver
-                    </button>
-                    <button 
-                        onClick={changeRoleToPassenger} 
-                        className={`mx-2 px-4 py-2 ${userRole === 'passenger' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                    >
-                        Passenger
-                    </button>
+            <div className="p-2 flex-grow flex justify-center mt-16"> {/* Center the buttons and consider banner height */}
+                <div className="my-6">
+                    <h2 className="text-lg text-primary-black text-center font-semibold">Your role is {userRole}.</h2>
+                    <div className="flex mt-4">
+                        <button
+                            onClick={() => changeRoleTo('driver')}
+                            className={`mx-2 px-4 py-2 rounded-lg shadow-md text-primary-black ${userRole === 'driver' ? 'bg-settingsButtons text-primary-black' : 'bg-gray-600'}`}
+                            style={{ width: '120px' }}
+                        >
+                            Driver
+                        </button>
+                        <button
+                            onClick={() => changeRoleTo('passenger')}
+                            className={`mx-2 px-4 py-2 rounded-lg shadow-md text-primary-black ${userRole === 'passenger' ? 'bg-settingsButtons text-primary-black' : 'bg-gray-600'}`}
+                            style={{ width: '120px' }}
+                        >
+                            Passenger
+                        </button>
+                    </div>
                 </div>
             </div>
-            
-            <Link to="/edit-name">
-                <button className={buttonStyles}>
-                    Edit Name
-                </button>
-            </Link>
-            <Link to="/edit-email">
-                <button className={buttonStyles}>
-                    Edit Email
-                </button>
-            </Link>
-            <Link to="/edit-university">
-                <button className={buttonStyles}>
-                    Edit University
-                </button>
-            </Link>
-            <Link to="/change-password">
-                <button className={buttonStyles}>
-                    Change Password
-                </button>
-            </Link>
-            <Link to="/change-phone-number">
-                <button className={buttonStyles}>
-                    Change Phone Number
-                </button>
-            </Link>
-            <Link to="/delete-account">
-                <button className={dangerButtonStyles}>
-                    Delete Account
-                </button>
-            </Link>
-
-            <button onClick={() => setShowReportModal(true)} className="absolute top-0 right-0 mt-4 mr-4 bg-red-500 text-white px-4 py-2 rounded md:mt-6 md:mr-6">
-                Report Issue
-            </button>
-
-            <div className="mt-10">
-                <Link to="/logout">
-                    <button className="bg-red-500 text-white font-bold py-2 px-4 rounded">
-                        Logout
-                    </button>
+            <div className="p-4 text-primary-black">
+                <Link to="/change-password" className="block mb-2">
+                    <div className="bg-gray-600 rounded-lg shadow-md p-4">
+                        <p className="text-lg text-primary-black font-medium">Change Password</p>
+                    </div>
+                </Link>
+                <Link to="/edit-name" className="block mb-2">
+                    <div className="bg-gray-600 rounded-lg shadow-md p-4">
+                        <p className="text-lg text-primary-black font-medium">Edit Name</p>
+                    </div>
+                </Link>
+                <Link to="/edit-email" className="block mb-2">
+                    <div className="bg-gray-600 rounded-lg shadow-md p-4">
+                        <p className="text-lg text-primary-black font-medium">Edit Email</p>
+                    </div>
+                </Link>
+                <Link to="/edit-university" className="block mb-2">
+                    <div className="bg-gray-600 rounded-lg shadow-md p-4">
+                        <p className="text-lg text-primary-black font-medium">Edit University</p>
+                    </div>
+                </Link>
+                <Link to="/change-phone-number" className="block mb-2">
+                    <div className="bg-gray-600 rounded-lg shadow-md p-4">
+                        <p className="text-lg text-primary-black font-medium">Change Phone Number</p>
+                    </div>
+                </Link>
+                <Link to="/delete-account" className="block mb-2">
+                    <div className="bg-red-500 rounded-lg shadow-md p-4">
+                        <p className="text-lg text-primary-black font-medium">Delete Account</p>
+                    </div>
+                </Link>
+                <Link to="/logout" className="block mb-2">
+                    <div className="bg-red-500 rounded-lg shadow-md p-4">
+                        <p className="text-lg text-primary-black font-medium">Logout</p>
+                    </div>
                 </Link>
             </div>
 
@@ -194,18 +160,45 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
             )}
 
             {showReportModal && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-4 rounded w-full max-w-md">
-                        <h3 className="text-lg font-bold mb-2">Report an Issue</h3>
+                <div className="fixed inset-0 bg-primary-blue text-primary-blue bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-primary-black p-4 rounded w-full max-w-sm">
+                        <h3 className="text-lg text-primary-blue font-bold mb-2">Report an issue</h3>
                         <form onSubmit={handleReportSubmit}>
-                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full p-2 border rounded mb-2" placeholder="Your Name" required />
-                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-2 border rounded mb-2" placeholder="Email of your account" required />
-                            <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="w-full p-2 border rounded" placeholder="Describe the issue..." required></textarea>
-                            <div className="flex justify-end mt-2">
-                                <button type="button" onClick={() => setShowReportModal(false)} className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mr-2">
+                            <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="w-full p-2 border rounded mb-2"
+                                placeholder="Your name"
+                                required
+                            />
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full p-2 border rounded mb-2"
+                                placeholder="Email of your account"
+                                required
+                            />
+                            <textarea
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                className="w-full p-2 border rounded"
+                                placeholder="Describe the issue..."
+                                required
+                            ></textarea>
+                            <div className="flex justify-center mt-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowReportModal(false)}
+                                    className="bg-red-500 hover:bg-red-300 text-primary-black font-bold py-2 px-4 rounded mr-2"
+                                >
                                     Cancel
                                 </button>
-                                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <button
+                                    type="submit"
+                                    className="bg-gray-600 hover:bg-gray-400 text-primary-black font-bold py-2 px-4 rounded"
+                                >
                                     Submit
                                 </button>
                             </div>

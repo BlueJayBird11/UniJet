@@ -99,8 +99,10 @@ const index = ({ selectedPage, setSelectedPage, passenger }: Props) => {
     <header className='relative'>
       <div className='flex justify-end p-4'>
         <Link to="/settings">
-          <button>
-            <Cog6ToothIcon className='w-10 h-10 text-primary-red' />
+          <button
+            onClick={() => setSelectedPage(SelectedPage.Settings)}
+          >
+            <Cog6ToothIcon className='w-10 h-10 text-settingsIconColor' />
           </button>
         </Link>
       </div>
@@ -114,14 +116,7 @@ const index = ({ selectedPage, setSelectedPage, passenger }: Props) => {
           Rating: {rating !== null ? rating : '0.0'}
         </h2>
       </div>
-      <div className='flex justify-center items-start'>
-        <button
-          className={`text-3xl p-5 font-bold text-primary-black  rounded-full focus:outline-none mt-24 ${offlineStatus ? 'bg-primary-red' : 'bg-primary-green-500'}`}
-          onClick={handleStatusClick}
-        >
-          {offlineStatus ? 'Offline' : 'Online'}
-        </button>
-      </div>
+
     </header>
   )
 }

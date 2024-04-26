@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import background from './background.png'; // Assuming you have a similar background for consistency
+import background from './background.png'; 
 
 const OTPVerificationPage: React.FC = () => {
     const [email, setEmail] = useState<string>('');

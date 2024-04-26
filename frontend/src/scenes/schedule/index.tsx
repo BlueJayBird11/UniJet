@@ -138,13 +138,13 @@ function Schedule() {
     <div className='pt-20'>
       <div className="h-20 fixed top-0 border border-rose-100 bg-gray-600 flex justify-between items-center px-2 w-full">
         <Link to="/addTimeSlot">
-          <button className="bg-primary-red rounded px-1 py-1">Add time slot</button>
+          <button className="bg-schedulerButtons rounded px-1 py-1">Add time slot</button>
         </Link>
         <Link to="/viewTimeSlot">
-          <button className="bg-primary-red rounded px-1 py-1">View time slots</button>
+          <button className="bg-schedulerButtons rounded px-1 py-1">View time slots</button>
         </Link>
         <Link to="/deleteTimeSlot">
-          <button className="bg-primary-red rounded px-1 py-1">Delete time slots</button>
+          <button className="bg-schedulerButtons rounded px-1 py-1">Delete time slots</button>
         </Link>
       </div>
         <div className="schedule bg-primary-blue">
@@ -155,7 +155,7 @@ function Schedule() {
                   <tr {...headerGroup.getHeaderGroupProps()}>
                     <th></th> {/* Add an empty header for the time column */}
                     {headerGroup.headers.map((column) => (
-                      <th {...column.getHeaderProps()} className="sticky bg-primary-blue border-rose-100 border-2 px-3 py-2">
+                      <th {...column.getHeaderProps()} className="sticky bg-schedulerDays border-rose-100 border-2 px-3 py-2">
                         {column.render("Header")}
                       </th>
                     ))}
@@ -171,11 +171,11 @@ function Schedule() {
                   const formattedTime = time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); // Format time
                   return (
                     <tr {...row.getRowProps()}>
-                      <td className="border border-rose-100 px-4 py-2">{formattedTime}</td> {/* Display time */}
+                      <td className="border border-rose-100 bg-schedulerTimes px-4 py-2">{formattedTime}</td> {/* Display time */}
                       {row.cells.map((cell) => (
                         <td
                           {...cell.getCellProps()}
-                          className={`border border-rose-100 w-10 h-10 ${cell.value === 1 ? 'bg-primary-red' : 'bg-gray-600'}`}
+                          className={`border border-rose-100 w-10 h-10 ${cell.value === 1 ? 'bg-takenblocks' : 'bg-gray-600'}`}
                         >
                         </td>
                       ))}

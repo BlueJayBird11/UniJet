@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -9,7 +11,7 @@ const ChangePassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (newPassword !== confirmPassword) {
       alert("New Password and Confirm Password do not match.");
@@ -18,70 +20,76 @@ const ChangePassword = () => {
     // Placeholder for actual submission logic
     console.log("Submitted Change Password Request");
   };
-
-  const handleCancel = () => {
-    navigate('/settings'); // Navigate back to the settings page
-  };
-
+  
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-4 rounded w-full max-w-md">
-        <h3 className="text-lg font-bold mb-4">Change Password</h3>
+    <>
+      <div className="bg-gray-600 text-primary-black py-5 px-6 flex items-center justify-between">
+      <Link to="/settings" className="mr-4">
+        <ChevronLeftIcon className="h-6 w-6" />
+      </Link>
+      <div className="flex-grow flex items-center justify-center"> 
+        <h1 className="text-xl text-primary-black font-bold mr-10">Change Password</h1>
+      </div>
+    </div>
+      <div className="p-4">
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="current-password" className="block mb-2 text-sm font-medium text-gray-900">Current Password</label>
+            <label htmlFor="current-password" className="block mb-2 text-sm font-medium text-primary-black">Current Password</label>
             <div className="flex">
               <input 
                 id="current-password"
                 type={showCurrentPassword ? "text" : "password"} 
+                placeholder="Enter current password"
                 value={currentPassword} 
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className="w-full p-2 border rounded mb-2" 
                 required 
               />
-              <button type="button" onClick={() => setShowCurrentPassword(!showCurrentPassword)} className="ml-2">
+              <button type="button" onClick={() => setShowCurrentPassword(!showCurrentPassword)} className="ml-2" style={{ width: '60px' }}>
                 {showCurrentPassword ? 'Hide' : 'Show'}
               </button>
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="new-password" className="block mb-2 text-sm font-medium text-gray-900">New Password</label>
+            <label htmlFor="new-password" className="block mb-2 text-sm font-medium text-primary-black">New Password</label>
             <div className="flex">
               <input 
                 id="new-password"
                 type={showNewPassword ? "text" : "password"} 
+                placeholder="Enter new password"
                 value={newPassword} 
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full p-2 border rounded mb-2" 
                 required 
               />
-              <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="ml-2">
+              <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="ml-2" style={{ width: '60px' }}>
                 {showNewPassword ? 'Hide' : 'Show'}
               </button>
             </div>
           </div>
           <div className="mb-4">
-            <label htmlFor="confirm-password" className="block mb-2 text-sm font-medium text-gray-900">Confirm New Password</label>
-            <input 
-              id="confirm-password"
-              type="password" 
-              value={confirmPassword} 
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full p-2 border rounded mb-2" 
-              required 
-            />
+            <label htmlFor="confirm-password" className="block mb-2 text-sm font-medium text-primary-black">Confirm New Password</label>
+            <div className="flex">
+              <input 
+                id="confirm-password"
+                type="password" 
+                placeholder="Confirm new password"
+                value={confirmPassword} 
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full p-2 border rounded mb-2" 
+                required 
+              />
+              <button type="button" className="invisible ml-2 text-primary-black" style={{ width: '60px' }}>Hide</button>
+            </div>
           </div>
-          <div className="flex justify-end mt-4">
-          <button type="button" onClick={handleCancel} className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mr-2">
-            Cancel
-          </button>
-            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          <div className="flex justify-center mt-4">
+            <button type="submit" className="bg-settingsButtons text-primary-black hover:bg-settingsButtonsPressed font-bold py-2 px-4 rounded">
               Change Password
             </button>
           </div>
         </form>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -11,14 +11,25 @@ export default {
         "gray-50": "#EFE6E6",
         "gray-100": "#DFCCCC",
         "gray-500": "#5E0000",
-        "primary-blue": "#003085",
-        "primary-red": "#CA333A",
-        "primary-green-500": "#92D36E",
+        "gray-600": "#404040", // scheduler blocks
+        "takenblocks" : "#C23345", // taken scheduler blocks
+        "schedulerButtons" : "#C23345", // scheduler buttons
+        "settingsButtons" : "#C23345", // settings subpage buttons
+        "settingsButtonsPressed" : "#c14757", // settings subpage buttons when pressed
+        "viewTimeSlots" : "#404040", // view time slot blocks
+        "historySearch" : "#404040", // history search bar
+        "primary-blue": "#202020", // background profile/ bg scheduler
+        "primary-red": "#6A0D19", // nav bar 
+        "schedulerDays": "#6A0D19", // scheduler days
+        "schedulerTimes": "#202020", // scheduler times
+        "settingsIconColor": "#DFDFDF", // setting icon
+        "primary-green-500": "#C23345", // nav bar circles
+        "navBarIcons": "#FFE4C4", // nav bar icons
         "primary-green-300": "#b1e098",
         "secondary-400": "#FFCD5B",
         "secondary-500": "#FFC132",
         "primary-white": "#FFFFFF",
-        "primary-black": "#000002",
+        "primary-black": "#DFDFDF", // text/icons
       },
       fontFamily: {
         dmsans: ["DM Sans", "sans-serif"],

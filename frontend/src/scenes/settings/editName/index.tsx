@@ -1,7 +1,7 @@
-import { Passenger } from '@/shared/types';
-import React, { useState, FormEvent } from 'react'
+import React, { useState, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
+import { Passenger } from '@/shared/types';
 
 type Props = {
   passenger: Passenger;
@@ -12,17 +12,16 @@ const EditName = ({passenger}: Props) => {
   const [lastName, setLastName] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
-  const changeName = async() => {
+  const changeName = async () => {
     console.log(passenger.id);
-    console.log({"firstName": name, "lastName": lastName});
+    console.log({ firstName: name, lastName: lastName });
     try {
       const response = await fetch(`http://localhost:8000/api/v1/settings/name/${passenger.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({"firstName": name, "lastName": lastName}), // Convert the passenger object to JSON
+        body: JSON.stringify({ firstName: name, lastName: lastName }),
       });
 
       if (!response.ok) {
@@ -55,6 +54,7 @@ const EditName = ({passenger}: Props) => {
     setName(event.currentTarget.value);
     setError('');
     setSuccess('');
+
   };
 
   const handleLastNameChange = (event: FormEvent<HTMLInputElement>) => {
@@ -64,21 +64,22 @@ const EditName = ({passenger}: Props) => {
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    console.log(`New name: ${name}`)
-    changeName(); // Call changeName function when the form is submitted
+    event.preventDefault();
+    console.log(`New name: ${name}`);
+    changeName();
   };
 
   return (
-    <div className="flex flex-col h-screen justify-center items-center bg-primary-blue">
-      {/* Back button */}
-      <Link to="/settings" className="absolute top-0 left-0 mt-4 ml-4 flex items-center text-white">
-        <ChevronLeftIcon className="h-5 w-5 mr-1" />
-        Back
+    <>
+      <div className="bg-gray-600 text-primary-black py-5 px-6 flex items-center justify-between">
+      <Link to="/settings" className="mr-4">
+        <ChevronLeftIcon className="h-6 w-6" />
       </Link>
       {/* Form */}
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8">
-        <h2 className="text-2xl font-bold mb-4">Edit Name</h2>
+        <div className="flex-grow flex items-center justify-center"> 
+          <h2 className="text-xl text-primary-black font-bold mr-10">Edit Name</h2>
+        </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
             New Name:
@@ -112,7 +113,41 @@ const EditName = ({passenger}: Props) => {
         </div>
       </form>
     </div>
+      <div className="p-4">
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-primary-black text-sm font-bold mb-2" htmlFor="name">
+              New Name:
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="name"
+              type="text"
+              placeholder="Enter your first name"
+              value={name}
+              onChange={handleChange}
+            />
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
+              id="lastName"
+              type="text"
+              placeholder="Enter your last name"
+              value={lastName}
+              onChange={handleLastNameChange}
+            />
+          </div>
+          <div className="flex justify-center">
+            <button
+              className="bg-settingsButtons hover:bg-settingsButtonsPressed text-primary-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
   );
 };
 
-export default EditName
+export default EditName;

@@ -33,7 +33,7 @@ const ForgotPasswordPage: React.FC = () => {
         <div className="flex justify-center items-center h-screen bg-no-repeat bg-cover" style={{ backgroundImage: `url(${background})` }}>
           <div className="w-full max-w-md">
             <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-              <h2 className="text-xl font-semibold text-center mb-6">Reset Password</h2>
+              <h2 className="text-xl font-semibold text-center text-black mb-6">Reset Password</h2>
               <form onSubmit={handleSubmit}>
                 <input
                   type="email"
@@ -42,7 +42,7 @@ const ForgotPasswordPage: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded text-gray-700"
                 />
                 <div className="flex justify-between items-center mt-4">
                   <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full p-2 border rounded">
@@ -50,8 +50,8 @@ const ForgotPasswordPage: React.FC = () => {
                   </button>
                 </div>
               </form>
-              <p className="text-center mt-4">
-                Remembered your password? <a href="/login" className="text-blue-500 hover:text-blue-700">Log in</a>
+              <p className="text-center text-black mt-4">
+                Know your password? <a href="/login" className="text-blue-500 hover:text-blue-700">Log in</a>
               </p>
             </div>
           </div>
