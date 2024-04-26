@@ -21,30 +21,86 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
 
-    const changeRoleTo = async (role: 'passenger' | 'driver') => {
-        const newStatus = role === 'driver' ? 1 : 0;
-        const endpoint = role === 'driver' ? 'status-driver' : 'status';
-        try {
-            const response = await fetch(`http://localhost:8000/api/v1/settings/${endpoint}/${passenger.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ newStatus }), // Convert the passenger object to JSON
-            });
+    // const changeRoleTo = async (role: 'passenger' | 'driver') => {
+    //     const newStatus = role === 'driver' ? 1 : 0;
+    //     const endpoint = role === 'driver' ? 'status-driver' : 'status';
+    //     try {
+    //         const response = await fetch(`http://localhost:8000/api/v1/settings/${endpoint}/${passenger.id}`, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ newStatus }), // Convert the passenger object to JSON
+    //         });
 
+    //         if (!response.ok) {
+    //             throw new Error(`Error: ${response.status}`);
+    //         }
+    //         setDriverId(0);
+    //         const data = await response.json();
+    //         passenger.email = email; 
+    //         console.log('Success:', data);
+    //         handleRoleChange(role)
+    //       } catch (error) {
+    //         console.error('Error:', error);
+    //       }
+    //   }; 
+
+    const changeRoleToPassenger = async() => {
+        try {
+            const response = await fetch(`http://localhost:8000/api/v1/settings/status/${passenger.id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({"newStatus": 1}), // Convert the passenger object to JSON
+            });
+      
             if (!response.ok) {
-                throw new Error(`Error: ${response.status}`);
+              throw new Error(`Error: ${response.status}`);
             }
+            
             setDriverId(0);
             const data = await response.json();
-            passenger.email = email; 
+            passenger.email = email;
             console.log('Success:', data);
-            handleRoleChange(role)
+            handleRoleChange('passenger');
+      
           } catch (error) {
             console.error('Error:', error);
           }
       }; 
+
+      const changeRoleToDriver = async() => {
+        try {
+          const response = await fetch(`http://localhost:8000/api/v1/settings/status-driver/${passenger.id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"newStatus": 1}), // Convert the passenger object to JSON
+          });
+    
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+    
+          const data = await response.json();
+          passenger.email = email;
+          console.log('Success:', data);
+
+          // set driverId
+          // console.log(data.data.driverId.rows[0].driverid);
+          setDriverId(data.data.driverId.rows[0].driverid);
+          console.log(driverId)
+
+          handleRoleChange('driver');
+    
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+
     const handleRoleChange = (newRole: 'passenger' | 'driver') => {
         setUserRole(newRole);
     };
@@ -99,14 +155,14 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
                     <h2 className="text-lg text-primary-black text-center font-semibold">Your role is {userRole}.</h2>
                     <div className="flex mt-4">
                         <button
-                            onClick={() => changeRoleTo('driver')}
+                            onClick={changeRoleToDriver}
                             className={`mx-2 px-4 py-2 rounded-lg shadow-md text-primary-black ${userRole === 'driver' ? 'bg-settingsButtons text-primary-black' : 'bg-gray-600'}`}
                             style={{ width: '120px' }}
                         >
                             Driver
                         </button>
                         <button
-                            onClick={() => changeRoleTo('passenger')}
+                            onClick={changeRoleToPassenger}
                             className={`mx-2 px-4 py-2 rounded-lg shadow-md text-primary-black ${userRole === 'passenger' ? 'bg-settingsButtons text-primary-black' : 'bg-gray-600'}`}
                             style={{ width: '120px' }}
                         >
