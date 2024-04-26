@@ -1,105 +1,120 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { ChevronLeftIcon } from '@heroicons/react/24/solid';
+import { Link, useNavigate } from 'react-router-dom';
 
-interface PhoneVerificationProps {
-}
+
+interface PhoneVerificationProps {}
 
 const PhoneVerification: React.FC<PhoneVerificationProps> = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [phoneOtp, setPhoneOtp] = useState('');
     const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [showOTPInput, setShowOTPInput] = useState(false);
     const [otpError, setOtpError] = useState('');
-    const [editMode, setEditMode] = useState(false);
-    const [otpSent, setOtpSent] = useState(false); // New state to track if OTP was sent
+    const [countdown, setCountdown] = useState(7);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        let timer: ReturnType<typeof setTimeout> | null = null; 
+        if (isPhoneVerified && countdown > 0) {
+            timer = setTimeout(() => {
+                setCountdown(countdown - 1);
+            }, 1000);
+        } else if (countdown === 0) {
+            navigate('/settings');
+        }
+        return () => {
+            if (timer) clearTimeout(timer);
+        };
+    }, [isPhoneVerified, countdown, navigate]);
 
     const handleSendOtp = async () => {
         if (!phoneNumber || phoneNumber.length < 10) {
-            alert('Please enter a valid phone number');
+            setOtpError('Please enter a valid phone number.');
             return;
         }
         try {
             const response = await axios.post('http://localhost:8000/api/send-phone-otp', { phoneNumber });
             if (response.status === 200) {
-                console.log('OTP sent successfully:', response.data.message);
-                setOtpSent(true); // OTP was successfully sent
+                setShowOTPInput(true);
+                setOtpError('');
             } else {
                 throw new Error(response.data.error || 'Failed to send OTP');
             }
         } catch (error: any) {
-            console.error('Error sending OTP:', error);
-            alert((error.response?.data?.error || 'Failed to send OTP') as string); // Cast to string if needed
-            setOtpSent(false); // Failed to send OTP
+            setOtpError(error.response?.data?.error || 'Failed to send OTP');
         }
     };
 
     const handleVerifyOtp = async () => {
         if (!phoneOtp || phoneOtp.length !== 6) {
-            alert('Please enter the 6-digit OTP');
+            setOtpError('Please enter the 6-digit OTP');
             return;
         }
         try {
             const response = await axios.post('http://localhost:8000/api/verify-phone-otp', { phoneNumber, otp: phoneOtp });
             if (response.status === 200) {
                 setIsPhoneVerified(true);
-                console.log('Phone number verified:', response.data.message);
-                setOtpSent(false); // Reset OTP sent status after successful verification
-                setEditMode(false); // Exit edit mode after successful verification
+                setShowConfirm(false);
+                setShowOTPInput(false);
+                setOtpError('');
             } else {
-                throw new Error(response.data.error || 'OTP verification failed');
+                throw new Error(response.data.error || "OTP doesn't match.");
             }
         } catch (error: any) {
-            console.error('Error verifying OTP:', error);
-            setOtpError((error.response?.data?.error || 'Failed to verify OTP') as string); // Cast to string if needed
+            setOtpError(error.response?.data?.error || 'Failed to verify OTP');
         }
     };
 
     return (
-        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div className="absolute top-0 left-0 mt-4 ml-4 flex items-center text-white">
-                <Link to="/settings" className="flex items-center">
-                    <ChevronLeftIcon className="h-5 w-5 mr-1" />
-                    Back
-                </Link>
+        <div className="flex justify-center items-center h-screen">
+            <div className="w-full max-w-md p-6 bg-white rounded shadow-md">
+                {!isPhoneVerified && !showConfirm && (
+                    <div>
+                        <h1 className="text-xl font-bold text-center mb-4">Change your phone number?</h1>
+                        <button onClick={() => setShowConfirm(true)} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded block w-full mb-2">Yes</button>
+                        <button onClick={() => navigate('/settings')} className="bg-red-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded block w-full">No</button>
+                    </div>
+                )}
+                {showConfirm && !showOTPInput && (
+                    <div>
+                        <h1 className="text-xl font-bold text-center mb-4">Please enter your phone number.</h1>
+                        <input
+                            type="tel"
+                            placeholder="Enter your phone number"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            className="w-full p-2 border rounded mb-4"
+                        />
+                        <button onClick={handleSendOtp} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">Send OTP</button>
+                    </div>
+                )}
+                {showOTPInput && (
+                    <div>
+                        <h1 className="text-xl font-bold text-center mb-4">Enter the OTP sent to your number.</h1>
+                        <input
+                            type="text"
+                            placeholder="Enter OTP"
+                            value={phoneOtp}
+                            onChange={(e) => setPhoneOtp(e.target.value)}
+                            className="w-full p-2 border rounded mb-4"
+                        />
+                        <button onClick={handleVerifyOtp} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">Verify OTP</button>
+                    </div>
+                )}
+                {otpError && (
+                    <div className="text-red-500 text-center mt-4">{otpError}</div>
+                )}
+                {isPhoneVerified && (
+                    <div className="text-green-500 text-center mt-4">
+                        <p style={{fontSize: 'md', fontWeight: 'bold'}}>Your phone number is verified and changed.</p>
+                        <p><strong>Redirecting to settings in {countdown} seconds...</strong></p>
+                    </div>
+                )}
+
             </div>
-            {!isPhoneVerified && (
-                <div style={{ marginBottom: '20px' }}>
-                    {editMode && !otpSent ? ( // Only show this if in edit mode and OTP has not been sent
-                        <>
-                            <input
-                                type="tel"
-                                placeholder="Enter new phone number"
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                                style={{ marginRight: '10px', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-                            />
-                            <button onClick={handleSendOtp} style={{ padding: '10px 20px', borderRadius: '5px', backgroundColor: 'blue', color: 'white', cursor: 'pointer' }}>Send OTP</button>
-                        </>
-                    ) : (
-                        <button onClick={() => { setEditMode(true); setOtpSent(false); }} style={{ padding: '10px 20px', borderRadius: '5px', backgroundColor: 'blue', color: 'white', cursor: 'pointer' }}> Change Phone Number </button>
-                    )}
-                </div>
-            )}
-            {isPhoneVerified && (
-                <div style={{ marginBottom: '20px' }}>
-                    <p>Your phone number is verified.</p>
-                    <button onClick={() => { setEditMode(true); setOtpSent(false); }} style={{ padding: '10px 20px', borderRadius: '5px', backgroundColor: 'blue', color: 'white', cursor: 'pointer' }}>Change Phone Number</button>
-                </div>
-            )}
-            {editMode && otpSent && ( // Only show OTP input if OTP has been sent
-                <div>
-                    <input
-                        type="text"
-                        placeholder="Enter OTP sent to your phone"
-                        value={phoneOtp}
-                        onChange={(e) => setPhoneOtp(e.target.value)}
-                        style={{ marginBottom: '10px', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-                    />
-                    {otpError && <div style={{ color: 'red', marginBottom: '10px' }}>{otpError}</div>}
-                    <button onClick={handleVerifyOtp} style={{ padding: '10px 20px', borderRadius: '5px', backgroundColor: 'green', color: 'white', cursor: 'pointer' }}>Verify OTP</button>
-                </div>
-            )}
         </div>
     );
 };

@@ -13,7 +13,7 @@ interface Props {
 }
 
 const ReachedDestinationModal = ({ driver, onRate }) => {
-  const [driverRating, setDriverRating] = useState(0);
+  const [driverRating, setDriverRating] = useState(5);
 
   const renderRatingStars = () => {
     return [...Array(5)].map((_, i) => (
@@ -55,6 +55,8 @@ const Map: React.FC<Props> = ({  passenger }) => {
   const placeholderLocation: [number, number] = [32.541251162684404, -92.63578950465626]; 
   const driverLocation: [number, number] = [32.52424701643656, -92.67001400107138]; 
   const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+
+  const [mapHeight, setMapHeight] = useState('100vh');
   // const riders: Array<RiderType> = [
   //   {
   //     name: "Ash",
@@ -210,6 +212,28 @@ const handleCancelRideFromArrivedModal = () => {
     }
   };
 
+  useEffect(() => {
+    // Function to update the map height
+    function updateMapHeight() {
+      const navbar = document.getElementById('navbar');
+      if (navbar) {
+        const navbarHeight = navbar.offsetHeight;
+        setMapHeight(`calc(100vh - ${navbarHeight}px)`);
+      }
+    }
+
+    // Set the map height on mount
+    updateMapHeight();
+
+    // Update map height on window resize
+    window.addEventListener('resize', updateMapHeight);
+
+    // Clean up event listener
+    return () => {
+      window.removeEventListener('resize', updateMapHeight);
+    };
+  }, []);
+
   if (!position) {
     return <div>Loading...</div>;
   }
@@ -234,7 +258,7 @@ const handleCancelRideFromArrivedModal = () => {
 
   return (
     <div className="h-screen relative">
-      <MapContainer style={{ width: '100%', height: '90.5%' }} center={position} zoom={13} scrollWheelZoom={true} className="relative">
+      <MapContainer style={{ width: '100%', height: mapHeight }} center={position} zoom={13} scrollWheelZoom={true} className="relative">
 
 
  {/* // return (

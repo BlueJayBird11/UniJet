@@ -19,6 +19,7 @@ type Props = {
 const Settings = ({passenger}: Props) => {
     const { userRole, setUserRole } = useUserRole();
     const [showReportModal, setShowReportModal] = useState(false);
+    const [reportSuccess, setReportSuccess] = useState(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
@@ -83,20 +84,28 @@ const Settings = ({passenger}: Props) => {
             message,
         };
 
-        const response = await fetch('https://formspree.io/f/xdoqgnoq', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
-        setName('');
-        setEmail('');
-        setMessage('');
-        setShowReportModal(false);
-    };
+        try {
+            const response = await fetch('https://formspree.io/f/xdoqgnoq', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
 
+            if (response.ok) {
+                setName('');
+                setEmail('');
+                setMessage('');
+                setShowReportModal(false);
+                setReportSuccess(true);
+                setTimeout(() => setReportSuccess(false), 3000); // Hide the confirmation message after 3 seconds
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
     const buttonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-white text-black";
     const dangerButtonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-red-500 text-white";
 
@@ -169,7 +178,11 @@ const Settings = ({passenger}: Props) => {
                 </Link>
             </div>
 
-            
+            {reportSuccess && (
+                <div className="fixed top-16 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded">
+                    Report successfully sent!
+                </div>
+            )}
 
             {showReportModal && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
