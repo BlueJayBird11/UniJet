@@ -4,6 +4,7 @@ import placeholderData from "../CURR_DATA.json";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from './confirmationModal';
+import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
 
 // Define an interface for the JSON data
 interface Slot {
@@ -40,6 +41,15 @@ const DeleteTimeSlot = () => {
   };
 
   return (
+    <>
+      <div className="bg-primary-green-500 text-primary-black py-5 px-6 flex items-center justify-between fixed top-0 w-full z-10">
+      <Link to="/schedule" className="mr-4">
+        <ChevronLeftIcon className="h-6 w-6" />
+      </Link>
+      <div className="flex-grow flex items-center justify-center">
+        <h1 className="text-xl text-primary-black font-bold mr-10">Delete Time Slots</h1>
+      </div>
+    </div>
     <div className="flex flex-col items-center">
       <h1 className="mb-4 text-3xl font-bold">Delete Time Slot</h1>
       {data.length === 0 ? (
@@ -59,7 +69,7 @@ const DeleteTimeSlot = () => {
               </div>
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">{slot.name}</div>
-                <p className="text-slate-300 text-base">
+                <p className="text-primary-black text-base">
                   Type: {slot.type}<br />
                   Days: {slot.days}<br />
                   Location: {slot.location}<br />
@@ -70,7 +80,6 @@ const DeleteTimeSlot = () => {
           ))}
         </div>
       )}
-      <Link to="/schedule" className="mt-4 text-blue-500 hover:text-blue-700">Back to Schedule</Link>
 
       {/* Confirmation Modal */}
       <ConfirmationModal
@@ -79,6 +88,7 @@ const DeleteTimeSlot = () => {
         onConfirm={handleConfirmDelete}
       />
     </div>
+    </>
   );
 };
 

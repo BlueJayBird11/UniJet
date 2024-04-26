@@ -23,7 +23,7 @@ const ViewTimeSlot = () => {
 
   return (
     <>
-      <div className="bg-gray-600 text-primary-black py-5 px-6 flex items-center justify-between fixed top-0 w-full z-10">
+      <div className="bg-primary-green-500 text-primary-black py-5 px-6 flex items-center justify-between fixed top-0 w-full z-10">
       <Link to="/schedule" className="mr-4">
         <ChevronLeftIcon className="h-6 w-6" />
       </Link>

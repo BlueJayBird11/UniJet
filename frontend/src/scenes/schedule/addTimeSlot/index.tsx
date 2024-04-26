@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import placeholderData from "../MOCK_DATA.json";
 import currData from "../CURR_DATA.json";
 import { Link } from 'react-router-dom';
+import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
 
 const AddTimeSlot: React.FC = () => {
   const [selectedSubject, setSelectedSubject] = useState<string>('');
@@ -67,6 +68,15 @@ const AddTimeSlot: React.FC = () => {
   )] : [];
 
   return (
+    <>
+      <div className="bg-primary-green-500 text-primary-black py-5 px-6 flex items-center justify-between fixed top-0 w-full z-10">
+      <Link to="/schedule" className="mr-4">
+        <ChevronLeftIcon className="h-6 w-6" />
+      </Link>
+      <div className="flex-grow flex items-center justify-center">
+        <h1 className="text-xl text-primary-black font-bold mr-10">Add Time Slots</h1>
+      </div>
+    </div>
     <div className="flex flex-col justify-center items-center h-full">
       <h1 className="mb-4 text-primary-black text-3xl font-bold">Add Time Slot </h1>
       <div className="mt-8">
@@ -120,21 +130,21 @@ const AddTimeSlot: React.FC = () => {
         </div>
         {/* Display submit button only when all form fields are filled */}
         {(selectedSubject && selectedCourse && selectedSection) && (
-          <button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          <button onClick={handleSubmit} className="bg-settingsButtons hover:bg-settingsButtonsPressed text-white font-bold py-2 px-4 rounded">
             Submit
           </button>
         )}
       </div>
       {/* Display filtered data only after form submission */}
       {formSubmitted && (
-        <div className="mt-8">
+        <div className="mt-8 text-primary-black">
           <h2>Selected Class:</h2>
           <div className="flex flex-wrap justify-center gap-4">
             {filteredData.map((item, index) => (
               <div key={index} className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-primary-red">
                 <div className="px-6 py-4">
                   <div className="font-bold text-xl mb-2">{item.name}</div>
-                  <p className="text-slate-300 text-base">
+                  <p className="text-primary-black text-base">
                     Type: {item.type}<br />
                     Days: {item.days}<br />
                     Location: {item.location}<br />
@@ -154,8 +164,8 @@ const AddTimeSlot: React.FC = () => {
           </div>
         </div>
       )}
-      <Link to="/schedule" className="mt-4 text-blue-500 hover:text-blue-700">Back to Schedule</Link>
     </div>
+   </>
   );
 }
 

@@ -7,19 +7,6 @@ type Props = {
   passenger: Passenger;
 }
 
-const Banner = () => {
-  return (
-    <div className="bg-gray-600 text-primary-black py-5 px-6 flex items-center justify-between">
-      <Link to="/settings" className="mr-4">
-        <ChevronLeftIcon className="h-6 w-6" />
-      </Link>
-      <div className="flex-grow flex items-center justify-center"> 
-        <h1 className="text-xl text-primary-black font-bold mr-10">Edit Email</h1>
-      </div>
-    </div>
-  );
-};
-
 const EditEmail = ({ passenger }: Props) => {
   const [email, setEmail] = useState(passenger.email);
 
@@ -60,7 +47,14 @@ const EditEmail = ({ passenger }: Props) => {
 
   return (
     <>
-      <Banner />
+      <div className="bg-gray-600 text-primary-black py-5 px-6 flex items-center justify-between">
+      <Link to="/settings" className="mr-4">
+        <ChevronLeftIcon className="h-6 w-6" />
+      </Link>
+      <div className="flex-grow flex items-center justify-center"> 
+        <h1 className="text-xl text-primary-black font-bold mr-10">Edit Email</h1>
+      </div>
+    </div>
       <div className="p-4">
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

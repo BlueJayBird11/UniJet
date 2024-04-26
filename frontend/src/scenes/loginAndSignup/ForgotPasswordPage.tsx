@@ -42,7 +42,7 @@ const ForgotPasswordPage: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded text-gray-700"
                 />
                 <div className="flex justify-between items-center mt-4">
                   <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full p-2 border rounded">

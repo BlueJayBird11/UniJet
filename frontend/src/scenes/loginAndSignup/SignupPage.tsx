@@ -149,7 +149,7 @@ const SignupPage: React.FC = () => {
         <h1 className="text-6xl font-bold text-center mb-2 text-white shadow-lg bg-opacity-50 bg-black px-3 py-1 rounded">UNIJET</h1>
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <h2 className="text-xl font-semibold text-center text-black mb-6">Sign Up</h2>
-          <form onSubmit={handleSignup} className="space-y-4">
+          <form onSubmit={handleSignup} className="text-gray-700 space-y-4">
             <input
               type="email"
               placeholder="Enter your email"
