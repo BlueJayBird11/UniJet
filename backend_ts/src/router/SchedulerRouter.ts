@@ -159,7 +159,33 @@ class SchedulerRoutes extends BaseRoutes {
                 res.status(500).send('Internal Server Error');
             }
         });
-     
+
+        this.router.get("/viewCourses/:passengerid", async (req, res) => {
+            const passengerid = req.params.passengerid
+            try {
+                const client = await pool.connect();
+                const query = `
+                    SELECT schedule 
+                    FROM public.passengers 
+                    WHERE id = $1
+                    ORDER BY id ASC;
+                `;
+                const { rows } = await client.query(query, [passengerid]);
+                client.release();
+            
+                if (rows.length === 0) {
+                    return res.status(404).send('Passenger not found');
+                }
+            
+                const schedule = rows[0].schedule;
+            
+                res.json(schedule); // Send the schedule array as JSON response
+                } catch (error) {
+                console.error('Error while fetching schedule:', error);
+                res.status(500).send('Internal Server Error');
+            }
+        });
+                
     }
 }
 
