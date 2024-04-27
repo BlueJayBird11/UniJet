@@ -4,7 +4,7 @@ import BaseRoutes from "./base/BaseRouter";
 import pool from "../db";
 import { OnGoingTrip, RiderType } from "../shared/types";
 
-var requests: Array<RiderType> = [];
+const requests: Array<{ data: RiderType, timeout: NodeJS.Timeout }> = [];
 var onGoing: Array<OnGoingTrip> = [];
 var requestIdCount = 1;
 
@@ -15,6 +15,25 @@ var requestIdCount = 1;
 //   position: [32.541251162684404, -92.63578950465626],
 //   destination: "Chase Bank",
 // },
+
+function addRequest(item: RiderType) {
+  const timeout = setTimeout(() => {
+      removeRequest(item);
+  }, 20 * 60 * 1000); // 20 minutes in milliseconds
+
+  requests.push({ data: item, timeout });
+}
+
+// Remove an item from the requests array
+function removeRequest(item: RiderType) {
+  const index = requests.findIndex(request => request.data === item);
+  if (index !== -1) {
+      clearTimeout(requests[index].timeout);
+      requests.splice(index, 1);
+      console.log("Request removed after 20 minutes.");
+  }
+}
+
 
 // '2024-02-24 08:20:01-05'
 function timeForDB(date:Date):string{
@@ -78,7 +97,7 @@ class RequestRoutes extends BaseRoutes {
         console.log(result.rows[0].firstname);
 
         for (let i = 0; i < requests.length; i++) {
-          if(requests[i].id == req.body.passengerId)
+          if(requests[i].data.id == req.body.passengerId)
             {
               throw new Error("Cannot have more than 1 active request");
             }
@@ -91,14 +110,23 @@ class RequestRoutes extends BaseRoutes {
             }
         }
 
-        requests.push({
-          id: result.rows[0].id,
-          name: result.rows[0].firstname + " " + result.rows[0].lastname,
-          rating: result.rows[0].rating,
-          position: req.body.location,
-          destination: req.body.destination,
-          destinationChoords: req.body.destinationChoords
-        });
+        addRequest({
+            id: result.rows[0].id,
+            name: result.rows[0].firstname + " " + result.rows[0].lastname,
+            rating: result.rows[0].rating,
+            position: req.body.location,
+            destination: req.body.destination,
+            destinationChoords: req.body.destinationChoords
+          });
+
+        // requests.push({
+        //   id: result.rows[0].id,
+        //   name: result.rows[0].firstname + " " + result.rows[0].lastname,
+        //   rating: result.rows[0].rating,
+        //   position: req.body.location,
+        //   destination: req.body.destination,
+        //   destinationChoords: req.body.destinationChoords
+        // });
 
         console.log(result.rows.length);
         console.log(requests);
@@ -156,7 +184,7 @@ class RequestRoutes extends BaseRoutes {
       try {
         console.log(requests);
         for (let i = 0; i < onGoing.length; i++) {
-          if(requests[i].id == req.body.id)
+          if(requests[i].data.id == req.body.id)
             {
               requests.splice(i,1);
             }
@@ -174,11 +202,16 @@ class RequestRoutes extends BaseRoutes {
 
     this.router.get("", async (req, res) => {
       try {
+        var tempRequests: Array<RiderType> = [];
+        for (let i = 0; i < requests.length; i++) {
+          tempRequests.push(requests[i].data);
+          
+        }
         res.status(200).json({
           status: "success",
-          results: requests.length,
+          results: tempRequests.length,
           data: {
-            passengers: requests,
+            passengers: tempRequests,
           },
         });
       } catch (err) {
@@ -216,7 +249,7 @@ class RequestRoutes extends BaseRoutes {
 
         // remove request from requests
         for (let i = 0; i < requests.length; i++) {
-          if(requests[i].id === req.body.passengerId)
+          if(requests[i].data.id === req.body.passengerId)
             {
               requests.splice(i,1);
             }
