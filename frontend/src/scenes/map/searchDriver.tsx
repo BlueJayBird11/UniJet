@@ -63,13 +63,40 @@ const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDri
   }, [isLookingForDriver]); // Run effect when isLookingForDriver changes
 
 
-  const cancelSearch = () => {
+  const cancelSearch = async () => {
     // if (timeoutId !== null) {
     //   clearTimeout(timeoutId);
     //   setIsLookingForDriver(false);
     //   navigate('/map', { replace: true });
     // }
-    setIsLookingForDriver(false);
+    
+    try {
+      if (!position) {
+        console.error('Position not available yet.');
+        return;
+      }
+
+      const response = await fetch('http://localhost:8000/api/v1/requests/cancel-request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: passenger.id,
+        }), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      setIsLookingForDriver(false);
+
+      console.log('Request cancelled successfully.');
+      navigate('/map');
+      // Handle response or update UI as needed
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const startLookingForDriver = () => {

@@ -5,16 +5,10 @@ import pool from "../db";
 import { OnGoingTrip, RiderType } from "../shared/types";
 
 const requests: Array<{ data: RiderType, timeout: NodeJS.Timeout }> = [];
-var onGoing: Array<OnGoingTrip> = [];
-var requestIdCount = 1;
+// var onGoing: Array<OnGoingTrip> = [];
+const onGoing: Array<{ data: OnGoingTrip, timeout: NodeJS.Timeout }> = [];
 
-// {
-//   id: 0,
-//   name: "Ash",
-//   rating: 5.0,
-//   position: [32.541251162684404, -92.63578950465626],
-//   destination: "Chase Bank",
-// },
+var requestIdCount = 1;
 
 function addRequest(item: RiderType) {
   const timeout = setTimeout(() => {
@@ -31,6 +25,26 @@ function removeRequest(item: RiderType) {
       clearTimeout(requests[index].timeout);
       requests.splice(index, 1);
       console.log("Request removed after 20 minutes.");
+  }
+}
+
+function addOnGoing(item: OnGoingTrip) {
+  const timeout = setTimeout(() => {
+      removeOnGoing(item);
+  }, 3 * 60 * 1000); // 3 minutes in milliseconds
+
+  onGoing.push({ data: item, timeout });
+}
+
+// Remove an item from the onGoing array
+function removeOnGoing(item: OnGoingTrip) {
+  const index = onGoing.findIndex(onGoing => onGoing.data === item);
+  if (index !== -1) {
+      clearTimeout(onGoing[index].timeout);
+      if (onGoing[index].data.confirmed == false) {
+        onGoing.splice(index, 1);
+        console.log("Unconfirmed trip removed after 3 minutes.");
+      }
   }
 }
 
@@ -104,7 +118,7 @@ class RequestRoutes extends BaseRoutes {
         }
 
         for (let i = 0; i < requests.length; i++) {
-          if(onGoing[i].passengerId == req.body.passengerId)
+          if(onGoing[i].data.passengerId == req.body.passengerId)
             {
               throw new Error("Cannot have more than 1 active request");
             }
@@ -161,10 +175,10 @@ class RequestRoutes extends BaseRoutes {
         };
 
         for (let i = 0; i < onGoing.length; i++) {
-          if(onGoing[i].passengerId == req.body.id)
+          if(onGoing[i].data.passengerId == req.body.id)
             {
               requestAccepted = true;
-              tempRequest = onGoing[i];
+              tempRequest = onGoing[i].data;
             }
         } 
 
@@ -182,15 +196,40 @@ class RequestRoutes extends BaseRoutes {
 
     this.router.post("/cancel-request", async (req, res) => {
       try {
+        console.log(req.body);
+        console.log("Current requests");
         console.log(requests);
-        for (let i = 0; i < onGoing.length; i++) {
+        for (let i = 0; i < requests.length; i++) {
+          console.log(`${requests[i].data.id} == ${req.body.id}? ${requests[i].data.id == req.body.id}`)
           if(requests[i].data.id == req.body.id)
             {
               requests.splice(i,1);
+              console.log("REMOVE THIS REQUEST");
+              break;
             }
         }
-        console.log("Removed item:");
+        console.log("Removed request:");
         console.log(requests);
+
+        res.status(200).json({
+          status: "success",
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    this.router.post("/cancel-ongoing", async (req, res) => {
+      try {
+        console.log(onGoing);
+        for (let i = 0; i < onGoing.length; i++) {
+          if(onGoing[i].data.tripId == req.body.tripId)
+            {
+              onGoing.splice(i,1);
+            }
+        }
+        console.log("Removed onGoingTrip:");
+        console.log(onGoing);
 
         res.status(200).json({
           status: "success",
@@ -245,7 +284,8 @@ class RequestRoutes extends BaseRoutes {
         requestIdCount++;
 
         // push to list
-        onGoing.push(tripData);
+        // onGoing.push(tripData);
+        addOnGoing(tripData);
 
         // remove request from requests
         for (let i = 0; i < requests.length; i++) {
@@ -270,12 +310,12 @@ class RequestRoutes extends BaseRoutes {
       try {
         var tempI:number = -1;
         for (let i = 0; i < onGoing.length; i++) {
-          console.log(`'${(onGoing[i].passengerId)}' == '${(req.body.id)}'?`);
+          console.log(`'${(onGoing[i].data.passengerId)}' == '${(req.body.id)}'?`);
 
-          if(onGoing[i].passengerId == req.body.id)
+          if(onGoing[i].data.passengerId == req.body.id)
             {
               console.log("SWITCH OCCURED");
-              onGoing[i].confirmed = true;
+              onGoing[i].data.confirmed = true;
               tempI = i;
             }
         }
@@ -286,7 +326,7 @@ class RequestRoutes extends BaseRoutes {
         res.status(200).json({
           status: "success",
           data: {
-            request: onGoing[tempI]
+            request: onGoing[tempI].data
           }
         });
       } catch (err) {
@@ -314,10 +354,10 @@ class RequestRoutes extends BaseRoutes {
       try {
         let tripData = null;
         for (let i = 0; i < onGoing.length; i++) {
-          if(onGoing[i].tripId == req.body.tripId)
+          if(onGoing[i].data.tripId == req.body.tripId)
             {
-              onGoing[i].passengerLocation = req.body.location;
-              tripData = onGoing[i];
+              onGoing[i].data.passengerLocation = req.body.location;
+              tripData = onGoing[i].data;
             }
         }
 
@@ -336,10 +376,10 @@ class RequestRoutes extends BaseRoutes {
       try {
         let tripData = null;
         for (let i = 0; i < onGoing.length; i++) {
-          if(onGoing[i].tripId == req.body.tripId)
+          if(onGoing[i].data.tripId == req.body.tripId)
             {
-              onGoing[i].driverLocation = req.body.location;
-              tripData = onGoing[i];
+              onGoing[i].data.driverLocation = req.body.location;
+              tripData = onGoing[i].data;
             }
         }
 
@@ -359,7 +399,7 @@ class RequestRoutes extends BaseRoutes {
         // remove item from ongoing
         console.log(onGoing);
         for (let i = 0; i < onGoing.length; i++) {
-          if(onGoing[i].tripId == req.body.tripId)
+          if(onGoing[i].data.tripId == req.body.tripId)
             {
               onGoing.splice(i,1);
             }

@@ -185,7 +185,12 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       const data = await response.json();
 
       console.log(data);
-      if (data.data.request.confirmed)
+      if (data.data.request == null)
+        {
+          setShowAcceptedDriverModal(false);
+          console.log("Passenger Cancelled Request");
+        }
+      else if (data.data.request.confirmed)
         {
           setShowAcceptedDriverModal(false);
           setShowActiveRide(true);

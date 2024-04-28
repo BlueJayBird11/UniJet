@@ -30,7 +30,28 @@ const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip, showD
   const handleLookForAnother = () => navigate('/confirmRide', { state: { lookingAgain: true } });
 
   // Cancel and navigate back to map
-  const handleCancel = () => navigate('/map');
+  const handleCancel = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/requests/cancel-ongoing', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tripId: onGoingTrip.tripId,
+        }), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      console.log('Request cancelled successfully.');
+      navigate('/map');
+      // Handle response or update UI as needed
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const confirmRequest = async () => {
     try {
