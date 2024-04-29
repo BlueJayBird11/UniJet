@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react';
 import placeholderData from "./CURR_DATA.json"
 import {useTable} from "react-table"
 import { Link } from 'react-router-dom';
@@ -78,29 +78,51 @@ function isEmpty(obj: object) {
   return true;
 }
 
-function Schedule() { 
-  
-  const jsonData: DataEntry[] = Array.isArray(placeholderData) ? placeholderData : [];
+function Schedule(passenger: any) {
+  const [fetchedData, setFetchedData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Extract startTimes, endTimes, and days from placeholderData
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/scheduler/viewCourses/${passenger.passenger.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch schedule');
+        }
+
+        const data = await response.json();
+        setFetchedData(data);
+      } catch (error) {
+        console.error('Error fetching schedule:', error);
+      } finally {
+        setIsLoading(false); // Set isLoading to false whether the fetch succeeded or failed
+      }
+    }
+
+    fetchData();
+  }, [passenger.passenger.id]);
+  
   const startTimes: string[] = [];
   const endTimes: string[] = [];
   const days: string[] = [];
 
-  jsonData.forEach(item => {
-      startTimes.push(item.startTime);
-      endTimes.push(item.endTime);
-      days.push(item.days);
+  fetchedData.forEach((item) => {
+      startTimes.push(item.starttime.replace(/:/g, '').slice(0, 4));
+      endTimes.push(item.endtime.replace(/:/g, '').slice(0, 4));
+      days.push(item.daysofweek);
   });
-  //console.log('Start Times:', startTimes);
-  //console.log('End Times:', endTimes);
-  //console.log('Days:', days)
-  
-  const generatedData =  React.useMemo(() => getData(startTimes, endTimes, days), []);
-  //console.log(generatedData)
 
-  const data = React.useMemo(() => placeholderData, []);
-  //console.log(data)
+  console.log(startTimes, endTimes, days)
+  
+  const generatedData =  React.useMemo(() => getData(startTimes, endTimes, days), [startTimes, endTimes, days, isLoading, fetchedData]);
+  console.log(generatedData)
+  //console.log(generatedData)
   
   const columns = React.useMemo(() => [
     {
@@ -134,6 +156,11 @@ function Schedule() {
     ], []);
 
   const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = useTable({columns, data: generatedData});
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className='pt-20'>
       <div className="h-20 fixed top-0 border border-rose-100 bg-gray-600 flex justify-between items-center px-2 w-full">

@@ -1,7 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
-
-import placeholderData from "../CURR_DATA.json";
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
 import { Passenger } from '@/shared/types';
 
@@ -22,6 +20,7 @@ type Props = {
 
 const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
   const [schedule, setSchedule] = useState<Slot[]>([]); // Initialize schedule as an empty array of Slot objects
+  const transformTime = (timeString: string): string => (parseInt(timeString.slice(0, 2)) % 12 || 12) + timeString.slice(2, 5);
 
   useEffect(() => {
     const fetchSchedule = async () => {
@@ -69,10 +68,10 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">{slot.classname}</div>
                 <p className="text-slate-300 text-base">
-                  Type: class <br />
+                  Type: Class <br />
                   Days: {slot.daysofweek}<br />
                   Location: {slot.buildingname}<br />
-                  Time: {slot.starttime}-{slot.endtime}
+                  Time: {transformTime(slot.starttime)}-{transformTime(slot.endtime)}
                 </p>
               </div>
             </div>

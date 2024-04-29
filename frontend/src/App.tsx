@@ -151,7 +151,7 @@ function App() {
             <Route path="/confirmRide" element={<ConfirmRide passenger={passenger} holdDestination={holdDestination} setHoldDestination={setHoldDestination} foundDriver={foundDriver} setFoundDriver={setFoundDriver} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip}/>} />
             <Route path="/driverFound" element={<DriverFound passenger={passenger} foundDriver={foundDriver} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip} showDriverPath={showDriverPath} setShowDriverPath={setShowDriverPath}/>} />
             <Route path="/findRider" element={<FindRider />} />
-            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/schedule" element={<Schedule passenger={passenger}/>} />
             <Route path="/map" element={<Map passenger={passenger} driverId={driverId} holdDestination={holdDestination} setHoldDestination={setHoldDestination} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip} showDriverPath={showDriverPath} setShowDriverPath={setShowDriverPath} showActiveRide={showActiveRide} setShowActiveRide={setShowActiveRide}/>} />
             <Route path="/viewTimeSlot" element={<ViewTimeSlot passenger={passenger} />} />
             <Route path="/addTimeSlot" element={<AddTimeSlot passenger={passenger} />} />
