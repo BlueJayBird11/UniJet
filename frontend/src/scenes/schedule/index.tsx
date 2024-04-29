@@ -101,7 +101,7 @@ function Schedule(passenger: any) {
       } catch (error) {
         console.error('Error fetching schedule:', error);
       } finally {
-        setIsLoading(false); // Set isLoading to false whether the fetch succeeded or failed
+        setIsLoading(false); 
       }
     }
 
@@ -117,12 +117,8 @@ function Schedule(passenger: any) {
       endTimes.push(item.endtime.replace(/:/g, '').slice(0, 4));
       days.push(item.daysofweek);
   });
-
-  console.log(startTimes, endTimes, days)
   
   const generatedData =  React.useMemo(() => getData(startTimes, endTimes, days), [startTimes, endTimes, days, isLoading, fetchedData]);
-  console.log(generatedData)
-  //console.log(generatedData)
   
   const columns = React.useMemo(() => [
     {
@@ -213,6 +209,7 @@ function Schedule(passenger: any) {
             </table>
           </div>
         </div>
+        <div className='py-10'></div>
     </div>
   );
 }

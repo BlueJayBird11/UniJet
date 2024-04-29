@@ -38,7 +38,6 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
   
         const data = await response.json();
         setSchedule(data);
-        console.log(schedule)
       } catch (error) {
         console.error('Error fetching schedule:', error);
       }

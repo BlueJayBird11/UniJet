@@ -69,7 +69,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
         }
 
         const { data } = await response.json();
-        console.log('Passenger data:', data.subject);
         setSubjectList(data.subject || []); // Use default empty array if data.subject is undefined
       } catch (error) {
         console.error('Error:', error);
@@ -93,7 +92,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
           }
     
           const { data } = await response.json();
-          console.log('Passenger data:', data.subject);
           setSubjectList(data.subject || []); // Use default empty array if data.subject is undefined
         } catch (error) {
           console.error('Error:', error);
@@ -106,9 +104,8 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
     useEffect(() => {
       const fetchCourse = async () => { 
         try {
-          console.log("RIGHT HERE")
-          console.log(selectedSubject)
-          const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/course/${selectedSubject}`, {
+          if (selectedSubject != '') { 
+            const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/course/${selectedSubject}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -118,21 +115,20 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
             throw new Error(`Error: ${response.status}`);
           }
           const { data } = await response.json();
-          console.log('Passenger data:', data.course);
           setCourseList(data.course || []); // Use default empty array if data.subject is undefined
-        } catch (error) {
-          console.error('Error:', error);
         }
-      };
+       } 
+       catch (error) {
+         console.error('Error:', error);
+       }
+     };
     
-      fetchCourse();
-    }, [selectedSubject]);
+       fetchCourse();
+     }, [selectedSubject]);
     
     useEffect(() => {
       const fetchSection = async () => { 
         try {
-          console.log("RIGHT HERE")
-          console.log(courseList)
           const foundCourse = courseList.find(course => course.coursenumber === selectedCourse);
           if (foundCourse != undefined) { 
             classId = foundCourse.id
@@ -146,7 +142,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
               throw new Error(`Error: ${response.status}`);
             }
             const { data } = await response.json();
-            console.log('Passenger data:', data.section);
             setSectionList(data.section || []); // Use default empty array if data.subject is undefined
             console.log(sectionList)
           }
@@ -162,8 +157,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
       try {
         await fetchSelectedClass();
         setFormSubmitted(true);
-        console.log("HERE")
-        console.log(selectedClass)
       } catch (error) {
         console.error('Error:', error);
       }
@@ -172,7 +165,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
     const fetchSelectedClass = async () => { 
       try {
         const foundSection = sectionList.find(course => course.section === selectedSection);
-        console.log(foundSection)
         if (foundSection != undefined) { 
           section = foundSection.sectionid
           const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/course/section/submit/${classId}/${section}`, {
@@ -195,7 +187,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
       }
     };
     useEffect(() => {
-      console.log(selectedClass);
     }, [selectedClass]);
 
   return (
