@@ -58,7 +58,9 @@ export interface OnGoingTrip {
   destination: string,
   destinationChoords: [number, number];
   startTime: string,
-  rideDate: string
+  rideDate: string,
+  cancelled: boolean
+
 }
 
 export interface FoundDriver {

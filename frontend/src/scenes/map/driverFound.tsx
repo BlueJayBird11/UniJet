@@ -74,7 +74,7 @@ const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip, showD
       console.log(data);
       // console.log(data.data.confirmed);
       setShowDriverPath(true);
-      navigate('/map', { state: { showDriverPath: true, foundDriver } });
+      navigate('/map');
 
       
       // Handle response or update UI as needed
@@ -84,7 +84,7 @@ const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip, showD
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center text-black">
       <div className="bg-white p-4 rounded w-full max-w-md text-center">
         <h3 className="text-lg font-bold mb-4">Driver Found</h3>
         <p><strong>Name:</strong> {foundDriver.name}</p>

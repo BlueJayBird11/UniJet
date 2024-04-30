@@ -99,9 +99,7 @@ const index = ({ selectedPage, setSelectedPage, passenger }: Props) => {
     <header className='relative'>
       <div className='flex justify-end p-4'>
         <Link to="/settings">
-          <button
-            onClick={() => setSelectedPage(SelectedPage.Settings)}
-          >
+          <button>
             <Cog6ToothIcon className='w-10 h-10 text-settingsIconColor' />
           </button>
         </Link>

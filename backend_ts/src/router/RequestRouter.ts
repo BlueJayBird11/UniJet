@@ -171,7 +171,8 @@ class RequestRoutes extends BaseRoutes {
             destinationChoords: [0,0],
             startTime: getTime(new Date()),
             rideDate: getDate(new Date()),
-            confirmed: false
+            confirmed: false,
+            cancelled: false
         };
 
         for (let i = 0; i < onGoing.length; i++) {
@@ -182,11 +183,23 @@ class RequestRoutes extends BaseRoutes {
             }
         } 
 
+        // SELECT * FROM drivers d JOIN registeredas ra ON d.id = ra.driverid JOIN passengers pa ON pa.id = ra.passengerid WHERE d.id = $1;
+        const ratingResult = await pool.query(
+          "SELECT pa.rating FROM drivers d JOIN registeredas ra ON d.id = ra.driverid JOIN passengers pa ON pa.id = ra.passengerid WHERE d.id = $1",
+          [tempRequest.driverId]
+        );
+        // const trip = resultTrip.rows[0]; 
+        // console.log(trip);
+
+        console.log("Rating: ");
+        console.log(ratingResult.rows[0].rating);
+
         res.status(200).json({
           status: "success",
           accepted: requestAccepted,
           data: {
             request: tempRequest,
+            dRating: ratingResult.rows[0].rating
           }
         });
       } catch (err) {
@@ -277,7 +290,8 @@ class RequestRoutes extends BaseRoutes {
           destinationChoords: req.body.destinationChoords,
           startTime: timeForDB(date),
           rideDate: getDate(date),
-          confirmed: false
+          confirmed: false,
+          cancelled: false
         }
 
         // increment count for future ids
@@ -333,34 +347,23 @@ class RequestRoutes extends BaseRoutes {
         console.log(err);
       }
     });
-
-    // onGoing[i] = {
-    //   tripId: onGoing[i].tripId,
-    //   passengerId: onGoing[i].passengerId,
-    //   driverId: onGoing[i].driverId,
-    //   passengerName: onGoing[i].passengerName,
-    //   driverName: onGoing[i].driverName,
-    //   passengerStartLocation:  onGoing[i].passengerStartLocation,
-    //   passengerLocation: onGoing[i].passengerLocation,
-    //   driverLocation: onGoing[i].driverLocation,
-    //   destination: onGoing[i].destination,
-    //   destinationChoords: onGoing[i].destinationChoords,
-    //   startTime: onGoing[i].startTime,
-    //   rideDate: onGoing[i].rideDate,
-    //   confirmed: true
-    // };
     
     this.router.post("/update-request-passenger", async (req, res) => {
       try {
         let tripData = null;
+        console.log("REQ BODY:")
+        console.log(req.body);
+        // console.log(onGoing)
         for (let i = 0; i < onGoing.length; i++) {
           if(onGoing[i].data.tripId == req.body.tripId)
             {
+              console.log(onGoing[i].data);
               onGoing[i].data.passengerLocation = req.body.location;
               tripData = onGoing[i].data;
             }
         }
-
+        console.log("TRIP DATA:")
+        console.log(tripData);
         res.status(200).json({
           status: "success",
           data: {
@@ -375,6 +378,7 @@ class RequestRoutes extends BaseRoutes {
     this.router.post("/update-request-driver", async (req, res) => {
       try {
         let tripData = null;
+        console.log(req.body);
         for (let i = 0; i < onGoing.length; i++) {
           if(onGoing[i].data.tripId == req.body.tripId)
             {
@@ -427,6 +431,57 @@ class RequestRoutes extends BaseRoutes {
         const history = resultHistory.rows[0]; 
         console.log(history);
 
+        res.status(200).json({
+          status: "success",
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    this.router.put("/rate-passenger", async (req, res) => {
+      try {
+        const newRatingResult = await pool.query(
+          "WITH avg_rating AS ( \
+            SELECT id, AVG(rating) AS avg_rating\
+            FROM passengers\
+            WHERE id = $1\
+            GROUP BY id\
+            )\
+            UPDATE passengers\
+            SET rating = (SELECT (avg_rating.avg_rating + $2) / 2 FROM avg_rating)\
+            WHERE id = $1\
+            returning *",
+          [req.body.id, req.body.rating]
+        );
+        
+        console.log(newRatingResult.rows[0].rating);
+        res.status(200).json({
+          status: "success",
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    this.router.put("/rate-driver", async (req, res) => {
+      try {
+        const newRatingResult = await pool.query(
+          "WITH avg_passenger_rating AS (\
+              SELECT ra.passengerID, AVG(p.rating) AS avg_rating\
+              FROM registeredAs ra\
+              INNER JOIN passengers p ON ra.passengerID = p.id\
+              WHERE ra.driverID = $1\
+              GROUP BY ra.passengerID\
+          )\
+          UPDATE passengers\
+          SET rating = (SELECT (apr.avg_rating + $2) / 2 FROM avg_passenger_rating apr WHERE apr.passengerID = passengers.id)\
+          WHERE id IN (SELECT passengerID FROM registeredAs WHERE driverID = $1)\
+          returning *;",
+          [req.body.id, req.body.rating]
+        );
+        
+        console.log(newRatingResult.rows[0].rating);
         res.status(200).json({
           status: "success",
         });

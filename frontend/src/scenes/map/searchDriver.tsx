@@ -10,15 +10,17 @@ type Props = {
   foundDriver: FoundDriver,
   setFoundDriver: (value: FoundDriver) => void
   onGoingTrip: OnGoingTrip,
-  setOnGoingTrip: (value: OnGoingTrip) => void
+  setOnGoingTrip: (value: OnGoingTrip) => void,
+  position: [number, number],
+  setPosition: (value: [number, number]) => void,
 }
 
-const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDriver, setFoundDriver, onGoingTrip, setOnGoingTrip }: Props) => {
+const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDriver, setFoundDriver, onGoingTrip, setOnGoingTrip, position, setPosition }: Props) => {
   const navigate = useNavigate();
   const [isLookingForDriver, setIsLookingForDriver] = useState(false);
   // Use a state to store the timeout ID for cancellation
   const [timeoutId, setTimeoutId] = useState<number | null>(null);
-  const [position, setPosition] = useState<[number, number] | null>(null);
+  // const [position, setPosition] = useState<[number, number] | null>(null);
 
   
 
@@ -103,32 +105,32 @@ const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDri
     setIsLookingForDriver(true);
   }
 
-  useEffect(() => {
-    // Function to get user's current position
-    const getPosition = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (geoPosition) => {
-            const lat = geoPosition.coords.latitude;
-            const lon = geoPosition.coords.longitude;
-            setPosition([lat, lon]);
-          },
-          (error) => {
-            console.error('Error getting location:', error);
-          }
-        );
-      } else {
-        console.error('Geolocation is not supported by this browser.');
-      }
-    };
+  // useEffect(() => {
+  //   // Function to get user's current position
+  //   const getPosition = () => {
+  //     if (navigator.geolocation) {
+  //       navigator.geolocation.getCurrentPosition(
+  //         (geoPosition) => {
+  //           const lat = geoPosition.coords.latitude;
+  //           const lon = geoPosition.coords.longitude;
+  //           setPosition([lat, lon]);
+  //         },
+  //         (error) => {
+  //           console.error('Error getting location:', error);
+  //         }
+  //       );
+  //     } else {
+  //       console.error('Geolocation is not supported by this browser.');
+  //     }
+  //   };
 
-    getPosition(); // Call getPosition when component mounts
+  //   getPosition(); // Call getPosition when component mounts
 
-    // Cleanup function (optional)
-    return () => {
-      // Any cleanup code here, if needed
-    };
-  }, []); // Empty dependency array to run effect only once on mount
+  //   // Cleanup function (optional)
+  //   return () => {
+  //     // Any cleanup code here, if needed
+  //   };
+  // }, []); // Empty dependency array to run effect only once on mount
 
 
   const makeRequest = async () => {
@@ -189,7 +191,7 @@ const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDri
           setFoundDriver({
             name: data.data.request.driverName,
             id: data.data.request.driverId,
-            rating: 5.0
+            rating:data.data.dRating
           })
           setOnGoingTrip({
             tripId: data.data.request.tripId,
@@ -204,7 +206,8 @@ const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDri
             destinationChoords: data.data.request.destinationChoords,
             startTime: data.data.request.startTime,
             rideDate: data.data.request.rideDate,
-            confirmed: false
+            confirmed: false,
+            cancelled: false
           })
           navigate('/driverFound', { replace: true });
         }
@@ -219,19 +222,19 @@ const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDri
       <div className="bg-white p-4 rounded w-full max-w-md text-center">
         {isLookingForDriver ? (
           <>
-            <h3 className="text-lg font-bold mb-4">Looking for a driver...</h3>
+            <h3 className="text-lg font-bold mb-4 text-black">Looking for a driver...</h3>
             <img src={loadingGif} alt="Searching..." style={{ maxWidth: '100px', display: 'block', margin: 'auto' }} />
             <button onClick={cancelSearch} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">Cancel Search</button>
           </>
         ) : (
-          <>
+          <div className='text-black'>
             <h3 className="text-lg font-bold mb-4">Confirm Ride</h3>
             <p>Do you want to look for a driver in this location?</p>
             <div className="flex justify-end mt-4">
               <button onClick={() => navigate('/map', { replace: true })} className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mr-2">No</button>
               <button onClick={startLookingForDriver} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Yes</button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

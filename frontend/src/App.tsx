@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { FoundDriver, HoldDestination, Info, OnGoingTrip, Passenger, SelectedPage } from './shared/types';
 
@@ -37,6 +37,7 @@ function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.Profile);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showActiveRide, setShowActiveRide] = useState(false);
+  const [position, setPosition] = useState<[number, number]>([0,0]);
   const [showDriverPath, setShowDriverPath] = useState(false);
   const [passenger, setPassenger] = useState<Passenger>({
     id: 0,
@@ -74,9 +75,28 @@ function App() {
     destinationChoords: [0,0],
     startTime: "",
     rideDate: "",
-    confirmed: false
+    confirmed: false,
+    cancelled: false
   })
 
+  useEffect(() => {
+    const watchPositionId = navigator.geolocation.watchPosition(
+      (geoPosition) => {
+        const lat = geoPosition.coords.latitude;
+        const lon = geoPosition.coords.longitude;
+        setPosition([lat, lon]);
+      },
+      (error) => {
+        console.error('Error getting location:', error);
+      }
+    );
+  
+    // Cleanup function to stop watching for position when component unmounts
+    return () => {
+      navigator.geolocation.clearWatch(watchPositionId);
+    };
+  }, []);
+  
   const handleLogin = async(info: Info): Promise<boolean> => {
     // setPassenger({
     //   id: 0,
@@ -148,11 +168,11 @@ function App() {
             <Route path="/history" element={<History selectedPage={selectedPage} setSelectedPage={setSelectedPage} passenger={passenger}/>} />
             <Route path="/settings" element={<Settings passenger={passenger} name={''} email={''} message={''} driverId={driverId} setDriverId={setDriverId}/>} />
             <Route path="/findDriver" element={<FindDriver />} />
-            <Route path="/confirmRide" element={<ConfirmRide passenger={passenger} holdDestination={holdDestination} setHoldDestination={setHoldDestination} foundDriver={foundDriver} setFoundDriver={setFoundDriver} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip}/>} />
+            <Route path="/confirmRide" element={<ConfirmRide passenger={passenger} holdDestination={holdDestination} setHoldDestination={setHoldDestination} foundDriver={foundDriver} setFoundDriver={setFoundDriver} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip}  position={position} setPosition={setPosition}/>} />
             <Route path="/driverFound" element={<DriverFound passenger={passenger} foundDriver={foundDriver} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip} showDriverPath={showDriverPath} setShowDriverPath={setShowDriverPath}/>} />
             <Route path="/findRider" element={<FindRider />} />
             <Route path="/schedule" element={<Schedule />} />
-            <Route path="/map" element={<Map passenger={passenger} driverId={driverId} holdDestination={holdDestination} setHoldDestination={setHoldDestination} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip} showDriverPath={showDriverPath} setShowDriverPath={setShowDriverPath} showActiveRide={showActiveRide} setShowActiveRide={setShowActiveRide}/>} />
+            <Route path="/map" element={<Map passenger={passenger} driverId={driverId} holdDestination={holdDestination} setHoldDestination={setHoldDestination} onGoingTrip={onGoingTrip} setOnGoingTrip={setOnGoingTrip} showDriverPath={showDriverPath} setShowDriverPath={setShowDriverPath} showActiveRide={showActiveRide} setShowActiveRide={setShowActiveRide} position={position} setPosition={setPosition}/>} />
             <Route path="/viewTimeSlot" element={<ViewTimeSlot passenger={passenger} />} />
             <Route path="/addTimeSlot" element={<AddTimeSlot passenger={passenger} />} />
             <Route path="/deleteTimeSlot" element={<DeleteTimeSlot />} />

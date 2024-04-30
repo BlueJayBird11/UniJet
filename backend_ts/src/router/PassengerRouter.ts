@@ -24,7 +24,7 @@ class PassengerRoutes extends BaseRoutes {
           const hash = await bcrypt.hash(req.body.passwordHash, 10);
           const results = await pool.query(
             "INSERT INTO passengers (birthDate, email, passwordHash, phoneNumber, firstName, lastName, userStatus, carPool, rating, amountdeposited, schedule) \
-              VALUES ($1, $2, $3, $4, $5, $6, 0, $7, NULL, 0, NULL) returning *",
+              VALUES ($1, $2, $3, $4, $5, $6, 0, $7, 5, 0, NULL) returning *",
             [
               req.body.birthDate,
               req.body.email,
