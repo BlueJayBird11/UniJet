@@ -159,7 +159,7 @@ const History: React.FC<Props> = ({ selectedPage, setSelectedPage, passenger }: 
             key={index}
             date={(entry.starttime.split("T")[0].replace(/-/g, "/")).split("/").slice(1).concat((entry.starttime.split("T")[0].replace(/-/g, "/")).split("/")[0]).join("/")}
             name={entry.firstname + " " + entry.lastname}
-            totalTime={(new Date(entry.endtime).getTime() - new Date(entry.starttime).getTime()) / (1000 * 60)}
+            totalTime={Math.ceil((new Date(entry.endtime).getTime() - new Date(entry.starttime).getTime()) / (1000 * 60))}
             amount={Math.round(parseFloat(entry.earnings) / 100)}
             userRole={userRole}
           />
