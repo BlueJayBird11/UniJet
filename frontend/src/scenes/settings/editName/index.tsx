@@ -138,6 +138,8 @@ const EditName = ({passenger}: Props) => {
               value={lastName}
               onChange={handleLastNameChange}
             />
+          {error && <p className="text-red-500 text-xs italic">{error}</p>}
+          {success && <p className="text-green-500 text-xs italic">{success}</p>}
           </div>
           <div className="flex justify-center">
             <button

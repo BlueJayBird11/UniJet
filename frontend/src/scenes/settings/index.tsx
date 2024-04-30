@@ -122,6 +122,7 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
                 },
                 body: JSON.stringify(formData),
             });
+            if(response.ok){
             setName('');
             setEmail('');
             setMessage('');
@@ -129,7 +130,7 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
             setReportSuccess(true);
             setTimeout(() => setReportSuccess(false), 3000); // Hide the confirmation message after 3 seconds
             }
-        catch (error) {
+        }catch (error) {
             console.error('Error:', error);
         };
     };
