@@ -160,14 +160,11 @@ function Schedule(passenger: any) {
   return (
     <div className='pt-20'>
       <div className="h-20 fixed top-0 border border-rose-100 bg-gray-600 flex justify-between items-center px-2 w-full">
-        <Link to="/addTimeSlot">
-          <button className="bg-schedulerButtons rounded px-1 py-1">Add time slot</button>
+        <Link to="/addTimeSlot" className="w-5/12">
+          <button className="bg-schedulerButtons rounded px-2 py-2 w-full">Add time slot</button>
         </Link>
-        <Link to="/viewTimeSlot">
-          <button className="bg-schedulerButtons rounded px-1 py-1">View time slots</button>
-        </Link>
-        <Link to="/deleteTimeSlot">
-          <button className="bg-schedulerButtons rounded px-1 py-1">Delete time slots</button>
+        <Link to="/viewTimeSlot" className="w-5/12">
+          <button className="bg-schedulerButtons rounded px-2 py-2 w-full">Edit time slots</button>
         </Link>
       </div>
         <div className="schedule bg-primary-blue">
