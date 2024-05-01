@@ -135,7 +135,9 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
         startTime: data.data.request.startTime,
         rideDate: data.data.request.rideDate,
         confirmed: false,
-        cancelled: false
+        cancelled: false,
+        pPhone: data.data.request.pPhone,
+        dPhone: data.data.request.dPhone
       })
       var ridersCopy:RiderType[] = riders;
       console.log(ridersCopy);
@@ -225,32 +227,13 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
 
   const updatePassenger = async () => {
     try {
-      // const getPosition = () => {
-      //   console.log(navigator.geolocation);
-      //   if (navigator.geolocation) {
-      //     navigator.geolocation.getCurrentPosition(
-      //       (geoPosition) => {
-      //         const lat = geoPosition.coords.latitude;
-      //         const lon = geoPosition.coords.longitude;
-      //         console.log([lat,lon]);
-      //         setPosition([lat, lon]);
-      //         console.log(position);
-      //       },
-      //       (error) => {
-      //         console.error('Error getting location:', error);
-      //       }
-      //     );
-      //   } else {
-      //     console.error('Geolocation is not supported by this browser.');
-      //   }
-      // };
-  
       // getPosition(); // Call getPosition when component mounts
       if (!position) {
         console.error('Position not available yet.');
         return;
       }
-
+      console.log("Passenger position:")
+      console.log(position);
       const response = await fetch('http://localhost:8000/api/v1/requests/update-request-passenger', {
         method: 'POST',
         headers: {
@@ -288,7 +271,9 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
           startTime: "",
           rideDate: "",
           confirmed: false,
-          cancelled: false
+          cancelled: false,
+          pPhone: "",
+          dPhone: ""
         });
         setShowRateDriverModal(true);
       }
@@ -299,8 +284,8 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
           console.log(onGoingTrip.driverLocation);
           console.log(onGoingTrip.destinationChoords);
 
-          fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
-          fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
+          // fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+          // fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
           // show routes
         }
       // Handle response or update UI as needed
@@ -349,7 +334,9 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
         startTime: "",
         rideDate: "",
         confirmed: false,
-        cancelled: false
+        cancelled: false,
+        pPhone: "",
+        dPhone: ""
       });
       // Handle response or update UI as needed
     } catch (error) {
@@ -401,7 +388,9 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
           startTime: "",
           rideDate: "",
           confirmed: false,
-          cancelled: false
+          cancelled: false,
+          pPhone: "",
+          dPhone: ""
         });
       }
       else if (data.data.request.confirmed)
@@ -411,8 +400,8 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
           console.log(onGoingTrip.driverLocation);
           console.log(onGoingTrip.destinationChoords);
 
-          fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
-          fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
+          // fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+          // fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
           // show routes
         }
       // Handle response or update UI as needed
@@ -475,6 +464,28 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
 //     return () => {navigator.geolocation.clearWatch(watchId);isMounted.current = false;};
 //   }, [location.state || true]);
 
+useEffect(() => {
+  const watchPositionId = setInterval(() => {
+    navigator.geolocation.getCurrentPosition(
+      (geoPosition) => {
+        const lat = geoPosition.coords.latitude;
+        const lon = geoPosition.coords.longitude;
+        setPosition([lat, lon]);
+        // console.log(position);
+        fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+        fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
+      },
+      (error) => {
+        console.error('Error getting location:', error);
+      }
+    );
+  }, 1000); // Call watchPosition every second (1000 milliseconds)
+
+  // Cleanup function to stop watching for position when component unmounts
+  return () => {
+    clearInterval(watchPositionId);
+  };
+  }, [showActiveRide || showDriverPath]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -706,36 +717,72 @@ const handleCancelRideFromArrivedModal = () => {
 
 
       {showDriverPath && (
-        <div style={{
-          position: 'absolute',top: '20%',left: '50%',transform: 'translate(-50%, -50%)',backgroundColor: 'rgba(0, 0, 0, 0.85)',color: 'white',padding: '20px',borderRadius: '8px',zIndex: 10100,display: 'flex',alignItems: 'center',justifyContent: 'center',}}>
-          <p style={{ margin: 0, marginRight: '10px', fontWeight:'bold' }}>Enroute...</p>
-          <img src={loadingGif} alt="Enroute..." style={{ height: '50px' }} />
+        <div className='p-12' style={{
+          position: 'absolute',
+          top: '20%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          color: 'white',
+          borderRadius: '8px',
+          zIndex: 10100,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <p style={{ margin: 0, marginRight: '10px', fontWeight:'bold' }}>Enroute...</p>
+            <img src={loadingGif} alt="Enroute..." style={{ height: '50px' }} />
+          </div>
+          <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
+            <p>Drivers number:<a href={`tel:${onGoingTrip.dPhone}`}>{onGoingTrip.dPhone}</a></p>
+          </div>
         </div>
+        
       )}
 
       {showAcceptedDriverModal && (
         <div style={{
           position: 'absolute',top: '20%',left: '50%',transform: 'translate(-50%, -50%)',backgroundColor: 'rgba(0, 0, 0, 0.85)',color: 'white',padding: '20px',borderRadius: '8px',zIndex: 10100,display: 'flex',alignItems: 'center',justifyContent: 'center',}}>
-          <p style={{ margin: 0, marginRight: '10px', fontWeight:'bold' }}>Waiting for comfirmation...</p>
+          <p style={{ margin: 0, marginRight: '0px', fontWeight:'bold' }}>Waiting for comfirmation...</p>
         </div>
       )}
 
       {showActiveRide && (
-        <div className='flex justify-between' style={{
-          position: 'absolute',top: '20%',left: '50%',transform: 'translate(-50%, -50%)',backgroundColor: 'rgba(0, 0, 0, 0.85)',color: 'white',padding: '20px',borderRadius: '8px',zIndex: 10100,display: 'flex',alignItems: 'center',justifyContent: 'center',}}>
-          {/* Finish ride button */}
-          <button
-            onClick={finishRide}
-            className='bg-blue-700 p-2 z-[400] rounded-full right-4 bottom-32 text-white hover:bg-blue-300'
+        <div className="">
+          <div className='p-12'
+            style={{
+              position: "absolute",
+              top: "20%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "rgba(0, 0, 0, 0.85)",
+              color: "white",
+              borderRadius: "8px",
+              zIndex: 10100,
+              display: "flex",
+            }}
           >
-          Finish Ride
-        </button>
-        <button
-            onClick={handleCancel}
-            className='p-2 z-[400] rounded-full right-4 bottom-32 text-white bg-red-700 hover:bg-red-300'
-          >
-          Cancel Ride
-        </button>
+            {/* Finish ride button */}
+            <button
+              onClick={finishRide}
+              className="bg-blue-700 px-8 z-[400] rounded-full right-4 bottom-32 text-white hover:bg-blue-300 mr-2 py-2"
+            >
+              Finish Ride
+            </button>
+            <button
+              onClick={handleCancel}
+              className="px-8 z-[400] rounded-full right-4 bottom-32 text-white bg-red-700 hover:bg-red-300 mr-2"
+            >
+              Cancel Ride
+            </button>
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
+              <p>Passenger's number:</p>
+              <a href={`tel:${onGoingTrip.pPhone}`} className="text-white">
+                {onGoingTrip.pPhone}
+              </a>
+            </div>
+          </div>
         </div>
       )}
 

@@ -207,7 +207,9 @@ const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDri
             startTime: data.data.request.startTime,
             rideDate: data.data.request.rideDate,
             confirmed: false,
-            cancelled: false
+            cancelled: false,
+            pPhone: data.data.request.pPhone,
+            dPhone: data.data.request.dPhone
           })
           navigate('/driverFound', { replace: true });
         }

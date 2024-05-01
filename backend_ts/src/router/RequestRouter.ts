@@ -172,7 +172,9 @@ class RequestRoutes extends BaseRoutes {
             startTime: getTime(new Date()),
             rideDate: getDate(new Date()),
             confirmed: false,
-            cancelled: false
+            cancelled: false,
+            pPhone: "",
+            dPhone: ""
         };
 
         for (let i = 0; i < onGoing.length; i++) {
@@ -276,6 +278,21 @@ class RequestRoutes extends BaseRoutes {
         // get date
         var date: Date = new Date();
 
+        // get phone numbers
+        const paPhoneResult = await pool.query(
+          "SELECT phonenumber FROM passengers WHERE id = $1",
+          [req.body.passengerId]
+        );
+
+        var pPhone: string = paPhoneResult.rows[0].phonenumber;
+
+        const drPhoneResult = await pool.query(
+          "SELECT pa.phonenumber FROM passengers pa JOIN registeredas ra ON ra.passengerid = pa.id JOIN drivers dr ON dr.id = ra.driverid WHERE dr.id = $1",
+          [req.body.driverId]
+        );
+
+        var drPhone: string = drPhoneResult.rows[0].phonenumber;
+
         // make object with proper values
         var tripData = {
           tripId: requestIdCount,
@@ -291,7 +308,9 @@ class RequestRoutes extends BaseRoutes {
           startTime: timeForDB(date),
           rideDate: getDate(date),
           confirmed: false,
-          cancelled: false
+          cancelled: false,
+          pPhone: pPhone,
+          dPhone: drPhone
         }
 
         // increment count for future ids

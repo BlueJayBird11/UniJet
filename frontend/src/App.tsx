@@ -80,22 +80,27 @@ function App() {
   })
 
   useEffect(() => {
-    const watchPositionId = navigator.geolocation.watchPosition(
-      (geoPosition) => {
-        const lat = geoPosition.coords.latitude;
-        const lon = geoPosition.coords.longitude;
-        setPosition([lat, lon]);
-      },
-      (error) => {
-        console.error('Error getting location:', error);
-      }
-    );
+    const watchPositionId = setInterval(() => {
+      navigator.geolocation.getCurrentPosition(
+        (geoPosition) => {
+          const lat = geoPosition.coords.latitude;
+          const lon = geoPosition.coords.longitude;
+          setPosition([lat, lon]);
+          console.log("User position:");
+          console.log(position);
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+        }
+      );
+    }, 1000); // Call watchPosition every second (1000 milliseconds)
   
     // Cleanup function to stop watching for position when component unmounts
     return () => {
-      navigator.geolocation.clearWatch(watchPositionId);
+      clearInterval(watchPositionId);
     };
-  }, []);
+  });
+
   
   const handleLogin = async(info: Info): Promise<boolean> => {
     // setPassenger({
