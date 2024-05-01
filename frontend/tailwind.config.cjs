@@ -12,6 +12,7 @@ export default {
         "gray-100": "#DFCCCC",
         "gray-500": "#5E0000",
         "gray-600": "#404040", // scheduler blocks
+        "gray-550": "#6B5B5B", // map buttons pressed
         "takenblocks" : "#789daf", // taken scheduler blocks
         "schedulerButtons" : "#789daf", // scheduler buttons
         "settingsButtons" : "#789daf", // settings subpage buttons
