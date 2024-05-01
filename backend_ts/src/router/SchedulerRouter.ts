@@ -119,14 +119,6 @@ class SchedulerRoutes extends BaseRoutes {
                 });
             }
         });
-        /*
-        selectedClass && selectedClass[0].classname}</div>
-                  <p className="text-slate-300 text-base">
-                    Type: class <br />
-                    Days: {selectedClass && selectedClass[0].daysofweek}<br />
-                    Location: {selectedClass && selectedClass[0].buildingname}<br />
-                    Time: {selectedClass && selectedClass[0].starttime}-{selectedClass[0].endtime}
-        */
 
         this.router.get("/addCourse/:classid/:sectionid/:className/:buildingname/:daysofweek/:starttime/:endtime/:passengerid", async (req, res) => {
             try {
@@ -185,6 +177,38 @@ class SchedulerRoutes extends BaseRoutes {
                 res.status(500).send('Internal Server Error');
             }
         });
+
+        this.router.get("/deleteSchedule/:classid/:sectionid/:passengerid", async (req, res) => {
+            try {
+                const classid = req.params.classid;
+                const sectionid = req.params.sectionid;
+                const passengerid = req.params.passengerid;
+                const results = await pool.query(`
+                WITH passengers_to_update AS (
+                    SELECT id
+                    FROM public.passengers
+                    WHERE id = $3 AND EXISTS (
+                        SELECT 1
+                        FROM jsonb_array_elements(schedule) AS s
+                        WHERE (s->>'classid')::text = $1 AND (s->>'sectionid')::text = $2
+                    )
+                )
+                UPDATE public.passengers AS p
+                SET schedule = (
+                    SELECT jsonb_agg(i)
+                    FROM jsonb_array_elements(p.schedule) i
+                    WHERE NOT (i->>'classid' = $1::text AND i->>'sectionid' = $2::text)
+                )
+                WHERE p.id IN (SELECT id FROM passengers_to_update);
+            `, [classid, sectionid, passengerid]);
+        
+                res.status(200).send(results);
+            } catch (error) {
+                console.error('Error while updating schedule:', error);
+                res.status(500).send('Internal Server Error');
+            }
+        });
+        
     }
 }
 
