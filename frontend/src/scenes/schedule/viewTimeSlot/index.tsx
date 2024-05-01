@@ -65,10 +65,10 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
       ) : (
         <div className="flex flex-wrap justify-center gap-4">
           {schedule.map((slot, index) => (
-            <div key={index} className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-primary-red">
+            <div key={index} className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-gray-600">
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">{slot.classname}</div>
-                <p className="text-slate-300 text-base">
+                <p className="text-primary-black text-base">
                   Type: class <br />
                   Days: {slot.daysofweek}<br />
                   Location: {slot.buildingname}<br />

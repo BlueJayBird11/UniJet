@@ -270,7 +270,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
         <div className="mt-8 text-primary-black">
           <h2>Selected Class:</h2>
           <div className="flex flex-wrap justify-center gap-4">
-              <div className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-primary-red">
+              <div className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-gray-600">
                 <div className="px-6 py-4">
                   <div className="font-bold text-xl mb-2">{selectedClass && selectedClass[0].classname}</div>
                   <p className="text-primary-black text-base">
