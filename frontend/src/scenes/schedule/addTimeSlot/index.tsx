@@ -260,9 +260,11 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
         </div>
         {/* Display submit button only when all form fields are filled */}
         {(selectedSubject && selectedCourse && selectedSection) && (
-          <button onClick={handleSubmit} className="bg-settingsButtons hover:bg-settingsButtonsPressed text-primary-black font-bold py-2 px-4 rounded">
-            Submit
-          </button>
+          <div className="flex justify-center">
+            <button onClick={handleSubmit} className="bg-settingsButtons hover:bg-settingsButtonsPressed text-primary-black font-bold py-2 px-4 rounded">
+              Submit
+            </button>
+          </div>
         )}
       </div>
       {/* Display filtered data only after form submission */}
