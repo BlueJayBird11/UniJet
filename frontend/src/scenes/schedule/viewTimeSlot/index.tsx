@@ -15,6 +15,8 @@ interface Slot {
   daysofweek: string;
   starttime: string;
   endtime: string;
+  classid: number;
+  sectionid: number;
 }
 
 type Props = {
@@ -34,13 +36,36 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
     setDeleteIndex(null);
   };
 
-  const handleConfirmDelete = () => {
+  
+  const handleConfirmDelete =  async () => {
     if (deleteIndex !== null) {
       // Implement your delete logic here
       console.log(`Delete slot at index ${deleteIndex}`);
+      console.log(schedule[deleteIndex])
+      try {
+        const response = await fetch(` http://localhost:8000/api/v1/scheduler/deleteSchedule/${schedule[deleteIndex].classid}/${schedule[deleteIndex].sectionid}/${passenger.passenger.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to fetch schedule');
+        }
+  
+        const data = await response.json();
+        console.log(data)
+        const updatedSchedule = [...schedule];
+        updatedSchedule.splice(deleteIndex, 1);
+        setSchedule(updatedSchedule);
+      } catch (error) {
+        console.error('Error fetching schedule:', error);
+      }
+    };
       setDeleteIndex(null); // Reset deleteIndex after deletion
     }
-  };
+  
 
   useEffect(() => {
     const fetchSchedule = async () => {
@@ -58,6 +83,7 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
   
         const data = await response.json();
         setSchedule(data);
+        console.log(data)
       } catch (error) {
         console.error('Error fetching schedule:', error);
       }
@@ -86,7 +112,7 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
                 <div key={index} className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-primary-red">
                   <div className="relative">
                     {/* Delete button */}
-                    <div className="absolute top-0 right-0 m-2 bg-primary-blue rounded-full p-1">
+                    <div className="absolute bottom-0 right-0 m-2 bg-primary-blue rounded-full p-1">
                       <button
                         onClick={() => handleDelete(index)}
                         className="text-red-100 hover:text-red-700"
@@ -95,8 +121,8 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
                       </button>
                     </div>
                     {/* Slot information */}
-                    <div className="px-6 py-4">
-                      <div className="font-bold text-xl mb-2">{slot.classname}</div>
+                    <div className="px-4 py-2">
+                      <div className="font-bold text-xl mb-1">{slot.classname}</div>
                       <p className="text-slate-300 text-base">
                         Type: Class <br />
                         Days: {slot.daysofweek}<br />

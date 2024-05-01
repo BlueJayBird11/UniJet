@@ -184,22 +184,22 @@ class SchedulerRoutes extends BaseRoutes {
                 const sectionid = req.params.sectionid;
                 const passengerid = req.params.passengerid;
                 const results = await pool.query(`
-                WITH passengers_to_update AS (
-                    SELECT id
-                    FROM public.passengers
-                    WHERE id = $3 AND EXISTS (
-                        SELECT 1
-                        FROM jsonb_array_elements(schedule) AS s
-                        WHERE (s->>'classid')::text = $1 AND (s->>'sectionid')::text = $2
+                    WITH passengers_to_update AS (
+                        SELECT id
+                        FROM public.passengers
+                        WHERE id = $3 AND EXISTS (
+                            SELECT 1
+                            FROM jsonb_array_elements(schedule) AS s
+                            WHERE (s->>'classid')::text = $1 AND (s->>'sectionid')::text = $2
+                        )
                     )
-                )
-                UPDATE public.passengers AS p
-                SET schedule = (
-                    SELECT jsonb_agg(i)
-                    FROM jsonb_array_elements(p.schedule) i
-                    WHERE NOT (i->>'classid' = $1::text AND i->>'sectionid' = $2::text)
-                )
-                WHERE p.id IN (SELECT id FROM passengers_to_update);
+                    UPDATE public.passengers AS p
+                    SET schedule = (
+                        SELECT jsonb_agg(i)
+                        FROM jsonb_array_elements(p.schedule) i
+                        WHERE NOT (i->>'classid' = $1::text AND i->>'sectionid' = $2::text)
+                    )
+                    WHERE p.id IN (SELECT id FROM passengers_to_update);
             `, [classid, sectionid, passengerid]);
         
                 res.status(200).send(results);
@@ -208,7 +208,6 @@ class SchedulerRoutes extends BaseRoutes {
                 res.status(500).send('Internal Server Error');
             }
         });
-        
     }
 }
 

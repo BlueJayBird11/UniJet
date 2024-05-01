@@ -97,7 +97,7 @@ function Schedule(passenger: any) {
         }
 
         const data = await response.json();
-        setFetchedData(data);
+        setFetchedData(data || []); // Ensure that data is not null
       } catch (error) {
         console.error('Error fetching schedule:', error);
       } finally {
@@ -108,17 +108,13 @@ function Schedule(passenger: any) {
     fetchData();
   }, [passenger.passenger.id]);
   
-  const startTimes: string[] = [];
-  const endTimes: string[] = [];
-  const days: string[] = [];
-
-  fetchedData.forEach((item) => {
-      startTimes.push(item.starttime.replace(/:/g, '').slice(0, 4));
-      endTimes.push(item.endtime.replace(/:/g, '').slice(0, 4));
-      days.push(item.daysofweek);
-  });
+  // If fetchedData is null, set empty arrays for startTimes, endTimes, and days
+  const startTimes: string[] = fetchedData ? fetchedData.map((item: any) => item.starttime.replace(/:/g, '').slice(0, 4)) : [];
+  const endTimes: string[] = fetchedData ? fetchedData.map((item: any) => item.endtime.replace(/:/g, '').slice(0, 4)) : [];
+  const days: string[] = fetchedData ? fetchedData.map((item: any) => item.daysofweek) : [];
   
   const generatedData =  React.useMemo(() => getData(startTimes, endTimes, days), [startTimes, endTimes, days, isLoading, fetchedData]);
+  
   
   const columns = React.useMemo(() => [
     {
