@@ -30,7 +30,28 @@ const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip, showD
   const handleLookForAnother = () => navigate('/confirmRide', { state: { lookingAgain: true } });
 
   // Cancel and navigate back to map
-  const handleCancel = () => navigate('/map');
+  const handleCancel = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/requests/cancel-ongoing', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tripId: onGoingTrip.tripId,
+        }), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      console.log('Request cancelled successfully.');
+      navigate('/map');
+      // Handle response or update UI as needed
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const confirmRequest = async () => {
     try {
@@ -53,7 +74,7 @@ const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip, showD
       console.log(data);
       // console.log(data.data.confirmed);
       setShowDriverPath(true);
-      navigate('/map', { state: { showDriverPath: true, foundDriver } });
+      navigate('/map');
 
       
       // Handle response or update UI as needed
@@ -63,7 +84,7 @@ const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip, showD
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center text-black">
       <div className="bg-white p-4 rounded w-full max-w-md text-center">
         <h3 className="text-lg font-bold mb-4">Driver Found</h3>
         <p><strong>Name:</strong> {foundDriver.name}</p>
