@@ -231,7 +231,7 @@ const SignupPage: React.FC = () => {
 
 
       {showOtpModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="fixed inset-0 bg-black bg-opacity-50 text-primary-blue flex justify-center items-center">
             <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
               <h2 className="text-xl font-semibold text-center mb-4">Verify Your Email</h2>
               <div className="mb-4">
@@ -266,7 +266,7 @@ const SignupPage: React.FC = () => {
 
       {/* First Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex text-primary-blue text-center justify-center items-center">
           <div className="bg-white p-6 rounded">
             <h2 className="text-xl font-semibold mb-4"> Do you wish to be a Driver?</h2>
             <div className="flex justify-center">
@@ -289,7 +289,7 @@ const SignupPage: React.FC = () => {
 
       {/* Second Modal */}
       {showSecondModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black text-primary-blue bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded">
             <h2 className="text-xl font-semibold mb-4 text-center">Driver Information</h2>
             <form onSubmit={(e) => {

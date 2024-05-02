@@ -7,9 +7,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import loadingGif from './car.gif';
 import { HoldDestination, OnGoingTrip, Passenger, RiderType } from '@/shared/types';
 import SearchBar from './SearchBar';
-import RouteToUser from './RouteToUser';
-// import * as dotenv from "dotenv";
-// dotenv.config();
 
 interface Props {
   passenger: Passenger;
@@ -22,9 +19,11 @@ interface Props {
   setShowActiveRide: (value: boolean) => void;
   showDriverPath: boolean;
   setShowDriverPath: (value: boolean) => void;
+  position: [number, number];
+  setPosition: (value: [number, number]) => void;
 }
 
-const ReachedDestinationModal = ({ driver, onRate }) => {
+const ReachedDestinationModal = ({ id, onRate, pOrD }) => {
   const [driverRating, setDriverRating] = useState(5);
 
   const renderRatingStars = () => {
@@ -41,7 +40,7 @@ const ReachedDestinationModal = ({ driver, onRate }) => {
       {/* <p><strong>Name:</strong> {driver.name}</p>
       <p><strong>Car Model:</strong> {driver.carModel}</p>
       <p><strong>Phone:</strong> {driver.phone}</p> */}
-      <p style={{ fontWeight: 'bold', marginBottom: '1em' }}>Rate the driver:</p>
+      <p style={{ fontWeight: 'bold', marginBottom: '1em' }}>Rate the {pOrD}:</p>
       <div>{renderRatingStars()}</div>
       <button onClick={() => onRate(driverRating)} style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '5px', backgroundColor: 'green', color: 'white', cursor: 'pointer' }}>
         Submit Rating
@@ -60,27 +59,16 @@ const destinationIcon = L.icon({
   iconSize: [32, 32], 
 });
     
-const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDestination, onGoingTrip, setOnGoingTrip, showActiveRide, setShowActiveRide, showDriverPath, setShowDriverPath }) => {
-  const [position, setPosition] = useState<[number, number] | null>(null);
+const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDestination, onGoingTrip, setOnGoingTrip, showActiveRide, setShowActiveRide, showDriverPath, setShowDriverPath, position, setPosition }) => {
   const [routeToDestination, setRouteToDestination] = useState<[number, number][] | null>(null);
   const [routeToUser, setRouteToUser] = useState<[number, number][] | null>(null);
-  // const [showActiveRide, setShowActiveRide] = useState(false);
-  // const [showDriverPath, setShowDriverPath] = useState(false);
   const placeholderLocation: [number, number] = [32.541251162684404, -92.63578950465626]; 
   const driverLocation: [number, number] = [32.52424701643656, -92.67001400107138]; 
   const mapboxAccessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
   const [mapHeight, setMapHeight] = useState('100vh');
-  // const riders: Array<RiderType> = [
-  //   {
-  //     name: "Ash",
-  //     rating: 5.0,
-  //     payMin: 9,
-  //     payMax: 11,
-  //     position: [32.541251162684404, -92.63578950465626],
-  //     destination: "Chase Bank"
-  //   }
-  // ]
+  const [tempDriverId, setTempDriverId] = useState(0);
+  const [tempPassengerId, setTempPassengerId] = useState(0);
   const [riders, setRiders] = useState<RiderType[]>([]); // State to hold list of riders
   // http://localhost:8000/api/v1/requests
   const getRequests = async () => {
@@ -146,7 +134,10 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
         destinationChoords: data.data.request.destinationChoords,
         startTime: data.data.request.startTime,
         rideDate: data.data.request.rideDate,
-        confirmed: false
+        confirmed: false,
+        cancelled: false,
+        pPhone: data.data.request.pPhone,
+        dPhone: data.data.request.dPhone
       })
       var ridersCopy:RiderType[] = riders;
       console.log(ridersCopy);
@@ -157,8 +148,32 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
           }
       }
       console.log(ridersCopy);
-      setRiders(ridersCopy);
+      // setRiders(ridersCopy);
+      setRiders([]);
       setShowAcceptedDriverModal(true);
+      // Handle response or update UI as needed
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleCancel = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/requests/cancel-ongoing', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tripId: onGoingTrip.tripId,
+        }), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      console.log('Request cancelled successfully.');
+      navigate('/map');
       // Handle response or update UI as needed
     } catch (error) {
       console.error('Error:', error);
@@ -185,10 +200,16 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       const data = await response.json();
 
       console.log(data);
-      if (data.data.request.confirmed)
+      if (data.data.request == null)
+        {
+          setShowAcceptedDriverModal(false);
+          console.log("Passenger Cancelled Request");
+        }
+      else if (data.data.request.confirmed)
         {
           setShowAcceptedDriverModal(false);
           setShowActiveRide(true);
+          setOnGoingTrip(data.data.request);
           console.log(onGoingTrip.passengerLocation);
           console.log(onGoingTrip.driverLocation);
           console.log(onGoingTrip.destinationChoords);
@@ -206,6 +227,13 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
 
   const updatePassenger = async () => {
     try {
+      // getPosition(); // Call getPosition when component mounts
+      if (!position) {
+        console.error('Position not available yet.');
+        return;
+      }
+      console.log("Passenger position:")
+      console.log(position);
       const response = await fetch('http://localhost:8000/api/v1/requests/update-request-passenger', {
         method: 'POST',
         headers: {
@@ -222,10 +250,11 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       }
 
       const data = await response.json();
-
+      
       console.log(data);
       if (data.data.request == null) {
         setShowDriverPath(false);
+        // setTempDriverId(onGoingTrip)
         setOnGoingTrip({
           tripId: 0,
           passengerId: 0,
@@ -239,17 +268,23 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
           destinationChoords: [0,0],
           startTime: "",
           rideDate: "",
-          confirmed: false
+          confirmed: false,
+          cancelled: false,
+          pPhone: "",
+          dPhone: ""
         });
+        setShowRateDriverModal(true);
       }
       else if (data.data.request.confirmed)
         {
+          setTempDriverId(onGoingTrip.driverId);
+          setOnGoingTrip(data.data.request);
           console.log(onGoingTrip.passengerLocation);
           console.log(onGoingTrip.driverLocation);
           console.log(onGoingTrip.destinationChoords);
 
-          fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
-          fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
+          // fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+          // fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
           // show routes
         }
       // Handle response or update UI as needed
@@ -297,8 +332,13 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
         destinationChoords: [0,0],
         startTime: "",
         rideDate: "",
-        confirmed: false
+        confirmed: false,
+        cancelled: false,
+        pPhone: "",
+        dPhone: ""
       });
+      setShowRatePassengerModal(true);
+
       // Handle response or update UI as needed
     } catch (error) {
       console.error('Error:', error);
@@ -307,6 +347,12 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
 
   const updateDriver = async () => {
     try {
+      
+      if (!position) {
+        console.error('Position not available yet.');
+        return;
+      }
+
       const response = await fetch('http://localhost:8000/api/v1/requests/update-request-driver', {
         method: 'POST',
         headers: {
@@ -323,7 +369,9 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       }
 
       const data = await response.json();
-
+      if (tempDriverId == 0) {
+        setTempDriverId(onGoingTrip.driverId);
+      }
       console.log(data);
       if (data.data.request == null) {
         setShowActiveRide(false);
@@ -340,17 +388,22 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
           destinationChoords: [0,0],
           startTime: "",
           rideDate: "",
-          confirmed: false
+          confirmed: false,
+          cancelled: false,
+          pPhone: "",
+          dPhone: ""
         });
       }
       else if (data.data.request.confirmed)
         {
+          setTempPassengerId(onGoingTrip.passengerId);
+          setOnGoingTrip(data.data.request);
           console.log(onGoingTrip.passengerLocation);
           console.log(onGoingTrip.driverLocation);
           console.log(onGoingTrip.destinationChoords);
 
-          fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
-          fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
+          // fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+          // fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
           // show routes
         }
       // Handle response or update UI as needed
@@ -377,18 +430,17 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
   };
  const [showEnrouteModal, setShowEnrouteModal] = useState(false);
  const [showRateDriverModal, setShowRateDriverModal] = useState(false);
+ const [showRatePassengerModal, setShowRatePassengerModal] = useState(false);
  const [showAcceptedDriverModal, setShowAcceptedDriverModal] = useState(false);
 
-
-
-//  useEffect(() => {
+// useEffect(() => {
 //   isMounted.current = true;
 //   const watchId = navigator.geolocation.watchPosition(
 //       (position) => {
 //         const { latitude, longitude } = position.coords;
 //         setPosition([latitude, longitude]);
-//         fetchRoute(latitude, longitude, placeholderLocation[0], placeholderLocation[1], setRouteToDestination);
-//         fetchRoute(driverLocation[0], driverLocation[1], latitude, longitude, setRouteToUser); // Fetch reverse route
+//         // fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[0], onGoingTrip.destinationChoords[1], setRouteToDestination);
+//         // fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser); // Fetch reverse route
 //       },
 //       (error) => console.error('Error watching position:', error),
 //       { enableHighAccuracy: true, maximumAge: 0 }
@@ -412,40 +464,32 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
 //     }
   
 //     return () => {navigator.geolocation.clearWatch(watchId);isMounted.current = false;};
-//   }, [location.state]);
+//   }, [location.state || true]);
 
 useEffect(() => {
-  isMounted.current = true;
-  const watchId = navigator.geolocation.watchPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setPosition([latitude, longitude]);
-        // fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[0], onGoingTrip.destinationChoords[1], setRouteToDestination);
-        // fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser); // Fetch reverse route
-      },
-      (error) => console.error('Error watching position:', error),
-      { enableHighAccuracy: true, maximumAge: 0 }
-    );
-
-    if (location.state?.driverOnTheWay) {
-      setShowDriverOnTheWay(true);
-
-      // Instead of directly modifying state after a timeout, check if component is still mounted
-      const timeoutId = setTimeout(() => {
-        if (isMounted.current) {
-          setShowDriverOnTheWay(false);
-          setShowDriverArrivedModal(true);
+  const watchPositionId = setInterval(() => {
+    navigator.geolocation.getCurrentPosition(
+      (geoPosition) => {
+        const lat = geoPosition.coords.latitude;
+        const lon = geoPosition.coords.longitude;
+        setPosition([lat, lon]);
+        // console.log(position);
+        if (onGoingTrip.tripId != 0) {
+          fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+          fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
         }
-      }, 10000);
+        },
+      (error) => {
+        console.error('Error getting location:', error);
+      }
+    );
+  }, 1000); // Call watchPosition every second (1000 milliseconds)
 
-      return () => {
-        clearTimeout(timeoutId);
-        isMounted.current = false;
-      };
-    }
-  
-    return () => {navigator.geolocation.clearWatch(watchId);isMounted.current = false;};
-  }, [location.state]);
+  // Cleanup function to stop watching for position when component unmounts
+  return () => {
+    clearInterval(watchPositionId);
+  };
+  }, [showActiveRide || showDriverPath]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -512,9 +556,6 @@ useEffect(() => {
     };
   }, [showActiveRide]); // Run effect when isLookingForDriver changes
 
-//   return () => {navigator.geolocation.clearWatch(watchId);isMounted.current = false;};
-// }, [location.state]);
-
   const handleCancelRide = () => {
     if (isMounted.current) {
       setShowDriverOnTheWay(false);
@@ -531,10 +572,56 @@ const handleConfirmRide = () => {
   }, 10000); // After enroute, show rate driver modal
 };
 
-const handleRateDriver = (rating) => {
+const handleRateDriver = async (rating: number) => {
   // Here you would handle the rating logic
-  setShowRateDriverModal(false);
   console.log(`Driver rated with: ${rating}`);
+
+  try {
+    const response = await fetch(`http://localhost:8000/api/v1/requests/rate-driver`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: tempDriverId, rating: rating  }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    setShowRateDriverModal(false);
+
+  } catch (error: any) {
+    console.error('Error:', error);
+  }
+};
+
+const handleRatePassenger = async (rating) => {
+  // Here you would handle the rating logic
+  console.log(`Driver rated with: ${rating}`);
+
+  try {
+    const response = await fetch(`http://localhost:8000/api/v1/requests/rate-passenger`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: tempPassengerId, rating: rating  }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    setShowRatePassengerModal(false);
+
+  } catch (error: any) {
+    console.error('Error:', error);
+  }
   // You might want to navigate away or update some state here
 };
 
@@ -592,7 +679,7 @@ const handleCancelRideFromArrivedModal = () => {
     return (
       <button
         onClick={resetView}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded absolute top-3 left-14 z-10"
+        className="bg-gray-600 hover:bg-gray-550 text-white font-bold py-2 px-4 rounded absolute top-3 left-14 z-10"
         style={{ zIndex: 9999 }}
       >
         Reset View
@@ -600,18 +687,10 @@ const handleCancelRideFromArrivedModal = () => {
     );
   };
 
-
-
-  
-
   return (
 
     <div className="h-screen relative">
-      <MapContainer style={{ width: '100%', height: mapHeight }} center={position} zoom={13} scrollWheelZoom={true} className="relative">
-
- {/* // return (
- //   <div className="h-screen relative">
- //     <MapContainer style={{ width: '100%', height: '90.5%' }} center={position} zoom={13} scrollWheelZoom={true}> */}
+      <MapContainer style={{ width: '100%', height: mapHeight }} center={position} zoom={13} scrollWheelZoom={true} className="relative z-0">
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
@@ -637,13 +716,7 @@ const handleCancelRideFromArrivedModal = () => {
 
         {onGoingTrip.tripId != 0 && routeToDestination && <Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />}
         {onGoingTrip.tripId != 0 && routeToUser && <Polyline positions={routeToUser} weight={10} opacity={0.3} color="red" />}
-        {/* {routeToUser && (
-           <Polyline positions={routeToUser} weight={10} opacity={0.3} color="blue" />
-        )} */}
         <ResetViewButton />
-        {/* <Marker position={position}>
-          <Popup>You are here</Popup>
-        </Marker> */}
         {riders.map((rider: RiderType) => (
           <Marker key={rider.id} position={rider.position}>
             <Popup className='items-center justify-center'>
@@ -654,19 +727,12 @@ const handleCancelRideFromArrivedModal = () => {
             </Popup>
           </Marker>
         ))}
-        {/* {routeToDestination && <Polyline positions={routeToDestination} color="blue" />}
-        {routeToUser && <Polyline positions={routeToUser} color="red" />} */}
       </MapContainer>
 
 
       {showDriverOnTheWay && (
         <div style={{position: 'absolute',top: '40%',left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(0, 0, 0, 0.75)',color: 'white',padding: '20px', borderRadius: '8px', zIndex: 10000, maxWidth: '400px', textAlign: 'center',}}>
           <p>Driver is on the way!</p>
-          {/* <p><strong>Name:</strong> {location.state.driver.name}</p>
-          <p><strong>Sex:</strong> {location.state.driver.sex}</p>
-          <p><strong>Car Model:</strong> {location.state.driver.carModel}</p>
-          <p><strong>Rating:</strong> {location.state.driver.rating}</p>
-          <p><strong>Phone:</strong> <span onClick={() => copyToClipboard(location.state.driver.phone)} style={{ cursor: 'pointer',fontWeight:'bold', textDecoration: 'underline' }}>{location.state.driver.phone}</span></p> */}
           <button onClick={handleCancelRide} style={{
             backgroundColor: 'rgb(220, 0, 0)', 
             color: 'white', 
@@ -686,11 +752,6 @@ const handleCancelRideFromArrivedModal = () => {
       {showDriverArrivedModal && (
         <div style={{position: 'absolute',top: '20%',left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(0, 0, 0, 0.75)',color: 'white',padding: '20px', borderRadius: '8px', zIndex: 10000, maxWidth: '400px', textAlign: 'left',}}>
           <p style={{fontSize:'lg',fontWeight:'bold', backgroundColor:'green', padding:'2px'}}>Your driver is here!</p>
-          {/* <p><strong>Name:</strong> {location.state.driver.name}</p>
-          <p><strong>Sex:</strong> {location.state.driver.sex}</p>
-          <p><strong>Car Model:</strong> {location.state.driver.carModel}</p>
-          <p><strong>Rating:</strong> {location.state.driver.rating}</p>
-          <p><strong>Phone:</strong> <span onClick={() => copyToClipboard(location.state.driver.phone)} style={{ cursor: 'pointer', fontWeight:'bold', textDecoration: 'underline' }}>{location.state.driver.phone}</span></p> */}
           <p style={{fontSize:'lg', fontWeight:'bold',backgroundColor:'yellow', padding:'2px', color:'black'}}>Confirm to start ride.</p>
           <button onClick={handleConfirmRide} style={{ backgroundColor: 'green', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', marginRight: '5px', width: '100%',  }}>Confirm</button>
           <button onClick={handleCancelRideFromArrivedModal} style={{ backgroundColor: 'rgb(220, 0, 0)', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', marginRight: '5px', width: '100%' }}>Cancel Ride</button>
@@ -699,58 +760,92 @@ const handleCancelRideFromArrivedModal = () => {
 
 
       {showDriverPath && (
-        <div style={{
-          position: 'absolute',top: '20%',left: '50%',transform: 'translate(-50%, -50%)',backgroundColor: 'rgba(0, 0, 0, 0.85)',color: 'white',padding: '20px',borderRadius: '8px',zIndex: 10100,display: 'flex',alignItems: 'center',justifyContent: 'center',}}>
-          <p style={{ margin: 0, marginRight: '10px', fontWeight:'bold' }}>Enroute...</p>
-          <img src={loadingGif} alt="Enroute..." style={{ height: '50px' }} />
+        <div className='p-12' style={{
+          position: 'absolute',
+          top: '20%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          color: 'white',
+          borderRadius: '8px',
+          zIndex: 10100,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <p style={{ margin: 0, marginRight: '10px', fontWeight:'bold' }}>Enroute...</p>
+            <img src={loadingGif} alt="Enroute..." style={{ height: '50px' }} />
+          </div>
+          <div className='absolute bottom-0 left-1/2 transform -translate-x-1/2'>
+            <p>Drivers number:<a href={`tel:${onGoingTrip.dPhone}`}>{onGoingTrip.dPhone}</a></p>
+          </div>
         </div>
+        
       )}
 
       {showAcceptedDriverModal && (
         <div style={{
           position: 'absolute',top: '20%',left: '50%',transform: 'translate(-50%, -50%)',backgroundColor: 'rgba(0, 0, 0, 0.85)',color: 'white',padding: '20px',borderRadius: '8px',zIndex: 10100,display: 'flex',alignItems: 'center',justifyContent: 'center',}}>
-          <p style={{ margin: 0, marginRight: '10px', fontWeight:'bold' }}>Waiting for comfirmation...</p>
+          <p style={{ margin: 0, marginRight: '0px', fontWeight:'bold' }}>Waiting for comfirmation...</p>
         </div>
       )}
 
       {showActiveRide && (
-        <div style={{
-          position: 'absolute',top: '20%',left: '50%',transform: 'translate(-50%, -50%)',backgroundColor: 'rgba(0, 0, 0, 0.85)',color: 'white',padding: '20px',borderRadius: '8px',zIndex: 10100,display: 'flex',alignItems: 'center',justifyContent: 'center',}}>
-          {/* Finish ride button */}
-          <button
-            onClick={finishRide}
-            className='bg-blue-700 p-2 z-[400] rounded-full right-4 bottom-32 text-white hover:bg-blue-300'
+        <div className="">
+          <div className='p-12'
+            style={{
+              position: "absolute",
+              top: "20%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "rgba(0, 0, 0, 0.85)",
+              color: "white",
+              borderRadius: "8px",
+              zIndex: 10100,
+              display: "flex",
+            }}
           >
-          Finish Ride
-        </button>
+            {/* Finish ride button */}
+            <button
+              onClick={finishRide}
+              className="bg-blue-700 px-8 z-[400] rounded-full right-4 bottom-32 text-white hover:bg-blue-300 mr-2 py-2"
+            >
+              Finish Ride
+            </button>
+            <button
+              onClick={handleCancel}
+              className="px-8 z-[400] rounded-full right-4 bottom-32 text-white bg-red-700 hover:bg-red-300 mr-2"
+            >
+              Cancel Ride
+            </button>
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
+              <p>Passenger's number:</p>
+              <a href={`tel:${onGoingTrip.pPhone}`} className="text-white">
+                {onGoingTrip.pPhone}
+              </a>
+            </div>
+          </div>
         </div>
       )}
 
+      {/* Rate Driver */}
       {showRateDriverModal && (
-        <ReachedDestinationModal driver={location.state.driver} onRate={handleRateDriver} />
+        <ReachedDestinationModal id={tempDriverId} onRate={handleRateDriver} pOrD={"driver"} />
+      )}
+      {/* Rate Passenger */}
+      {showRatePassengerModal && (
+        <ReachedDestinationModal id={tempPassengerId} onRate={handleRatePassenger} pOrD={"passenger"}  />
       )}
 
-
-      {/* Dev Button */}
-      {/* <button
-        style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 1000, backgroundColor: 'red', color:'white', padding:'10px' }}
-        onClick={() => navigate('/confirmRide')}>
-        Dev
-      </button> */}
-      {/* <button onClick={getRequests} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-10 bottom-28 text-white hover:bg-blue-300'>Find Rider's</button> */}
       {driverId !== 0 && (  
         <button
           onClick={getRequests}
-          className='bg-blue-700 p-2 absolute z-[400] rounded-full right-4 bottom-32 text-white hover:bg-blue-300'
+          className='bg-settingsButtons p-2 absolute z-[400] rounded-full right-4 bottom-32 text-primary-black hover:bg-settingsButtonsPressed'
         >
           Find Passenger
         </button>
       )}
-      {/* {driverId === 0 && (  
-        <button onClick={() => makeRequest(position)} className='bg-blue-700 p-2 absolute z-[400] rounded-full right-4 bottom-32 text-white hover:bg-blue-300'>
-          Request Driver
-        </button>
-      )} */}
     </div>
   );
 };

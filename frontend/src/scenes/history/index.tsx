@@ -62,7 +62,7 @@ const HistoryEntry = ({ date, name, totalTime, amount, userRole }: HistoryEntryP
           <p className={textStyle}>{date}</p>
         </div>
         <div className="mt-2">
-          <p className={detailTextStyle}>Total Ride Time: {totalTime} minutes</p>
+          <p className={detailTextStyle}>Total Ride Time: {parseFloat(totalTime.toFixed(2))} minutes</p>
           <p className={detailTextStyle}>{amountText + `$${amount}`}</p>
         </div>
     </motion.div>

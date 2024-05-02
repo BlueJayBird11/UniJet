@@ -21,4 +21,7 @@ export interface OnGoingTrip {
   destinationChoords: [number, number];
   startTime: string,
   rideDate: string
+  cancelled: boolean,
+  pPhone: string,
+  dPhone: string
 }

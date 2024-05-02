@@ -109,7 +109,7 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
           ) : (
             <div className="flex flex-wrap justify-center gap-4">
               {schedule.map((slot, index) => (
-                <div key={index} className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-primary-red">
+                <div key={index} className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-gray-600">
                   <div className="relative">
                     {/* Delete button */}
                     <div className="absolute bottom-0 right-0 m-2 bg-primary-blue rounded-full p-1">
@@ -123,7 +123,7 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
                     {/* Slot information */}
                     <div className="px-4 py-2">
                       <div className="font-bold text-xl mb-1">{slot.classname}</div>
-                      <p className="text-slate-300 text-base">
+                      <p className="text-primary-black text-base">
                         Type: Class <br />
                         Days: {slot.daysofweek}<br />
                         Location: {slot.buildingname}<br />
