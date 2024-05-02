@@ -57,7 +57,7 @@ function timeForDB(date:Date):string{
   let day=date.getDate();
   let month=date.getMonth()+1;
   let year=date.getFullYear();
-  return (year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds+"-05");
+  return (year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds+"-00");
 }
 
 function getTime(date:Date):string{
