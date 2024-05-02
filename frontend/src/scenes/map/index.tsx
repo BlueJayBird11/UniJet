@@ -23,7 +23,7 @@ interface Props {
   setPosition: (value: [number, number]) => void;
 }
 
-const ReachedDestinationModal = ({ onRate }) => {
+const ReachedDestinationModal = ({ id, onRate, pOrD }) => {
   const [driverRating, setDriverRating] = useState(5);
 
   const renderRatingStars = () => {
@@ -40,7 +40,7 @@ const ReachedDestinationModal = ({ onRate }) => {
       {/* <p><strong>Name:</strong> {driver.name}</p>
       <p><strong>Car Model:</strong> {driver.carModel}</p>
       <p><strong>Phone:</strong> {driver.phone}</p> */}
-      <p style={{ fontWeight: 'bold', marginBottom: '1em' }}>Rate the driver:</p>
+      <p style={{ fontWeight: 'bold', marginBottom: '1em' }}>Rate the {pOrD}:</p>
       <div>{renderRatingStars()}</div>
       <button onClick={() => onRate(driverRating)} style={{ marginTop: '20px', padding: '10px 20px', borderRadius: '5px', backgroundColor: 'green', color: 'white', cursor: 'pointer' }}>
         Submit Rating
@@ -250,9 +250,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       }
 
       const data = await response.json();
-      if (tempDriverId == 0) {
-        setTempDriverId(onGoingTrip.driverId);
-      }
+      
       console.log(data);
       if (data.data.request == null) {
         setShowDriverPath(false);
@@ -279,6 +277,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       }
       else if (data.data.request.confirmed)
         {
+          setTempDriverId(onGoingTrip.driverId);
           setOnGoingTrip(data.data.request);
           console.log(onGoingTrip.passengerLocation);
           console.log(onGoingTrip.driverLocation);
@@ -338,6 +337,8 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
         pPhone: "",
         dPhone: ""
       });
+      setShowRatePassengerModal(true);
+
       // Handle response or update UI as needed
     } catch (error) {
       console.error('Error:', error);
@@ -395,6 +396,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       }
       else if (data.data.request.confirmed)
         {
+          setTempPassengerId(onGoingTrip.passengerId);
           setOnGoingTrip(data.data.request);
           console.log(onGoingTrip.passengerLocation);
           console.log(onGoingTrip.driverLocation);
@@ -472,9 +474,11 @@ useEffect(() => {
         const lon = geoPosition.coords.longitude;
         setPosition([lat, lon]);
         // console.log(position);
-        fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
-        fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
-      },
+        if (onGoingTrip.tripId != 0) {
+          fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+          fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
+        }
+        },
       (error) => {
         console.error('Error getting location:', error);
       }
@@ -568,17 +572,56 @@ const handleConfirmRide = () => {
   }, 10000); // After enroute, show rate driver modal
 };
 
-const handleRateDriver = (rating) => {
+const handleRateDriver = async (rating: number) => {
   // Here you would handle the rating logic
-  setShowRateDriverModal(false);
   console.log(`Driver rated with: ${rating}`);
-  // You might want to navigate away or update some state here
+
+  try {
+    const response = await fetch(`http://localhost:8000/api/v1/requests/rate-driver`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: tempDriverId, rating: rating  }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    setShowRateDriverModal(false);
+
+  } catch (error: any) {
+    console.error('Error:', error);
+  }
 };
 
-const handleRatePassenger = (rating) => {
+const handleRatePassenger = async (rating) => {
   // Here you would handle the rating logic
-  setShowRateDriverModal(false);
-  console.log(`Passenger rated with: ${rating}`);
+  console.log(`Driver rated with: ${rating}`);
+
+  try {
+    const response = await fetch(`http://localhost:8000/api/v1/requests/rate-passenger`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: tempPassengerId, rating: rating  }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    setShowRatePassengerModal(false);
+
+  } catch (error: any) {
+    console.error('Error:', error);
+  }
   // You might want to navigate away or update some state here
 };
 
@@ -786,12 +829,13 @@ const handleCancelRideFromArrivedModal = () => {
         </div>
       )}
 
+      {/* Rate Driver */}
       {showRateDriverModal && (
-        <ReachedDestinationModal onRate={handleRateDriver} />
+        <ReachedDestinationModal id={tempDriverId} onRate={handleRateDriver} pOrD={"driver"} />
       )}
-
+      {/* Rate Passenger */}
       {showRatePassengerModal && (
-        <ReachedDestinationModal onRate={handleRatePassenger} />
+        <ReachedDestinationModal id={tempPassengerId} onRate={handleRatePassenger} pOrD={"passenger"}  />
       )}
 
       {driverId !== 0 && (  

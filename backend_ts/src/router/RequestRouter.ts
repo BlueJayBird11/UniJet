@@ -460,6 +460,7 @@ class RequestRoutes extends BaseRoutes {
 
     this.router.put("/rate-passenger", async (req, res) => {
       try {
+        console.log(req.body);
         const newRatingResult = await pool.query(
           "WITH avg_rating AS ( \
             SELECT id, AVG(rating) AS avg_rating\
@@ -473,7 +474,7 @@ class RequestRoutes extends BaseRoutes {
             returning *",
           [req.body.id, req.body.rating]
         );
-        
+        console.log("New Rating")
         console.log(newRatingResult.rows[0].rating);
         res.status(200).json({
           status: "success",
@@ -485,6 +486,7 @@ class RequestRoutes extends BaseRoutes {
 
     this.router.put("/rate-driver", async (req, res) => {
       try {
+        console.log(req.body);
         const newRatingResult = await pool.query(
           "WITH avg_passenger_rating AS (\
               SELECT ra.passengerID, AVG(p.rating) AS avg_rating\
