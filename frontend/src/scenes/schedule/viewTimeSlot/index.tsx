@@ -104,7 +104,7 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
         </div>
         </div>
         <div className="flex flex-col justify-center items-center h-full pt-20">
-          {schedule.length === 0 ? (
+          {schedule === null || schedule.length === 0 ? (
             <p className="text-red-500 text-2xl">The schedule is currently empty.</p>
           ) : (
             <div className="flex flex-wrap justify-center gap-4">
