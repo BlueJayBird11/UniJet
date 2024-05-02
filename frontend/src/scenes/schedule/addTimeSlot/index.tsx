@@ -40,6 +40,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
   const [subjectList, setSubjectList] = useState<string[]>([]); 
   const [courseList, setCourseList] = useState<courseList[]>([]); 
   const [sectionList, setSectionList] = useState<sectionList[]>([]); 
+  const transformTime = (timeString: string): string => (parseInt(timeString.slice(0, 2)) % 12 || 12) + timeString.slice(2, 5);
 
   // Function to handle form submission
 
@@ -68,7 +69,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
         }
 
         const { data } = await response.json();
-        console.log('Passenger data:', data.subject);
         setSubjectList(data.subject || []); // Use default empty array if data.subject is undefined
       } catch (error) {
         console.error('Error:', error);
@@ -92,7 +92,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
           }
     
           const { data } = await response.json();
-          console.log('Passenger data:', data.subject);
           setSubjectList(data.subject || []); // Use default empty array if data.subject is undefined
         } catch (error) {
           console.error('Error:', error);
@@ -105,9 +104,8 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
     useEffect(() => {
       const fetchCourse = async () => { 
         try {
-          console.log("RIGHT HERE")
-          console.log(selectedSubject)
-          const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/course/${selectedSubject}`, {
+          if (selectedSubject != '') { 
+            const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/course/${selectedSubject}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -117,21 +115,20 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
             throw new Error(`Error: ${response.status}`);
           }
           const { data } = await response.json();
-          console.log('Passenger data:', data.course);
           setCourseList(data.course || []); // Use default empty array if data.subject is undefined
-        } catch (error) {
-          console.error('Error:', error);
         }
-      };
+       } 
+       catch (error) {
+         console.error('Error:', error);
+       }
+     };
     
-      fetchCourse();
-    }, [selectedSubject]);
+       fetchCourse();
+     }, [selectedSubject]);
     
     useEffect(() => {
       const fetchSection = async () => { 
         try {
-          console.log("RIGHT HERE")
-          console.log(courseList)
           const foundCourse = courseList.find(course => course.coursenumber === selectedCourse);
           if (foundCourse != undefined) { 
             classId = foundCourse.id
@@ -145,7 +142,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
               throw new Error(`Error: ${response.status}`);
             }
             const { data } = await response.json();
-            console.log('Passenger data:', data.section);
             setSectionList(data.section || []); // Use default empty array if data.subject is undefined
             console.log(sectionList)
           }
@@ -161,8 +157,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
       try {
         await fetchSelectedClass();
         setFormSubmitted(true);
-        console.log("HERE")
-        console.log(selectedClass)
       } catch (error) {
         console.error('Error:', error);
       }
@@ -171,7 +165,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
     const fetchSelectedClass = async () => { 
       try {
         const foundSection = sectionList.find(course => course.section === selectedSection);
-        console.log(foundSection)
         if (foundSection != undefined) { 
           section = foundSection.sectionid
           const response = await fetch(`http://localhost:8000/api/v1/scheduler/subjects/course/section/submit/${classId}/${section}`, {
@@ -194,7 +187,6 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
       }
     };
     useEffect(() => {
-      console.log(selectedClass);
     }, [selectedClass]);
 
   return (
@@ -210,7 +202,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
     <div className="flex flex-col justify-center items-center h-full">
       <h1 className="mb-4 text-primary-black text-3xl font-bold">Add Time Slot </h1>
       <div className="mt-8">
-        <div className="mb-16">
+        <div className="mb-8">
           <div className={`bg-viewTimeSlots rounded-lg p-4`}>
           <label htmlFor="subject" className="mr-2 text-primary-black text-xl">Subject:</label>
           <select
@@ -226,7 +218,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
           </select>
          </div>
         </div>
-        <div className="mb-16">
+        <div className="mb-8">
           <div className={`bg-viewTimeSlots rounded-lg p-4`}>
           <label htmlFor="course" className="mr-2 text-primary-black text-xl">Course:</label>
           <select
@@ -242,7 +234,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
           </select>
           </div>
         </div>
-        <div className="mb-16">
+        <div className="mb-8">
           <div className={`bg-viewTimeSlots rounded-lg p-4`}>
           <label htmlFor="section" className="mr-2 text-primary-black text-xl">Section:</label>
           <select
@@ -279,7 +271,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
                     Type: class <br />
                     Days: {selectedClass && selectedClass[0].daysofweek}<br />
                     Location: {selectedClass && selectedClass[0].buildingname}<br />
-                    Time: {selectedClass && selectedClass[0].starttime}-{selectedClass[0].endtime}
+                    Time: {selectedClass && transformTime(selectedClass[0].starttime)}-{transformTime(selectedClass[0].endtime)}
                   </p>
                 </div>
               </div>
@@ -294,6 +286,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
           </div>
         </div>
       )}
+      <div className='py-12'></div>
     </div>
    </>
   );

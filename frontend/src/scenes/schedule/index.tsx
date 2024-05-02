@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react';
 import placeholderData from "./CURR_DATA.json"
 import {useTable} from "react-table"
 import { Link } from 'react-router-dom';
@@ -78,29 +78,43 @@ function isEmpty(obj: object) {
   return true;
 }
 
-function Schedule() { 
+function Schedule(passenger: any) {
+  const [fetchedData, setFetchedData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/scheduler/viewCourses/${passenger.passenger.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch schedule');
+        }
+
+        const data = await response.json();
+        setFetchedData(data || []); // Ensure that data is not null
+      } catch (error) {
+        console.error('Error fetching schedule:', error);
+      } finally {
+        setIsLoading(false); 
+      }
+    }
+
+    fetchData();
+  }, [passenger.passenger.id]);
   
-  const jsonData: DataEntry[] = Array.isArray(placeholderData) ? placeholderData : [];
-
-  // Extract startTimes, endTimes, and days from placeholderData
-  const startTimes: string[] = [];
-  const endTimes: string[] = [];
-  const days: string[] = [];
-
-  jsonData.forEach(item => {
-      startTimes.push(item.startTime);
-      endTimes.push(item.endTime);
-      days.push(item.days);
-  });
-  //console.log('Start Times:', startTimes);
-  //console.log('End Times:', endTimes);
-  //console.log('Days:', days)
+  // If fetchedData is null, set empty arrays for startTimes, endTimes, and days
+  const startTimes: string[] = fetchedData ? fetchedData.map((item: any) => item.starttime.replace(/:/g, '').slice(0, 4)) : [];
+  const endTimes: string[] = fetchedData ? fetchedData.map((item: any) => item.endtime.replace(/:/g, '').slice(0, 4)) : [];
+  const days: string[] = fetchedData ? fetchedData.map((item: any) => item.daysofweek) : [];
   
-  const generatedData =  React.useMemo(() => getData(startTimes, endTimes, days), []);
-  //console.log(generatedData)
-
-  const data = React.useMemo(() => placeholderData, []);
-  //console.log(data)
+  const generatedData =  React.useMemo(() => getData(startTimes, endTimes, days), [startTimes, endTimes, days, isLoading, fetchedData]);
+  
   
   const columns = React.useMemo(() => [
     {
@@ -134,17 +148,19 @@ function Schedule() {
     ], []);
 
   const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} = useTable({columns, data: generatedData});
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className='pt-20'>
       <div className="h-20 fixed top-0 border border-rose-100 bg-gray-600 flex justify-between items-center px-2 w-full">
-        <Link to="/addTimeSlot">
-          <button className="bg-schedulerButtons rounded px-1 py-1">Add time slot</button>
+        <Link to="/addTimeSlot" className="w-5/12">
+          <button className="bg-schedulerButtons rounded px-2 py-2 w-full">Add time slot</button>
         </Link>
-        <Link to="/viewTimeSlot">
-          <button className="bg-schedulerButtons rounded px-1 py-1">View time slots</button>
-        </Link>
-        <Link to="/deleteTimeSlot">
-          <button className="bg-schedulerButtons rounded px-1 py-1">Delete time slots</button>
+        <Link to="/viewTimeSlot" className="w-5/12">
+          <button className="bg-schedulerButtons rounded px-2 py-2 w-full">Edit time slots</button>
         </Link>
       </div>
         <div className="schedule bg-primary-blue">
@@ -186,6 +202,7 @@ function Schedule() {
             </table>
           </div>
         </div>
+        <div className='py-10'></div>
     </div>
   );
 }

@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
-
-import placeholderData from "../CURR_DATA.json";
 import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
 import { Passenger } from '@/shared/types';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ConfirmationModal from '../deleteTimeSlot/confirmationModal';
 
 // Define an interface for the JSON data
 interface Slot {
@@ -14,6 +15,8 @@ interface Slot {
   daysofweek: string;
   starttime: string;
   endtime: string;
+  classid: number;
+  sectionid: number;
 }
 
 type Props = {
@@ -22,6 +25,47 @@ type Props = {
 
 const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
   const [schedule, setSchedule] = useState<Slot[]>([]); // Initialize schedule as an empty array of Slot objects
+  const transformTime = (timeString: string): string => (parseInt(timeString.slice(0, 2)) % 12 || 12) + timeString.slice(2, 5);
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+
+  const handleDelete = (index: number) => {
+    setDeleteIndex(index);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteIndex(null);
+  };
+
+  
+  const handleConfirmDelete =  async () => {
+    if (deleteIndex !== null) {
+      // Implement your delete logic here
+      console.log(`Delete slot at index ${deleteIndex}`);
+      console.log(schedule[deleteIndex])
+      try {
+        const response = await fetch(` http://localhost:8000/api/v1/scheduler/deleteSchedule/${schedule[deleteIndex].classid}/${schedule[deleteIndex].sectionid}/${passenger.passenger.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to fetch schedule');
+        }
+  
+        const data = await response.json();
+        console.log(data)
+        const updatedSchedule = [...schedule];
+        updatedSchedule.splice(deleteIndex, 1);
+        setSchedule(updatedSchedule);
+      } catch (error) {
+        console.error('Error fetching schedule:', error);
+      }
+    };
+      setDeleteIndex(null); // Reset deleteIndex after deletion
+    }
+  
 
   useEffect(() => {
     const fetchSchedule = async () => {
@@ -39,7 +83,7 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
   
         const data = await response.json();
         setSchedule(data);
-        console.log(schedule)
+        console.log(data)
       } catch (error) {
         console.error('Error fetching schedule:', error);
       }
@@ -60,26 +104,44 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
         </div>
         </div>
         <div className="flex flex-col justify-center items-center h-full pt-20">
-      {schedule.length === 0 ? (
-        <p className="text-red-500 text-2xl">The schedule is currently empty.</p>
-      ) : (
-        <div className="flex flex-wrap justify-center gap-4">
-          {schedule.map((slot, index) => (
-            <div key={index} className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-gray-600">
-              <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">{slot.classname}</div>
-                <p className="text-primary-black text-base">
-                  Type: class <br />
-                  Days: {slot.daysofweek}<br />
-                  Location: {slot.buildingname}<br />
-                  Time: {slot.starttime}-{slot.endtime}
-                </p>
-              </div>
+          {schedule.length === 0 ? (
+            <p className="text-red-500 text-2xl">The schedule is currently empty.</p>
+          ) : (
+            <div className="flex flex-wrap justify-center gap-4">
+              {schedule.map((slot, index) => (
+                <div key={index} className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-gray-600">
+                  <div className="relative">
+                    {/* Delete button */}
+                    <div className="absolute bottom-0 right-0 m-2 bg-primary-blue rounded-full p-1">
+                      <button
+                        onClick={() => handleDelete(index)}
+                        className="text-red-100 hover:text-red-700"
+                      >
+                        <FontAwesomeIcon icon={faTrashAlt} />
+                      </button>
+                    </div>
+                    {/* Slot information */}
+                    <div className="px-4 py-2">
+                      <div className="font-bold text-xl mb-1">{slot.classname}</div>
+                      <p className="text-primary-black text-base">
+                        Type: Class <br />
+                        Days: {slot.daysofweek}<br />
+                        Location: {slot.buildingname}<br />
+                        Time: {transformTime(slot.starttime)}-{transformTime(slot.endtime)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
-     </div>
+          )}
+          {/* Confirmation Modal */}
+          <ConfirmationModal
+            isOpen={deleteIndex !== null}
+            onCancel={handleCancelDelete}
+            onConfirm={handleConfirmDelete}
+          />
+      </div>
     </>
   );
 };
