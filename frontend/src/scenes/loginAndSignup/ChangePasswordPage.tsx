@@ -25,6 +25,8 @@ const ChangePasswordPage: React.FC = () => {
     };
     
     const changePassword = async () => {
+        let passed = false;
+
         if (newPassword !== confirmPassword) {
             alert("Passwords do not match.");
             return;
@@ -47,18 +49,18 @@ const ChangePasswordPage: React.FC = () => {
           
                 const data = await response.json();
                 console.log('Success:', data);
-                var passed = true
+                passed = true
                 // setShowModal(true);
           
               } catch (error) {
-                var passed = false
+                passed = false
                 console.error('Error:', error);
               }
         }
         if (passed) { 
             console.log("New password:", newPassword);
             alert("Your password has been changed successfully.");
-            navigate('/login'); 
+            navigate('/'); 
         }
     };
 

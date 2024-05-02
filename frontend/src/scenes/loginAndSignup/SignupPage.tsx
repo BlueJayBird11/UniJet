@@ -81,7 +81,7 @@ const SignupPage: React.FC = () => {
       const data = await response.json();
       console.log('Success:', data);
       // goto login
-      navigate('/login');
+      navigate('/');
     } catch (error) {
       console.error('Error:', error);
     }
@@ -124,6 +124,7 @@ const SignupPage: React.FC = () => {
         userStatus: 0,
         carPool: false
       }
+      response;
       postPassenger(user);
       setShowModal(true);
 
@@ -224,7 +225,7 @@ const SignupPage: React.FC = () => {
             <button type="submit" className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Sign Up</button>
           </form>
           <p className="text-center text-sm text-black mt-4">
-            Already have an account? <Link to="/login" className="text-blue-500 hover:text-blue-800">Login</Link>
+            Already have an account? <Link to="/" className="text-blue-500 hover:text-blue-800">Login</Link>
           </p>
         </div>
       </div>
