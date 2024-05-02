@@ -179,27 +179,17 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
                 </Link>
                 <Link to="/edit-name" className="block mb-2">
                     <div className="bg-gray-600 rounded-lg shadow-md p-4">
-                        <p className="text-lg text-primary-black font-medium">Edit Name</p>
+                        <p className="text-lg text-primary-black font-medium">Change Name</p>
                     </div>
                 </Link>
                 <Link to="/edit-email" className="block mb-2">
                     <div className="bg-gray-600 rounded-lg shadow-md p-4">
-                        <p className="text-lg text-primary-black font-medium">Edit Email</p>
-                    </div>
-                </Link>
-                <Link to="/edit-university" className="block mb-2">
-                    <div className="bg-gray-600 rounded-lg shadow-md p-4">
-                        <p className="text-lg text-primary-black font-medium">Edit University</p>
+                        <p className="text-lg text-primary-black font-medium">Change Email</p>
                     </div>
                 </Link>
                 <Link to="/change-phone-number" className="block mb-2">
                     <div className="bg-gray-600 rounded-lg shadow-md p-4">
                         <p className="text-lg text-primary-black font-medium">Change Phone Number</p>
-                    </div>
-                </Link>
-                <Link to="/delete-account" className="block mb-2">
-                    <div className="bg-red-500 rounded-lg shadow-md p-4">
-                        <p className="text-lg text-primary-black font-medium">Delete Account</p>
                     </div>
                 </Link>
                 <Link to="/logout" className="block mb-2">
@@ -253,7 +243,7 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="bg-gray-600 hover:bg-gray-400 text-primary-black font-bold py-2 px-4 rounded"
+                                    className="bg-settingsButtons hover:bg-gray-400 text-primary-black font-bold py-2 px-4 rounded"
                                 >
                                     Submit
                                 </button>

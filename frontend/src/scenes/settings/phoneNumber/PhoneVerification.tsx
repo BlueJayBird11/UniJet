@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { ChevronLeftIcon } from '@heroicons/react/24/solid'; 
 
 interface PhoneVerificationProps {}
 
@@ -9,7 +9,6 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [phoneOtp, setPhoneOtp] = useState('');
     const [isPhoneVerified, setIsPhoneVerified] = useState(false);
-    const [showConfirm, setShowConfirm] = useState(false);
     const [showOTPInput, setShowOTPInput] = useState(false);
     const [otpError, setOtpError] = useState('');
     const [countdown, setCountdown] = useState(7);
@@ -38,7 +37,7 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = () => {
         try {
             const response = await axios.post('http://localhost:8000/api/send-phone-otp', { phoneNumber });
             if (response.status === 200) {
-                setShowOTPInput(true);
+                setShowOTPInput(true); // Show the OTP input fields
                 setOtpError('');
             } else {
                 throw new Error(response.data.error || 'Failed to send OTP');
@@ -57,7 +56,6 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = () => {
             const response = await axios.post('http://localhost:8000/api/verify-phone-otp', { phoneNumber, otp: phoneOtp });
             if (response.status === 200) {
                 setIsPhoneVerified(true);
-                setShowConfirm(false);
                 setShowOTPInput(false);
                 setOtpError('');
             } else {
@@ -69,41 +67,47 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = () => {
     };
 
     return (
-        <div className="flex justify-center items-center h-screen">
-            <div className="w-full max-w-md p-6 bg-white rounded shadow-md">
-                {!isPhoneVerified && !showConfirm && (
+        <>
+        <div className="bg-gray-600 text-primary-black py-5 px-6 flex items-center justify-between">
+            <Link to="/settings" className="mr-4">
+                <ChevronLeftIcon className="h-6 w-6" />
+            </Link>
+            <div className="flex-grow flex items-center justify-center">
+                <h1 className="text-xl text-primary-black font-bold mr-10">Change Phone Number</h1>
+            </div>
+        </div>
+        <div className="text-primary-black">
+            <div className="w-full max-w-md p-6 ">
+                {!isPhoneVerified && !showOTPInput && (
                     <div>
-                        <h1 className="text-xl font-bold text-center mb-4">Change your phone number?</h1>
-                        <button onClick={() => setShowConfirm(true)} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded block w-full mb-2">Yes</button>
-                        <button onClick={() => navigate('/settings')} className="bg-red-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded block w-full">No</button>
-                    </div>
-                )}
-                {showConfirm && !showOTPInput && (
-                    <div>
-                        <h1 className="text-xl font-bold text-center mb-4">Please enter your phone number.</h1>
+                        <h1 className="text-xl mb-4">New Phone Number</h1>
                         <input
                             type="tel"
-                            placeholder="Enter your phone number"
+                            placeholder="Enter your new phone number"
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
-                            className="w-full p-2 border rounded mb-4"
+                            className="w-full p-2 border rounded mb-4 text-primary-blue"
                         />
-                        <button onClick={handleSendOtp} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">Send OTP</button>
+                        <div className="flex justify-center">
+                            <button onClick={handleSendOtp} className="bg-primary-green-500 hover:bg-settingsButtonsPressed text-primary-black font-bold py-2 px-4 rounded">Send OTP</button>
+                        </div>
                     </div>
                 )}
+
                 {showOTPInput && (
                     <div>
-                        <h1 className="text-xl font-bold text-center mb-4">Enter the OTP sent to your number.</h1>
+                        <h1 className="text-xl mb-4">Enter the OTP sent to your number.</h1>
                         <input
                             type="text"
                             placeholder="Enter OTP"
                             value={phoneOtp}
                             onChange={(e) => setPhoneOtp(e.target.value)}
-                            className="w-full p-2 border rounded mb-4"
+                            className="w-full p-2 border rounded mb-4 text-primary-blue"
                         />
-                        <button onClick={handleVerifyOtp} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">Verify OTP</button>
+                        <button onClick={handleVerifyOtp} className="bg-primary-green-500 hover:bg-settingsButtonsPressed text-primary-black font-bold py-2 px-4 rounded w-full">Verify OTP</button>
                     </div>
                 )}
+
                 {otpError && (
                     <div className="text-red-500 text-center mt-4">{otpError}</div>
                 )}
@@ -113,9 +117,9 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = () => {
                         <p><strong>Redirecting to settings in {countdown} seconds...</strong></p>
                     </div>
                 )}
-
             </div>
         </div>
+        </>
     );
 };
 

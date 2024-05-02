@@ -33,10 +33,10 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, onCancel,
           </div>
           <div className="fixed inset-0 z-50 flex justify-center items-center">
             <div className="bg-primary-black p-8 rounded shadow-lg">
-              <p className="mb-4 text-primary-blue">Are you sure you want to delete this item?</p>
+              <p className="mb-4 text-bold text-primary-blue">Are you sure you want to delete this item?</p>
               <div className="flex justify-center">
-                <button className="bg-gray-600 hover:bg-gray-600 text-white font-bold py-2 px-4 mr-2 rounded" onClick={onCancel}>Cancel</button>
-                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={onConfirm}>Delete</button>
+                <button className="bg-settingsButtons hover:bg-settingsButtonsPressed text-primary-black font-bold py-2 px-4 mr-2 rounded" onClick={onCancel}>Cancel</button>
+                <button className="bg-red-500 hover:bg-red-700 text-primary-black font-bold py-2 px-4 rounded" onClick={onConfirm}>Delete</button>
               </div>
             </div>
           </div>

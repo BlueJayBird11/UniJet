@@ -63,7 +63,7 @@ const SearchBar: React.FC<Props> = ({holdDestination, setHoldDestination}) => {
   };
 
   return (
-    <div className="z-[400] top-24 left-2 bg-white p-2 absolute">
+    <div className="z-[400] top-24 left-2 bg-white p-2 absolute text-primary-blue">
       <input
         type="text"
         placeholder="Search address..."
