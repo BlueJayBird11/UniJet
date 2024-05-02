@@ -122,6 +122,7 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
                 },
                 body: JSON.stringify(formData),
             });
+            if(response.ok){
             setName('');
             setEmail('');
             setMessage('');
@@ -129,7 +130,7 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
             setReportSuccess(true);
             setTimeout(() => setReportSuccess(false), 3000); // Hide the confirmation message after 3 seconds
             }
-        catch (error) {
+        }catch (error) {
             console.error('Error:', error);
         };
     };
@@ -137,7 +138,7 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
     const dangerButtonStyles = "mt-2 w-full font-bold py-2 px-4 rounded border border-gray-300 hover:border-gray-500 bg-red-500 text-white";
     return (
         
-        <div className="flex flex-col bg-primary-blue font-sans">
+        <div className="flex flex-col bg-primary-blue font-sans" style={{ paddingBottom: '100px' }}>
             <div className="bg-gray-600 text-primary-black py-4 px-6 flex items-center justify-between fixed top-0 w-full">
                 <Link to="/" className="mr-4">
                     <ChevronLeftIcon className="h-6 w-6" />
