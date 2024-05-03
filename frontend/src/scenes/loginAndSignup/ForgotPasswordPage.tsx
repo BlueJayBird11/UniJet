@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import background from './background.png';
 import axios from 'axios';
 
@@ -51,7 +51,7 @@ const ForgotPasswordPage: React.FC = () => {
                 </div>
               </form>
               <p className="text-center text-black mt-4">
-                Know your password? <a href="/login" className="text-blue-500 hover:text-blue-700">Log in</a>
+                Know your password? <Link to="/login" className="text-blue-500 hover:text-blue-800">Login</Link>
               </p>
             </div>
           </div>

@@ -13,9 +13,57 @@ const EditEmail = ({passenger}: Props) => {
   const [success, setSuccess] = useState('');
   const [navigateBack, setNavigateBack] = useState(false);
 
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+
+
   const validateEmail = (email: string): boolean => {
     return email.endsWith('@email.latech.edu');
   };
+
+  const sendOtp = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        setOtpSent(true);
+        setSuccess(data.message);
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (error:any) {
+      setError(`Failed to send OTP: ${error.message}`);
+    }
+  };
+  
+    const verifyOtp = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/verify-otp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, otp }),
+        });
+    
+        const data = await response.json();
+        if (response.ok) {
+          await changeEmail();
+        } else {
+          throw new Error(data.error);
+        }
+      } catch (error:any) {
+        setError(`OTP Verification failed: ${error.message}`);
+      }
+    };
+  
 
   const changeEmail = async () => {
     try {
@@ -52,17 +100,21 @@ const EditEmail = ({passenger}: Props) => {
     setSuccess('');
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    if (validateEmail(email)) {
-      console.log(`New email: ${email}`);
-      await changeEmail(); 
-    } else {
+  
+    if (!validateEmail(email)) {
       setError('Email must end with @email.latech.edu');
+      return;
     }
-
+  
+    if (!otpSent) {
+      await sendOtp();
+    } else {
+      await verifyOtp();
+    }
   };
+  
 
   
   if (navigateBack) {
@@ -93,6 +145,25 @@ const EditEmail = ({passenger}: Props) => {
               value={email}
               onChange={handleChange}
             />
+
+          {
+            otpSent && (
+              <div className="mb-4">
+                <label className="block text-primary-black text-xl mb-2" htmlFor="otp">
+                  OTP
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="otp"
+                  type="text"
+                  placeholder="Enter OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                />
+              </div>
+            )
+          }
+
           {error && <p className="text-red-500 text-xs italic">{error}</p>}
           {success && <p className="text-green-500 text-xs italic">{success}</p>}
           </div>

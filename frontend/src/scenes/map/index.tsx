@@ -8,6 +8,8 @@ import loadingGif from './car.gif';
 import { HoldDestination, OnGoingTrip, Passenger, RiderType } from '@/shared/types';
 import SearchBar from './SearchBar';
 
+
+
 interface Props {
   passenger: Passenger;
   driverId: number;
@@ -49,7 +51,7 @@ const ReachedDestinationModal = ({ id, onRate, pOrD }) => {
   );
 };
 
-const carIcon = L.icon({
+/*const carIcon = L.icon({
   iconUrl: '@/assets/car.png', 
   iconSize: [32, 32], 
 });
@@ -57,7 +59,7 @@ const carIcon = L.icon({
 const destinationIcon = L.icon({
   iconUrl: '@/assets/destination.png', 
   iconSize: [32, 32], 
-});
+});*/
     
 const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDestination, onGoingTrip, setOnGoingTrip, showActiveRide, setShowActiveRide, showDriverPath, setShowDriverPath, position, setPosition }) => {
   const [routeToDestination, setRouteToDestination] = useState<[number, number][] | null>(null);
@@ -686,6 +688,20 @@ const handleCancelRideFromArrivedModal = () => {
       </button>
     );
   };
+
+  const carIcon = L.icon({
+    iconUrl: './src/assets/car.png',
+    iconSize: [32, 32], // Size of the icon
+    iconAnchor: [16, 16], // Point of the icon which will correspond to marker's location
+    popupAnchor: [0, -16] // Point from which the popup should open relative to the iconAnchor
+  });
+  
+  const destinationIcon = L.icon({
+    iconUrl: './src/assets/destination.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
 
   return (
 
