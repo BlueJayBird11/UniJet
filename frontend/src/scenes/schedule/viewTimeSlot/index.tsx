@@ -115,7 +115,7 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
                     <div className="absolute bottom-0 right-0 m-2 bg-primary-blue rounded-full p-1">
                       <button
                         onClick={() => handleDelete(index)}
-                        className="text-red-100 hover:text-red-700"
+                        className="text-red-500 hover:text-red-700"
                       >
                         <FontAwesomeIcon icon={faTrashAlt} />
                       </button>

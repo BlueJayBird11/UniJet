@@ -199,9 +199,8 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
         <h1 className="text-xl text-primary-black font-bold mr-10">Add Time Slots</h1>
       </div>
     </div>
-    <div className="flex flex-col justify-center items-center h-full">
-      <h1 className="mb-4 text-primary-black text-3xl font-bold">Add Time Slot </h1>
-      <div className="mt-8">
+    <div className="flex mt-10 flex-col justify-center items-center h-full bg-primary-blue">
+      <div className="mt-16">
         <div className="mb-8">
           <div className={`bg-viewTimeSlots rounded-lg p-4`}>
           <label htmlFor="subject" className="mr-2 text-primary-black text-xl">Subject:</label>
@@ -251,7 +250,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
          </div>
         </div>
         {/* Display submit button only when all form fields are filled */}
-        {(selectedSubject && selectedCourse && selectedSection) && (
+        {(!formSubmitted && selectedSubject && selectedCourse && selectedSection) && (
           <div className="flex justify-center">
             <button onClick={handleSubmit} className="bg-settingsButtons hover:bg-settingsButtonsPressed text-primary-black font-bold py-2 px-4 rounded">
               Submit
@@ -276,11 +275,11 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
                 </div>
               </div>
           </div>
-          <div className="mt-4">
-            <button onClick={handleAddTimeSlot} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
-              Add Time Slot
+          <div className="mt-4 flex justify-center">
+            <button onClick={handleAddTimeSlot} className="bg-settingsButtons hover:bg-settingsButtonsPressed text-primary-black font-bold py-2 px-4 rounded mr-2">
+              Add
             </button>
-            <button onClick={handleReset} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+            <button onClick={handleReset} className="bg-red-500 hover:bg-red-700 text-primary-black font-bold py-2 px-4 rounded">
               Back
             </button>
           </div>
