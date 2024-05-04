@@ -88,8 +88,8 @@ function App() {
           const lat = geoPosition.coords.latitude;
           const lon = geoPosition.coords.longitude;
           setPosition([lat, lon]);
-          console.log("User position:");
-          console.log(position);
+          // console.log("User position:");
+          // console.log(position);
         },
         (error) => {
           console.error('Error getting location:', error);

@@ -232,6 +232,7 @@ const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDri
           <div className='text-black'>
             <h3 className="text-lg font-bold mb-4">Confirm Ride</h3>
             <p>Do you want to look for a driver in this location?</p>
+            <p className='font-bold'>{holdDestination.name}</p>
             <div className="flex justify-center mt-4">
               <button onClick={() => navigate('/map', { replace: true })} className="bg-red-500 hover:bg-red-600 text-primary-black font-bold py-2 px-4 rounded mr-2">No</button>
               <button onClick={startLookingForDriver} className="bg-settingsButtons hover:bg-settingsButtonsPressed text-primary-black font-bold py-2 px-4 rounded">Yes</button>

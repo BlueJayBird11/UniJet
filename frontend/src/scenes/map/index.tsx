@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import 'leaflet';
@@ -7,7 +9,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import loadingGif from './car.gif';
 import { HoldDestination, OnGoingTrip, Passenger, RiderType } from '@/shared/types';
 import SearchBar from './SearchBar';
-
+import ScheduleModal from './ScheduleModal';
 
 
 interface Props {
@@ -737,15 +739,19 @@ const handleCancelRideFromArrivedModal = () => {
           <Popup>You are here</Popup>
         </CircleMarker>
 
-        {/* Placeholder location marker with destination icon */}
-        <Marker position={placeholderLocation} icon={destinationIcon}>
-          <Popup>Destination Location</Popup>
-        </Marker>
+        {onGoingTrip.tripId !== 0 && (
+          <Marker position={[onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0]]} icon={destinationIcon}>
+            <Popup>Destination Location</Popup>
+          </Marker>
+        )}
+        
+        {onGoingTrip.tripId !== 0 && (
+          <Marker position={onGoingTrip.driverLocation} icon={carIcon}>
+            <Popup>Driver Location</Popup>
+          </Marker>
+        )}
 
-        {/* Driver location marker with car icon */}
-        <Marker position={driverLocation} icon={carIcon}>
-          <Popup>Driver Location</Popup>
-        </Marker>
+        
 
         {onGoingTrip.tripId != 0 && routeToDestination && <Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />}
         {onGoingTrip.tripId != 0 && routeToUser && <Polyline positions={routeToUser} weight={10} opacity={0.3} color="red" />}
@@ -760,6 +766,8 @@ const handleCancelRideFromArrivedModal = () => {
             </Popup>
           </Marker>
         ))}
+        <ScheduleModal setHoldDestination={setHoldDestination}/>
+
       </MapContainer>
 
 
@@ -879,6 +887,7 @@ const handleCancelRideFromArrivedModal = () => {
           Find Passenger
         </button>
       )}
+
     </div>
   );
 };
