@@ -48,6 +48,21 @@ function removeOnGoing(item: OnGoingTrip) {
   }
 }
 
+function localTime(date:Date):string{
+  const day_mapping: { [key: string]: string } = {
+    "0": "U",
+    "1": "M",
+    "2": "T",
+    "3": "W",
+    "4": "R",
+    "5": "F",
+    "6": "S"
+  };
+  let hours=date.getHours();
+  let minutes=date.getMinutes();
+  let day = day_mapping[date.getDay().toString()];
+  return (day + ":" + String(Number(hours*60 + minutes)));
+}
 
 // '2024-02-24 08:20:01-05'
 function timeForDB(date:Date):string{
@@ -73,8 +88,7 @@ function getDate(date:Date):string{
   let day=date.getDate();
   let month=date.getMonth()+1;
   let year=date.getFullYear();
-  let compDate: string = year+"-"+month+"-"+day;
-  // console.log("Current Date: "+ compDate); 
+  let compDate: string = year+"-"+month+"-"+day; 
   return compDate;
 }
 
@@ -114,15 +128,6 @@ class RequestRoutes extends BaseRoutes {
             destination: req.body.destination,
             destinationChoords: req.body.destinationChoords
           });
-
-        // requests.push({
-        //   id: result.rows[0].id,
-        //   name: result.rows[0].firstname + " " + result.rows[0].lastname,
-        //   rating: result.rows[0].rating,
-        //   position: req.body.location,
-        //   destination: req.body.destination,
-        //   destinationChoords: req.body.destinationChoords
-        // });
 
         console.log(result.rows.length);
         console.log(requests);
@@ -498,6 +503,67 @@ class RequestRoutes extends BaseRoutes {
         });
       } catch (err) {
         console.log(err);
+      }
+    });
+
+    this.router.get("/agenda/:passengerid", async (req, res) => {
+      const passengerid = req.params.passengerid
+      try {
+          var date: Date = new Date();
+          const client = await pool.connect();
+          const query = `
+              SELECT schedule 
+              FROM public.passengers 
+              WHERE id = $1
+              ORDER BY id ASC;
+          `;
+          const { rows } = await client.query(query, [passengerid]);
+          client.release();
+      
+          if (rows.length === 0) {
+              return res.status(404).send('Passenger not found');
+          }
+          let classSoon = undefined
+      
+          const schedule = rows[0].schedule;
+          if (schedule !== null) { 
+            let localTimeString = localTime(date)
+            const formatTime = (timeString: string | any[]) => {
+              return Number(timeString.slice(0,2))*60 + Number(timeString.slice(3,5));
+            };
+            let localScheduleString = schedule.map((schedule: { starttime: any; daysofweek: any; }) => { 
+              const startTime = formatTime(schedule.starttime);
+              return `${schedule.daysofweek}:${startTime}`;
+            })
+            const containsLocalTime = localScheduleString.map((str: string) => str.split(':')[0].includes(localTimeString.split(':')[0]));   
+            let filteredSchedule = schedule.filter((str: any, index: string | number) => containsLocalTime[index]);
+            localScheduleString = localScheduleString.filter((str: any, index: string | number) => containsLocalTime[index]);
+            const isWithin20Minutes = (time1: number, time2: number) => {
+              return Math.abs(time1 - time2) <= 20;
+            };
+            let localTimeNum = Number(localTimeString.split(':')[1]);
+            const filteredSchedule2  = localScheduleString.map((str: string) => {
+              const time = Number(str.split(':')[1]);
+              return isWithin20Minutes(time, localTimeNum);
+            });
+            filteredSchedule = filteredSchedule.filter((str: any, index: string | number) => filteredSchedule2[index]);
+            classSoon = filteredSchedule[0]
+            
+            if (classSoon !== undefined) { 
+              const results = await pool.query(`
+                  SELECT buildinglocation 
+                  FROM public.buildings 
+                  WHERE buildingname = $1
+                  ORDER BY id ASC;`,
+                  [classSoon.buildingname],);
+                  classSoon.buildinglocation = results.rows[0].buildinglocation
+            }
+          }
+
+          res.json(classSoon); // Send the schedule array as JSON response
+          } catch (error) {
+          console.error('Error while fetching schedule:', error);
+          res.status(500).send('Internal Server Error');
       }
     });
   }
