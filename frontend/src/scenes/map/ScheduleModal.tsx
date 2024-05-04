@@ -30,9 +30,28 @@ const ScheduleModal: React.FC<Props> = ({setHoldDestination}) => {
 
 //   console.log(schedule);
 
-  const toggleModal = () => {
+  const toggleModal = async () => {
     setSchedule([tempClass])
     setIsOpen(!isOpen);
+
+    // try {
+    //     const response = await fetch(`http://localhost:8000/api/v1/history/driverId/${id}`, {
+    //       method: 'GET',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //     });
+    
+    //     if (!response.ok) {
+    //       throw new Error(`Error: ${response.status}`);
+    //     }
+    
+    //     const {data} = await response.json();
+    //     const driverId = data.history[0].driverid;
+    //     console.log('Passenger data right here:', driverId);
+    //   } catch (error) {
+    //     console.error('Error:', error);
+    //   }
   };
 
     const requestRide = (buildingname: string, location: [number, number]) => {

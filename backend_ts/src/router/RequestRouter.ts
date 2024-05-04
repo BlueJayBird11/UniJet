@@ -78,24 +78,6 @@ function getDate(date:Date):string{
   return compDate;
 }
 
-
-
-// {
-//   tripId: 1,
-//   passengerId: 1,
-//   driverId: 2,
-//   passengerName: "Jay Reich",
-//   driverName: "Josiah Norman",
-//   passengerStartLocation:  [32.541251162684404, -92.63578950465626],
-//   passengerLocation: [32.541251162684404, -92.63578950465626],
-//   driverLocation: [32.541251162684404, -92.63578950465626],
-//   destination: "IESB",
-//   startTime: getTime(new Date()),
-//   rideDate: getDate(new Date())
-// }
-
-// console.log(onGoing);
-
 class RequestRoutes extends BaseRoutes {
   routes(): void {
     this.router.post("/request", async (req, res) => {
@@ -376,13 +358,16 @@ class RequestRoutes extends BaseRoutes {
         for (let i = 0; i < onGoing.length; i++) {
           if(onGoing[i].data.tripId == req.body.tripId)
             {
-              console.log(onGoing[i].data);
-              onGoing[i].data.passengerLocation = req.body.location;
+              console.log("Stored passenger location:")
+              console.log(onGoing[i].data.passengerLocation);
+              onGoing[i].data.passengerLocation = [req.body.location[0], req.body.location[1]];
               tripData = onGoing[i].data;
+              console.log("Changed passenger location:")
+              console.log(onGoing[i].data.passengerLocation);
             }
         }
-        console.log("TRIP DATA:")
-        console.log(tripData);
+        // console.log("TRIP DATA:")
+        // console.log(tripData);
         res.status(200).json({
           status: "success",
           data: {
@@ -397,12 +382,17 @@ class RequestRoutes extends BaseRoutes {
     this.router.post("/update-request-driver", async (req, res) => {
       try {
         let tripData = null;
+        console.log("Driver-REQ-BODY")
         console.log(req.body);
         for (let i = 0; i < onGoing.length; i++) {
           if(onGoing[i].data.tripId == req.body.tripId)
             {
+              console.log("Stored driver location:");
+              console.log(onGoing[i].data.driverLocation);
               onGoing[i].data.driverLocation = req.body.location;
               tripData = onGoing[i].data;
+              console.log("Changed driver location:");
+              console.log(onGoing[i].data.driverLocation);
             }
         }
 
