@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeftIcon, EnvelopeIcon } from '@heroicons/react/24/solid'; 
 import { useUserRole } from '@/scenes/settings/userRole/UserRoleContext';
@@ -20,6 +20,33 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const [isDriver, setIsDriver] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/api/v1/settings/is-driver/${passenger.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Success:', data);
+                console.log(data.data.isDriver)
+                setIsDriver(data.data.isDriver); // Assuming there is a property 'isDriver' in the response
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData();
+    }, [passenger.id]);
 
     const changeRoleToPassenger = async() => {
         try {
@@ -73,27 +100,6 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
             console.error('Error:', error);
         }
     };
-
-    const isDriver = async() => { 
-        try {
-            const response = await fetch(`http://localhost:8000/api/v1/settings/is-driver/${passenger.id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            });
-
-            if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log('Success:', data);
-
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
 
     const handleRoleChange = (newRole: 'passenger' | 'driver') => {
         setUserRole(newRole);
@@ -166,8 +172,27 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
             </div>
             <div className="p-2 flex-grow flex justify-center mt-16"> {/* Center the buttons and consider banner height */}
                 <div className="my-6">
-                    <h2 className="text-lg text-primary-black text-center font-semibold">Your role is {userRole}.</h2>              
-                    {RoleButtons}
+                    <h2 className="text-lg text-primary-black text-center font-semibold">Your role is {driverId !== 0 ? ('driver'):('passenger')}.</h2>              
+                    {isDriver ? (
+                        <div className="flex mt-4">
+                            <button
+                                onClick={changeRoleToPassenger}
+                                className={`mx-2 px-4 py-2 rounded-lg shadow-md text-primary-black ${userRole === 'passenger' ? 'bg-settingsButtons text-primary-black' : 'bg-gray-600'}`}
+                                style={{ width: '120px' }}
+                            >
+                                Passenger
+                            </button>
+                            <button
+                            onClick={changeRoleToDriver}
+                            className={`mx-2 px-4 py-2 rounded-lg shadow-md text-primary-black ${userRole === 'driver' ? 'bg-settingsButtons text-primary-black' : 'bg-gray-600'}`}
+                            style={{ width: '120px' }}
+                            >
+                                Driver
+                        </button>
+                    </div>
+                    ) : (
+                        <div className="flex mt-4"></div>
+                    )}
                 </div>
             </div>
             <div className="p-4 text-primary-black">
