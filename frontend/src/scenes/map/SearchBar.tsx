@@ -1,5 +1,5 @@
 import { HoldDestination } from '@/shared/types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
@@ -51,6 +51,24 @@ const SearchBar: React.FC<Props> = ({holdDestination, setHoldDestination}) => {
       });
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const inputElement = document.getElementById('searchInput');
+      if (inputElement && !inputElement.contains(event.target)) {
+        // Click is outside the input, blur the input to simulate zoom out
+        inputElement.blur();
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+
+
   const handleResultClick = (name: string, coordinates: number[]) => {
     console.log('Clicked:', name, coordinates);
     setHoldDestination({
@@ -63,8 +81,9 @@ const SearchBar: React.FC<Props> = ({holdDestination, setHoldDestination}) => {
   };
 
   return (
-    <div className="z-[400] top-24 left-2 bg-white p-2 absolute text-primary-blue">
+    <div className="z-[400] top-2 left-2 bg-white p-2 absolute text-primary-blue mr-24">
       <input
+        className='w-full'
         type="text"
         placeholder="Search address..."
         value={searchText}

@@ -72,6 +72,22 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
   const [tempDriverId, setTempDriverId] = useState(0);
   const [tempPassengerId, setTempPassengerId] = useState(0);
   const [riders, setRiders] = useState<RiderType[]>([]); // State to hold list of riders
+
+  const SetZoomControlPosition = () => {
+    const map = useMap();
+    useEffect(() => {
+      map.zoomControl.setPosition('bottomleft');
+    }, []);
+    return null;
+  };
+
+  // Custom CSS style for adjusting zoom control position
+  const zoomControlStyle = {
+    bottom: '7rem', // Adjust this value as needed
+    left: '0.8rem',
+    position: "absolute"
+  };
+
   // http://localhost:8000/api/v1/requests
   const getRequests = async () => {
     try {
@@ -681,7 +697,7 @@ const handleCancelRideFromArrivedModal = () => {
     return (
       <button
         onClick={resetView}
-        className="bg-gray-600 hover:bg-gray-550 text-white font-bold py-2 px-4 rounded absolute top-3 left-14 z-10"
+        className="bg-gray-600 hover:bg-gray-550 text-white font-bold py-2 px-4 rounded left-14 z-10 bottom-3 absolute"
         style={{ zIndex: 9999 }}
       >
         Reset View
@@ -706,7 +722,8 @@ const handleCancelRideFromArrivedModal = () => {
   return (
 
     <div className="h-screen relative">
-      <MapContainer style={{ width: '100%', height: mapHeight }} center={position} zoom={13} scrollWheelZoom={true} className="relative z-0">
+      <MapContainer style={{ width: '100%', height: "88.5%" }} center={position} zoom={13} scrollWheelZoom={true} className="relative z-0">
+        <SetZoomControlPosition />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
