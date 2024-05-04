@@ -76,7 +76,9 @@ function App() {
     startTime: "",
     rideDate: "",
     confirmed: false,
-    cancelled: false
+    cancelled: false,
+    pPhone: "",
+    dPhone: ""
   })
 
   useEffect(() => {
@@ -147,20 +149,6 @@ function App() {
       console.error('Error:', error);
       return false;
     }
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setPassenger({
-      id: 0,
-      birthDate: "",
-      email: "",
-      phoneNumber: 0,
-      firstName: "",
-      lastName: "",
-      userStatus: 0,
-      carPool: false
-    });
   };
 
   const renderContent = () => {

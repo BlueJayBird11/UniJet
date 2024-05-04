@@ -681,7 +681,7 @@ const handleCancelRideFromArrivedModal = () => {
     return (
       <button
         onClick={resetView}
-        className="bg-gray-600 hover:bg-gray-550 text-white font-bold py-2 px-4 rounded absolute top-3 left-14 z-10"
+        className="bg-gray-600 hover:bg-gray-550 text-white font-bold py-2 px-4 rounded left-14 z-10 bottom-28 absolute"
         style={{ zIndex: 9999 }}
       >
         Reset View
