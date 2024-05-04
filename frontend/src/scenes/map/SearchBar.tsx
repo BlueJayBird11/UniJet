@@ -75,7 +75,7 @@ const SearchBar: React.FC<Props> = ({holdDestination, setHoldDestination}) => {
       name: name,
       destination: [coordinates[0], coordinates[1]]
     })
-    console.log(holdDestination);
+    // console.log(holdDestination);
     navigate('/confirmRide');
     // Add additional logic here (e.g., navigate to a specific location on the map)
   };
