@@ -202,11 +202,11 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
     <div className="flex mt-10 flex-col justify-center items-center h-full bg-primary-blue">
       <div className="mt-16">
         <div className="mb-8">
-          <div className={`bg-viewTimeSlots rounded-lg p-4`}>
+          <div className={`bg-viewTimeSlots rounded-lg p-4 relative`}>
           <label htmlFor="subject" className="mr-2 text-primary-black text-xl">Subject:</label>
           <select
             id="subject"
-            className="text-primary-blue border rounded p-2 w-full"
+            className="text-primary-blue border rounded p-2 w-full overflow-y-auto"
             value={selectedSubject}
             onChange={(e) => setSelectedSubject(e.target.value)}
           >
@@ -222,7 +222,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
           <label htmlFor="course" className="mr-2 text-primary-black text-xl">Course:</label>
           <select
             id="course"
-            className="text-primary-blue border rounded p-2 w-full"
+            className="text-primary-blue border rounded p-2 w-full overflow-y-auto"
             value={selectedCourse}
             onChange={(e) => setSelectedCourse(e.target.value)}
           >
@@ -238,7 +238,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
           <label htmlFor="section" className="mr-2 text-primary-black text-xl">Section:</label>
           <select
             id="section"
-            className="text-primary-blue border rounded p-2 w-full"
+            className="text-primary-blue border rounded p-2 w-full overflow-y-auto"
             value={selectedSection}
             onChange={(e) => setSelectedSection(e.target.value)}
           >

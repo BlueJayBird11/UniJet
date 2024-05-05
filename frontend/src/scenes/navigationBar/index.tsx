@@ -21,7 +21,7 @@ const Navbar = ({selectedPage, setSelectedPage}: Props) => {
     return (
     <nav>
         <div id="navbar" className='bg-primary-red flex w-full items-center justify-between fixed bottom-0 py-2 px-6 gap-2 z-[400]'>
-            <Link to ="/schedule">
+            <Link className="rounded-full" to ="/schedule">
                 <button className={`${buttonStyle} ${checkIfIsSelectedPage(SelectedPage.Schedule)}`} 
                     onClick={() => setSelectedPage(SelectedPage.Schedule)}
                 > 
@@ -36,7 +36,7 @@ const Navbar = ({selectedPage, setSelectedPage}: Props) => {
                     <TruckIcon className={`${iconStyle}`}/>
                 </button>
             </Link> */}
-            <Link to ="/map">
+            <Link className="rounded-full" to ="/map">
                 <button
                     className={`${buttonStyle} ${checkIfIsSelectedPage(SelectedPage.Map)}`}    
                     onClick={() => setSelectedPage(SelectedPage.Map)}
@@ -44,7 +44,7 @@ const Navbar = ({selectedPage, setSelectedPage}: Props) => {
                     <MapIcon className={`${iconStyle}`}/>
                 </button>
             </Link>
-            <Link to ="/history">
+            <Link className="rounded-full" to ="/history">
                 <button
                     className={`${buttonStyle} ${checkIfIsSelectedPage(SelectedPage.History)}`}    
                     onClick={() => setSelectedPage(SelectedPage.History)}
@@ -52,7 +52,7 @@ const Navbar = ({selectedPage, setSelectedPage}: Props) => {
                     <ClockIcon className={`${iconStyle}`}/>
                 </button>
             </Link>
-            <Link to ="/">
+            <Link className="rounded-full" to ="/">
                 <button
                     className={`${buttonStyle} ${checkIfIsSelectedPage(SelectedPage.Profile)}`}    
                     onClick={() => setSelectedPage(SelectedPage.Profile)}

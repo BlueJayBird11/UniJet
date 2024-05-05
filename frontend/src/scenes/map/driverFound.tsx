@@ -45,6 +45,24 @@ const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip, showD
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
+      setOnGoingTrip({
+        tripId: 0,
+        confirmed: false,
+        passengerId: 0,
+        driverId: 0,
+        passengerName: '',
+        driverName: '',
+        passengerStartLocation: [0,0],
+        passengerLocation: [0,0],
+        driverLocation: [0,0],
+        destination: '',
+        destinationChoords: [0,0],
+        startTime: '',
+        rideDate: '',
+        cancelled: false,
+        pPhone: '',
+        dPhone: ''
+      });
       console.log('Request cancelled successfully.');
       navigate('/map');
       // Handle response or update UI as needed
@@ -88,7 +106,7 @@ const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip, showD
       <div className="bg-white p-4 rounded w-full max-w-md text-center">
         <h3 className="text-lg font-bold mb-4">Driver Found</h3>
         <p><strong>Name:</strong> {foundDriver.name}</p>
-        <p><strong>Rating:</strong> {foundDriver.rating}</p>
+        <p><strong>Rating:</strong> {foundDriver.rating.toFixed(1)}</p>
         <div className="flex justify-around mt-4">
           <button onClick={confirmRequest} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Confirm</button>
           {/* <button onClick={handleLookForAnother} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Look for Another</button> */}

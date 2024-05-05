@@ -28,7 +28,7 @@ interface Props {
 }
 
 const ReachedDestinationModal = ({ id, onRate, pOrD }) => {
-  const [driverRating, setDriverRating] = useState(5);
+  const [driverRating, setDriverRating] = useState(3);
 
   const renderRatingStars = () => {
     return [...Array(5)].map((_, i) => (
@@ -222,6 +222,24 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       console.log(data);
       if (data.data.request == null)
         {
+          setOnGoingTrip({
+            tripId: 0,
+            confirmed: false,
+            passengerId: 0,
+            driverId: 0,
+            passengerName: '',
+            driverName: '',
+            passengerStartLocation: [0,0],
+            passengerLocation: [0,0],
+            driverLocation: [0,0],
+            destination: '',
+            destinationChoords: [0,0],
+            startTime: '',
+            rideDate: '',
+            cancelled: false,
+            pPhone: '',
+            dPhone: ''
+          })
           setShowAcceptedDriverModal(false);
           console.log("Passenger Cancelled Request");
         }
@@ -754,7 +772,7 @@ const handleCancelRideFromArrivedModal = () => {
           <Marker key={rider.id} position={rider.position}>
             <Popup className='items-center justify-center'>
               <p>Name: {rider.name}</p> 
-              <p>Rating: {rider.rating !== null ? rider.rating : '5.0'}</p> 
+              <p>Rating: {rider.rating !== null ? rider.rating.toFixed(1) : '5.0'}</p> 
               <p>Destination: {rider.destination}</p>
               <button onClick={() => acceptRequest(rider.id, rider.name, rider.position, rider.destination, rider.destinationChoords)} className='bg-blue-700 rounded-full p-2 text-white'>Accept</button>
             </Popup>
@@ -881,7 +899,7 @@ const handleCancelRideFromArrivedModal = () => {
       {(driverId !== 0 && onGoingTrip.tripId === 0) && (  
         <button
           onClick={getRequests}
-          className='bg-settingsButtons p-2 absolute z-[400] rounded-full right-4 bottom-32 text-primary-black hover:bg-settingsButtonsPressed'
+          className='p-2 absolute z-[400] rounded-full right-4 bottom-32 text-primary-black hover:bg-settingsButtonsPressed bg-primary-red'
         >
           Find Passenger
         </button>

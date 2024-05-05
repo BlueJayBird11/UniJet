@@ -111,7 +111,7 @@ const index = ({ selectedPage, setSelectedPage, passenger }: Props) => {
       </div>
       <div className='flex justify-center items-start'>
         <h2 className='text-4xl font-bold text-primary-black mt-4'>
-          Rating: {rating !== null ? parseFloat(rating).toFixed(1) : '0.0'}
+          Rating: {rating !== null ? parseFloat(rating).toFixed(1) : '5.0'}
         </h2>
       </div>
 
