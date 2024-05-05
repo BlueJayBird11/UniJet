@@ -1,4 +1,4 @@
-import { HoldDestination } from "@/shared/types";
+import { HoldDestination, Passenger } from "@/shared/types";
 import { CalendarDaysIcon } from "@heroicons/react/20/solid";
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -11,19 +11,12 @@ interface Slot {
     location: [number, number];
   }
 
-const tempClass: Slot = {
-    buildingname: "IESB",
-    classname: "Software",
-    daysofweek: "F",
-    starttime: "2:00",
-    location: [0,0]
-}
-
 interface Props {
     setHoldDestination: (value: HoldDestination) => void;
+    passenger: Passenger;
   }
 
-const ScheduleModal: React.FC<Props> = ({setHoldDestination}) => {
+const ScheduleModal: React.FC<Props> = ({setHoldDestination, passenger}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [schedule, setSchedule] = useState<Slot[]>([]); // Initialize schedule as an empty array of Slot objects
   const navigate = useNavigate();
@@ -31,27 +24,42 @@ const ScheduleModal: React.FC<Props> = ({setHoldDestination}) => {
 //   console.log(schedule);
 
   const toggleModal = async () => {
-    setSchedule([tempClass])
-    setIsOpen(!isOpen);
+    try {
+        if (!isOpen) {
+            const response = await fetch(`http://localhost:8000/api/v1/requests/agenda/${passenger.id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            });
+            console.log(response);
+            if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+            }
+        
+            const {data} = await response.json();
 
-    // try {
-    //     const response = await fetch(`http://localhost:8000/api/v1/history/driverId/${id}`, {
-    //       method: 'GET',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     });
-    
-    //     if (!response.ok) {
-    //       throw new Error(`Error: ${response.status}`);
-    //     }
-    
-    //     const {data} = await response.json();
-    //     const driverId = data.history[0].driverid;
-    //     console.log('Passenger data right here:', driverId);
-    //   } catch (error) {
-    //     console.error('Error:', error);
-    //   }
+            console.log(data)
+            if(data !== undefined)
+                {
+                    const coordinates: [number, number] = data.buildinglocation.split(',').map(parseFloat) as [number, number];
+                    setSchedule([{
+                        buildingname: data.buildingname,
+                        classname: data.classname,
+                        daysofweek: data.daysofweek,
+                        starttime: data.starttime,
+                        location: [coordinates[1], coordinates[0]]
+                    }])
+                }
+            setIsOpen(!isOpen);
+        }
+        else
+        {
+            setIsOpen(!isOpen);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
   };
 
     const requestRide = (buildingname: string, location: [number, number]) => {

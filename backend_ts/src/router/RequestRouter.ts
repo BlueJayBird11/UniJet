@@ -560,7 +560,9 @@ class RequestRoutes extends BaseRoutes {
             }
           }
 
-          res.json(classSoon); // Send the schedule array as JSON response
+          res.status(200).json(
+            {data: classSoon}
+          ); // Send the schedule array as JSON response
           } catch (error) {
           console.error('Error while fetching schedule:', error);
           res.status(500).send('Internal Server Error');

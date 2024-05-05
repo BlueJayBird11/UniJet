@@ -552,7 +552,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
   useEffect(() => {
     const fetchRoutes = () => {
       setTimeout(() => {
-        if (onGoingTrip.tripId !== 0 && onGoingTrip.confirmed)
+        if (onGoingTrip.confirmed)
           {
             console.log("WORKS");
             fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
@@ -566,7 +566,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
 
     // Clean up interval on component unmount
     return () => clearInterval(intervalId);
-  }, [onGoingTrip.tripId !== 0]); // Empty dependency array to run effect only once on mount
+  }, [onGoingTrip.confirmed]); // Empty dependency array to run effect only once on mount
 
   const handleCancelRide = () => {
     if (isMounted.current) {
@@ -761,7 +761,7 @@ const handleCancelRideFromArrivedModal = () => {
           </Marker>
         ))}
         {onGoingTrip.tripId === 0 && (
-          <ScheduleModal setHoldDestination={setHoldDestination}/>
+          <ScheduleModal setHoldDestination={setHoldDestination} passenger={passenger}/>
         )}
 
       </MapContainer>
