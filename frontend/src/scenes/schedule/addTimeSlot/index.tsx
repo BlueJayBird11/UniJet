@@ -202,7 +202,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
     <div className="flex mt-10 flex-col justify-center items-center h-full bg-primary-blue">
       <div className="mt-16">
         <div className="mb-8">
-          <div className={`bg-viewTimeSlots rounded-lg p-4 relative`}>
+          <div className={`bg-viewTimeSlots rounded-md p-4`}>
           <label htmlFor="subject" className="mr-2 text-primary-black text-xl">Subject:</label>
           <select
             id="subject"
@@ -260,7 +260,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
       </div>
       {/* Display filtered data only after form submission */}
       {formSubmitted && selectedClass && (
-        <div className="mt-8 text-primary-black">
+        <div className="text-primary-black">
           <h2>Selected Class:</h2>
           <div className="flex flex-wrap justify-center gap-4">
               <div className="max-w-xs w-full sm:w-64 rounded overflow-hidden shadow-lg bg-gray-600">
