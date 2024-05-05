@@ -139,6 +139,7 @@ const History: React.FC<Props> = ({ selectedPage, setSelectedPage, passenger }: 
         console.log(entryDate)
         return entryDate === searchDate;
       });
+      
       setFilteredEntries(filtered);
     }
   }, [searchDate, historyEntries]);

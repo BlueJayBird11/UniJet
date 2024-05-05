@@ -120,9 +120,8 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
                         <FontAwesomeIcon icon={faTrashAlt} />
                       </button>
                     </div>
-                    {/* Slot information */}
                     <div className="px-4 py-2">
-                      <div className="font-bold text-xl mb-1">{slot.classname}</div>
+                      <div className="font-bold text-l mb-1">{slot.classname}</div>
                       <p className="text-primary-black text-base">
                         Type: Class <br />
                         Days: {slot.daysofweek}<br />
@@ -142,6 +141,7 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
             onConfirm={handleConfirmDelete}
           />
       </div>
+      <div className='py-16'></div>
     </>
   );
 };
