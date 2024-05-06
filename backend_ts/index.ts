@@ -3,16 +3,16 @@
 
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
-import PassengerRouter from "./router/PassengerRouter";
-import ClassInfoRouter from "./router/ClassInfoRouter";
-import LoginRouter from "./router/LoginRouter";
-import ForgotPassword from "./router/ForgotPassword";
-import StatusRouter from "./router/SettingsRouter";
-import DriverRouter from "./router/DriverRouter";
-import SMSVerificationRoute from './router/smsVerification';
-import RequestRouter from "./router/RequestRouter";
-import HistoryRouter from './router/HistoryRouter';
-import SchedulerRouter from './router/SchedulerRouter';
+import PassengerRouter from "./src/router/PassengerRouter";
+import ClassInfoRouter from "./src/router/ClassInfoRouter";
+import LoginRouter from "./src/router/LoginRouter";
+import ForgotPassword from "./src/router/ForgotPassword";
+import StatusRouter from "./src/router/SettingsRouter";
+import DriverRouter from "./src/router/DriverRouter";
+import SMSVerificationRoute from './src/router/smsVerification';
+import RequestRouter from "./src/router/RequestRouter";
+import HistoryRouter from './src/router/HistoryRouter';
+import SchedulerRouter from './src/router/SchedulerRouter';
 
 class App {
   public app: Application;
@@ -47,8 +47,8 @@ class App {
   }
 }
 
-const port: number = 8000;
-// const port: number = +process.env.PORT! || 3001;
+// const port: number = 8000;
+const port: number = +process.env.PORT! || 3001;
 
 const app = new App().app;
 

@@ -394,6 +394,7 @@ class RequestRoutes extends BaseRoutes {
             {
               console.log("Stored driver location:");
               console.log(onGoing[i].data.driverLocation);
+              console.log("Set new position: " + req.body.location)
               onGoing[i].data.driverLocation = req.body.location;
               tripData = onGoing[i].data;
               console.log("Changed driver location:");
@@ -539,7 +540,7 @@ class RequestRoutes extends BaseRoutes {
             let filteredSchedule = schedule.filter((str: any, index: string | number) => containsLocalTime[index]);
             localScheduleString = localScheduleString.filter((str: any, index: string | number) => containsLocalTime[index]);
             const isWithin20Minutes = (time1: number, time2: number) => {
-              return Math.abs(time1 - time2) <= 20;
+              return Math.abs(time1 - time2) <= 50; //20
             };
             let localTimeNum = Number(localTimeString.split(':')[1]);
             const filteredSchedule2  = localScheduleString.map((str: string) => {
