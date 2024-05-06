@@ -63,7 +63,7 @@ const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip, showD
         pPhone: '',
         dPhone: ''
       });
-      console.log('Request cancelled successfully.');
+      
       navigate('/map');
       // Handle response or update UI as needed
     } catch (error) {
@@ -89,8 +89,8 @@ const DriverFound = ({passenger, foundDriver, onGoingTrip, setOnGoingTrip, showD
       }
       const data = await response.json();
 
-      console.log(data);
-      // console.log(data.data.confirmed);
+      
+      // 
       setShowDriverPath(true);
       navigate('/map');
 

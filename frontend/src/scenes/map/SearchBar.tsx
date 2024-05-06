@@ -70,12 +70,12 @@ const SearchBar: React.FC<Props> = ({holdDestination, setHoldDestination}) => {
 
 
   const handleResultClick = (name: string, coordinates: number[]) => {
-    console.log('Clicked:', name, coordinates);
+    
     setHoldDestination({
       name: name,
       destination: [coordinates[0], coordinates[1]]
     })
-    // console.log(holdDestination);
+    // 
     navigate('/confirmRide');
     // Add additional logic here (e.g., navigate to a specific location on the map)
   };

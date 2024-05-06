@@ -21,7 +21,7 @@ const ScheduleModal: React.FC<Props> = ({setHoldDestination, passenger}) => {
   const [schedule, setSchedule] = useState<Slot[]>([]); // Initialize schedule as an empty array of Slot objects
   const navigate = useNavigate();
 
-//   console.log(schedule);
+//   
 
   const toggleModal = async () => {
     try {
@@ -32,14 +32,14 @@ const ScheduleModal: React.FC<Props> = ({setHoldDestination, passenger}) => {
                 'Content-Type': 'application/json',
             },
             });
-            console.log(response);
+            
             if (!response.ok) {
             throw new Error(`Error: ${response.status}`);
             }
         
             const {data} = await response.json();
 
-            console.log(data)
+            
             if(data !== undefined)
                 {
                     const coordinates: [number, number] = data.buildinglocation.split(',').map(parseFloat) as [number, number];
@@ -64,12 +64,12 @@ const ScheduleModal: React.FC<Props> = ({setHoldDestination, passenger}) => {
 
     const requestRide = (buildingname: string, location: [number, number]) => {
         // throw new Error("Function not implemented.");
-        console.log(`Send Request: ${buildingname}, ${location}`)
+        
         setHoldDestination({
             name: buildingname,
             destination: [location[0], location[1]]
           })
-        //   console.log(holdDestination);
+        //   
           navigate('/confirmRide');
     }
 

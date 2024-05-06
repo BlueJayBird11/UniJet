@@ -35,7 +35,7 @@ const DeleteTimeSlot = () => {
   const handleConfirmDelete = () => {
     if (deleteIndex !== null) {
       // Implement your delete logic here
-      console.log(`Delete slot at index ${deleteIndex}`);
+      
       setDeleteIndex(null); // Reset deleteIndex after deletion
     }
   };

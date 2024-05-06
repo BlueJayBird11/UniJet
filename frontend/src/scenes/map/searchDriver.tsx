@@ -34,7 +34,7 @@ const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDri
   //   makeRequest();
   //   const intervalId = setInterval(() => {
   //     // makeRequest();
-  //     console.log("Ping")
+  //     
   //   }, 5000); // 5000 milliseconds = 5 seconds
 
   //   return () => {
@@ -52,7 +52,7 @@ const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDri
 
       // Set interval to make request every 5 seconds
       intervalId = setInterval(() => {
-        console.log("Ping");
+        
         checkRequest();
         // makeRequest();
       }, 5000);
@@ -93,7 +93,7 @@ const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDri
       }
       setIsLookingForDriver(false);
 
-      console.log('Request cancelled successfully.');
+      
       navigate('/map');
       // Handle response or update UI as needed
     } catch (error) {
@@ -158,7 +158,7 @@ const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDri
         throw new Error(`Error: ${response.status}`);
       }
 
-      console.log('Request sent successfully.');
+      
       // Handle response or update UI as needed
     } catch (error) {
       console.error('Error:', error);
@@ -183,8 +183,8 @@ const ConfirmRide = ({  passenger, holdDestination, setHoldDestination, foundDri
       }
       const data = await response.json();
 
-      console.log(data);
-      console.log(data.accepted);
+      
+      
       if (data.accepted)
         {
           setIsLookingForDriver(false);

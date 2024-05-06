@@ -18,7 +18,7 @@ const ChangePassword = () => {
       return;
     }
     // Placeholder for actual submission logic
-    console.log("Submitted Change Password Request");
+    
   };
   
   return (

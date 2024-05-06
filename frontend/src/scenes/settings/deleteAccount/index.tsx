@@ -24,7 +24,7 @@ const DeleteAccount = ({ passenger }: Props) => {
       }
 
       const data = await response.json();
-      console.log('Success:', data);
+      
       // Use Logout Function
 
     } catch (error) {
@@ -35,7 +35,7 @@ const DeleteAccount = ({ passenger }: Props) => {
   const handleDeleteAccount = () => {
     if (confirmation === 'DELETE') {
       deleteAccount();
-      console.log('Account deleted successfully!');
+      
     } else {
       console.error('Confirmation input is incorrect!');
     }

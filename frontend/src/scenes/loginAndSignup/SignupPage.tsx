@@ -46,10 +46,10 @@ const SignupPage: React.FC = () => {
         throw new Error(`Error: ${response.status}`);
       }
       const data = await response.json();
-      console.log('Success:', data);
-      console.log(data.data.passengers.id);
+      
+      
       setID(data.data.passengers.id);
-      console.log(newId);
+      
       setShowModal(true);
     } catch (error) {
       console.error('Error:', error);
@@ -79,7 +79,7 @@ const SignupPage: React.FC = () => {
         throw new Error(`Error: ${response.status}`);
       }
       const data = await response.json();
-      console.log('Success:', data);
+      
       // goto login
       navigate('/');
     } catch (error) {
@@ -105,7 +105,7 @@ const SignupPage: React.FC = () => {
       setOtpError('Failed to send OTP. Please try again.');
     }
 
-    // console.log(user);
+    // 
   };
 
   const verifyOtp = async () => {
@@ -158,7 +158,7 @@ const SignupPage: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               pattern=".+@email.latech\.edu$"
-              title="Email must end with @latech.edu"
+              title="Email must end with @email.latech.edu"
               className="w-full p-2 border rounded"
             />
 

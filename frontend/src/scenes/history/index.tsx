@@ -33,7 +33,7 @@ const getDriverId: (id: bigint) => Promise<bigint> = async (id) => {
 
     const {data} = await response.json();
     const driverId = data.history[0].driverid;
-    console.log('Passenger data right here:', driverId);
+    
     return BigInt(Number(driverId));
   } catch (error) {
     console.error('Error:', error);
@@ -78,10 +78,10 @@ const History: React.FC<Props> = ({ selectedPage, setSelectedPage, passenger }: 
 
   useEffect(() => {
     const getInformation = async (passenger: Passenger) => {
-      console.log(userRole)
+      
       if (userRole === "driver") { 
         try {
-          console.log("driver")
+          
           const id = await getDriverId(BigInt(Number(passenger.id)))
           const response = await fetch(`http://localhost:8000/api/v1/history/passengers/${id}`, {
             method: 'GET',
@@ -94,7 +94,7 @@ const History: React.FC<Props> = ({ selectedPage, setSelectedPage, passenger }: 
             throw new Error(`Error: ${response.status}`);
           }
           const {data} = await response.json();
-          console.log('Passenger data:', data);
+          
           setHistoryEntries(data.history)
         } catch (error) {
           console.error('Error:', error);
@@ -102,7 +102,7 @@ const History: React.FC<Props> = ({ selectedPage, setSelectedPage, passenger }: 
       }
       else if (userRole === "passenger")  {
         try {
-          console.log("passenger")
+          
           const response = await fetch(`http://localhost:8000/api/v1/history/drivers/${BigInt(Number(passenger.id))}`, {
             method: 'GET',
             headers: {
@@ -114,7 +114,7 @@ const History: React.FC<Props> = ({ selectedPage, setSelectedPage, passenger }: 
             throw new Error(`Error: ${response.status}`);
           }
           const {data} = await response.json();
-          console.log('Passenger data:', data);
+          
           setHistoryEntries(data.history)
         } catch (error) {
           console.error('Error:', error);
@@ -126,7 +126,7 @@ const History: React.FC<Props> = ({ selectedPage, setSelectedPage, passenger }: 
   }, [passenger]); // Fetch data when 'passenger' prop changes
 
   // Filter function
-  console.log(historyEntries)
+  
   useEffect(() => {
     // Filter entries based on searchDate
     if (searchDate.trim() === '') {
@@ -135,8 +135,8 @@ const History: React.FC<Props> = ({ selectedPage, setSelectedPage, passenger }: 
       const filtered = historyEntries.filter(entry => {
         // Extract date part from starttime and compare with searchDate
         const entryDate = entry.starttime.split("T")[0];
-        console.log(searchDate)
-        console.log(entryDate)
+        
+        
         return entryDate === searchDate;
       });
       

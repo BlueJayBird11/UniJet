@@ -105,15 +105,33 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       }
       
       const data = await response.json();
-      console.log('Success:');
-      console.log(data);
-      console.log(data.data.passengers);
+      
+      
+      
       setRiders(data.data.passengers);
 
     } catch (error) {
       console.error('Error:', error);
     }
   };
+  function getPosition(): Promise<[number, number]> {
+    return new Promise<[number, number]>((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            resolve([longitude, latitude]);
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+      } else {
+        reject(new Error("Geolocation is not supported by this browser."));
+      }
+    });
+  }
   
   const acceptRequest = async (pId: number, pName: string, pLocation: [number, number], pDestination:string, pDestinationChoords:[number,number]) => {
     try {
@@ -140,7 +158,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
 
       const data = await response.json();
 
-      console.log(data);
+      
       setOnGoingTrip({
         tripId: data.data.request.tripId,
         passengerId: data.data.request.passengerId,
@@ -160,14 +178,14 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
         dPhone: data.data.request.dPhone
       })
       // var ridersCopy:RiderType[] = riders;
-      // console.log(ridersCopy);
+      // 
       // for (let i = 0; i < ridersCopy.length; i++) {
       //   if (ridersCopy[i].id === pId)
       //     {
       //       ridersCopy.splice(i,1);
       //     }
       // }
-      // console.log(ridersCopy);
+      // 
       // setRiders(ridersCopy);
       setRiders([]);
       setShowAcceptedDriverModal(true);
@@ -192,7 +210,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-      console.log('Request cancelled successfully.');
+      
       navigate('/map');
       // Handle response or update UI as needed
     } catch (error) {
@@ -219,7 +237,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
 
       const data = await response.json();
 
-      console.log(data);
+      
       if (data.data.request == null)
         {
           setOnGoingTrip({
@@ -241,7 +259,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
             dPhone: ''
           })
           setShowAcceptedDriverModal(false);
-          console.log("Passenger Cancelled Request");
+          
         }
       else if (data.data.request.confirmed)
         {
@@ -249,9 +267,9 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
           setShowActiveRide(true);
           setOnGoingTrip(data.data.request);
           
-          // console.log(onGoingTrip.passengerLocation);
-          // console.log(onGoingTrip.driverLocation);
-          // console.log(onGoingTrip.destinationChoords);
+          // 
+          // 
+          // 
 
           // fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
           // fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
@@ -271,8 +289,10 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
         console.error('Position not available yet.');
         return;
       }
-      console.log("Passenger position:")
-      console.log(position);
+
+      const tempPos: [number, number] = await getPosition();
+      
+      
       const response = await fetch('http://localhost:8000/api/v1/requests/update-request-passenger', {
         method: 'POST',
         headers: {
@@ -280,7 +300,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
         },
         body: JSON.stringify({
           tripId: onGoingTrip.tripId,
-          location: position
+          location: tempPos
         }), 
       });
 
@@ -290,7 +310,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
 
       const data = await response.json();
       
-      console.log(data);
+      
       if (data.data.request == null) {
         setShowDriverPath(false);
         // setTempDriverId(onGoingTrip)
@@ -317,8 +337,8 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       else if (data.data.request.confirmed)
         {
           setTempDriverId(onGoingTrip.driverId);
-          console.log("Passenger request:");
-          console.log(data.data.request);
+          
+          
           setOnGoingTrip({
             tripId: data.data.request.tripId,
             passengerId: data.data.request.passengerId,
@@ -337,6 +357,11 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
             pPhone: data.data.request.pPhone,
             dPhone: data.data.request.dPhone
           });
+          
+          // fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+          // fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
+          fetchRoute(tempPos[1], tempPos[0], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+          fetchRoute(data.data.request.driverLocation[1], data.data.request.driverLocation[0], tempPos[1], tempPos[0], setRouteToUser);
         }
       // Handle response or update UI as needed
     } catch (error) {
@@ -369,7 +394,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       const data = await response.json();
       setShowActiveRide(false);
 
-      console.log(data);
+      
       setOnGoingTrip({
         tripId: 0,
         passengerId: 0,
@@ -403,6 +428,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
         console.error('Position not available yet.');
         return;
       }
+      const tempPos: [number, number] = await getPosition();
 
       const response = await fetch('http://localhost:8000/api/v1/requests/update-request-driver', {
         method: 'POST',
@@ -411,7 +437,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
         },
         body: JSON.stringify({
           tripId: onGoingTrip.tripId,
-          location: position
+          location: tempPos
         }), 
       });
 
@@ -423,7 +449,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       if (tempDriverId == 0) {
         setTempDriverId(onGoingTrip.driverId);
       }
-      console.log(data);
+      
       if (data.data.request == null) {
         setShowActiveRide(false);
         setOnGoingTrip({
@@ -467,9 +493,10 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
             pPhone: data.data.request.pPhone,
             dPhone: data.data.request.dPhone
           });
-          console.log(onGoingTrip.passengerLocation);
-          console.log(onGoingTrip.driverLocation);
-          console.log(onGoingTrip.destinationChoords);
+          
+          fetchRoute(data.data.request.passengerLocation[1], data.data.request.passengerLocation[0], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+          fetchRoute(tempPos[1], tempPos[0], data.data.request.passengerLocation[1], data.data.request.passengerLocation[0], setRouteToUser);
+          
 
           // fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
           // fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
@@ -511,7 +538,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
 
       // Set interval to make request every 5 seconds
       intervalId = setInterval(() => {
-        console.log("Ping - checkRequest");
+        
         checkRequest();
         // makeRequest();
       }, 1000);
@@ -525,14 +552,14 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
-    console.log("showDriverPath: " + showDriverPath);
+    
     if (showDriverPath) {
       // Start interval only if looking for driver
       // makeRequest(); // Initial request
 
       // Set interval to make request every 5 seconds
       intervalId = setInterval(() => {
-        console.log("Ping - updatePassenger");
+        
         updatePassenger();
         // makeRequest();
       }, 3000);
@@ -547,15 +574,15 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
 
-    console.log("showAcceptedDriverModal: " + showAcceptedDriverModal);
+    
     if (showActiveRide) {
       // Start interval only if looking for driver
       // makeRequest(); // Initial request
 
       // Set interval to make request every 5 seconds
-      console.log(showActiveRide);
+      
       intervalId = setInterval(() => {
-        console.log("Ping - updateDriver");
+        
         updateDriver();
         // makeRequest();
       }, 3000);
@@ -567,24 +594,24 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
     };
   }, [showActiveRide]); // Run effect when isLookingForDriver changes
 
-  useEffect(() => {
-    const fetchRoutes = () => {
-      setTimeout(() => {
-        if (onGoingTrip.confirmed)
-          {
-            console.log("WORKS");
-            fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
-            fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
-          }
-      }, 3000);
-    };
+  // useEffect(() => {
+  //   const fetchRoutes = () => {
+  //     setTimeout(() => {
+  //       if (onGoingTrip.confirmed)
+  //         {
+            
+  //           fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+  //           fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
+  //         }
+  //     }, 3000);
+  //   };
 
-    // Set interval to fetch routes every 3 seconds
-    const intervalId = setInterval(fetchRoutes, 3000);
+  //   // Set interval to fetch routes every 3 seconds
+  //   const intervalId = setInterval(fetchRoutes, 3000);
 
-    // Clean up interval on component unmount
-    return () => clearInterval(intervalId);
-  }, [onGoingTrip.confirmed]); // Empty dependency array to run effect only once on mount
+  //   // Clean up interval on component unmount
+  //   return () => clearInterval(intervalId);
+  // }, [onGoingTrip.confirmed]); // Empty dependency array to run effect only once on mount
 
   const handleCancelRide = () => {
     if (isMounted.current) {
@@ -604,7 +631,7 @@ const handleConfirmRide = () => {
 
 const handleRateDriver = async (rating: number) => {
   // Here you would handle the rating logic
-  console.log(`Driver rated with: ${rating}`);
+  
 
   try {
     const response = await fetch(`http://localhost:8000/api/v1/requests/rate-driver`, {
@@ -630,7 +657,7 @@ const handleRateDriver = async (rating: number) => {
 
 const handleRatePassenger = async (rating) => {
   // Here you would handle the rating logic
-  console.log(`Driver rated with: ${rating}`);
+  
 
   try {
     const response = await fetch(`http://localhost:8000/api/v1/requests/rate-passenger`, {
@@ -717,6 +744,14 @@ const handleCancelRideFromArrivedModal = () => {
     );
   };
 
+  // https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png
+  const pinIcon = L.icon({
+    iconUrl: 'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png',
+    iconSize: [32, 32], // Size of the icon
+    iconAnchor: [16, 16], // Point of the icon which will correspond to marker's location
+    popupAnchor: [0, -16] // Point from which the popup should open relative to the iconAnchor
+  });
+
   const carIcon = L.icon({
     iconUrl: './src/assets/car.png',
     iconSize: [32, 32], // Size of the icon
@@ -733,14 +768,14 @@ const handleCancelRideFromArrivedModal = () => {
 
   return (
 
-    <div className="h-screen relative">
-      <MapContainer style={{ width: '100%', height: "88.5%" }} center={position} zoom={13} scrollWheelZoom={true} className="relative z-0">
+    <div className="h-screen relative pb-[5.6rem]">
+      <MapContainer style={{ width: '100%', height: "100%" }} center={position} zoom={13} scrollWheelZoom={true} className="relative z-0">
         <SetZoomControlPosition />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`}
         />
-        {onGoingTrip.tripId === 0 && (
+        {(onGoingTrip.tripId === 0 && driverId === 0) && (
           <SearchBar holdDestination={holdDestination} setHoldDestination={setHoldDestination} />
         )}
         {/* White outline marker */}
@@ -752,33 +787,53 @@ const handleCancelRideFromArrivedModal = () => {
         </CircleMarker>
 
         {onGoingTrip.tripId !== 0 && (
-          <Marker position={[onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0]]} icon={destinationIcon}>
+          // <Marker position={[onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0]]} icon={destinationIcon}>
+          <CircleMarker center={[onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0]]} radius={8} color='green' fillColor='white'>
             <Popup>Destination Location</Popup>
-          </Marker>
+          </CircleMarker>
         )}
         
-        {onGoingTrip.tripId !== 0 && (
-          <Marker position={onGoingTrip.driverLocation} icon={carIcon}>
+        {(onGoingTrip.tripId !== 0 && driverId === 0) && (
+          // <Marker position={onGoingTrip.driverLocation} icon={carIcon}>
+          <CircleMarker center={[onGoingTrip.driverLocation[1], onGoingTrip.driverLocation[0]]} color="red" radius={5}>
             <Popup>Driver Location</Popup>
-          </Marker>
+          </CircleMarker>
         )}
 
-        
+        {(onGoingTrip.tripId !== 0 && driverId !== 0) && (
+          // <Marker position={onGoingTrip.driverLocation} icon={carIcon}>
+          <CircleMarker center={[onGoingTrip.passengerLocation[1], onGoingTrip.passengerLocation[0]]} color="red" radius={5}>
+            <Popup>Passenger Location</Popup>
+          </CircleMarker>
+        )}
 
-        {onGoingTrip.tripId != 0 && routeToDestination && <Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />}
-        {onGoingTrip.tripId != 0 && routeToUser && <Polyline positions={routeToUser} weight={10} opacity={0.3} color="red" />}
+
+        {(onGoingTrip.tripId != 0 && routeToDestination) && (<Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />)}
+        {(onGoingTrip.tripId != 0 && routeToUser) && (<Polyline positions={routeToUser} weight={10} opacity={0.3} color="red" />)}
+
+        {/* fetchRoute(position[0], position[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
+          fetchRoute(onGoingTrip.driverLocation[1], onGoingTrip.driverLocation[0], position[0], position[1], setRouteToUser); */}
+
+        {/* {(onGoingTrip.tripId != 0) && (<Polyline positions={[[onGoingTrip.passengerLocation[1], onGoingTrip.passengerLocation[0]],[onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0]]]} weight={10} opacity={0.3} color="blue" />)}
+        {(onGoingTrip.tripId != 0) && (<Polyline positions={[[onGoingTrip.driverLocation[1], onGoingTrip.driverLocation[0]],[onGoingTrip.passengerLocation[1], onGoingTrip.passengerLocation[0]]]} weight={10} opacity={0.3} color="red" />)} */}
+
+        {/* {(onGoingTrip.tripId != 0) && (<Polyline positions={fetchRoute([onGoingTrip.passengerLocation[1], onGoingTrip.passengerLocation[0],onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0]])} weight={10} opacity={0.3} color="blue" />)}
+        {(onGoingTrip.tripId != 0) && (<Polyline positions={fetchRoute([onGoingTrip.driverLocation[1], onGoingTrip.driverLocation[0],onGoingTrip.passengerLocation[1], onGoingTrip.passengerLocation[0]])} weight={10} opacity={0.3} color="red" />)} */}
+
+        
         <ResetViewButton />
         {riders.map((rider: RiderType) => (
-          <Marker key={rider.id} position={rider.position}>
+          // <Marker key={rider.id} position={rider.position} icon={pinIcon}>
+          <CircleMarker key={rider.id} center={rider.position} radius={6} color='red'>
             <Popup className='items-center justify-center'>
               <p>Name: {rider.name}</p> 
               <p>Rating: {rider.rating !== null ? rider.rating.toFixed(1) : '5.0'}</p> 
               <p>Destination: {rider.destination}</p>
               <button onClick={() => acceptRequest(rider.id, rider.name, rider.position, rider.destination, rider.destinationChoords)} className='bg-blue-700 rounded-full p-2 text-white'>Accept</button>
             </Popup>
-          </Marker>
+          </CircleMarker>
         ))}
-        {onGoingTrip.tripId === 0 && (
+        {(onGoingTrip.tripId === 0 && driverId === 0) && (
           <ScheduleModal setHoldDestination={setHoldDestination} passenger={passenger}/>
         )}
 
@@ -899,7 +954,7 @@ const handleCancelRideFromArrivedModal = () => {
       {(driverId !== 0 && onGoingTrip.tripId === 0) && (  
         <button
           onClick={getRequests}
-          className='p-2 absolute z-[400] rounded-full right-4 bottom-32 text-primary-black hover:bg-settingsButtonsPressed bg-primary-red'
+          className='p-2 absolute z-[400] rounded-full right-4 top-4 text-primary-black hover:bg-settingsButtonsPressed bg-primary-red'
         >
           Find Passenger
         </button>

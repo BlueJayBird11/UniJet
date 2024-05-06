@@ -46,7 +46,7 @@ const EditUniversity = () => {
 
   // Handle click on university button
   const handleClickUniversity = (name: string) => {
-    console.log(name)
+    
   }
 
   return (

@@ -88,8 +88,8 @@ function App() {
           const lat = geoPosition.coords.latitude;
           const lon = geoPosition.coords.longitude;
           setPosition([lat, lon]);
-          // console.log("User position:");
-          // console.log(position);
+          // 
+          // 
         },
         (error) => {
           console.error('Error getting location:', error);
@@ -132,7 +132,7 @@ function App() {
 
       const data = await response.json();
 
-      console.log('Login Success:', data);
+      
         setPassenger({
           id: data.passenger.id,
           birthDate: data.passenger.birthdate,
@@ -175,7 +175,7 @@ function App() {
             <Route path="/edit-name" element={<EditName passenger={passenger}/>} />
             <Route path="/change-phone-number" element={<PhoneVerification />} />
             <Route path="/edit-university" element={<EditUniversity />} />
-            <Route path="/logout" element={<Logout onLogout={() => {setIsLoggedIn(false);}} />} />
+            <Route path="/logout" element={<Logout onLogout={() => {setIsLoggedIn(false);setDriverId(0)}} />} />
             <Route path="*" element={<Navigate to="/profile" replace />} />
           </Routes>
         </div>

@@ -37,8 +37,8 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
                 }
 
                 const data = await response.json();
-                console.log('Success:', data);
-                console.log(data.data.isDriver)
+                
+                
                 setIsDriver(data.data.isDriver); // Assuming there is a property 'isDriver' in the response
             } catch (error) {
                 console.error('Error:', error);
@@ -65,7 +65,7 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
             setDriverId(0);
             const data = await response.json();
             passenger.email = email;
-            console.log('Success:', data);
+            
             handleRoleChange('passenger');
         
             } catch (error) {
@@ -89,10 +89,10 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
 
             const data = await response.json();
             passenger.email = email;
-            console.log('Success:', data);
+            
 
             setDriverId(data.data.driverId.rows[0].driverid);
-            console.log(driverId)
+            
 
             handleRoleChange('driver');
 
@@ -172,7 +172,6 @@ const Settings = ({passenger, driverId, setDriverId}: Props) => {
             </div>
             <div className="p-2 flex-grow flex justify-center mt-16"> {/* Center the buttons and consider banner height */}
                 <div className="my-6">
-                    <h2 className="text-lg text-primary-black text-center font-semibold">Your role is {driverId !== 0 ? ('driver'):('passenger')}.</h2>              
                     {isDriver ? (
                         <div className="flex mt-4">
                             <button

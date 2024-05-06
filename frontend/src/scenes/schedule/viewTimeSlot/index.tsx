@@ -40,8 +40,8 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
   const handleConfirmDelete =  async () => {
     if (deleteIndex !== null) {
       // Implement your delete logic here
-      console.log(`Delete slot at index ${deleteIndex}`);
-      console.log(schedule[deleteIndex])
+      
+      
       try {
         const response = await fetch(` http://localhost:8000/api/v1/scheduler/deleteSchedule/${schedule[deleteIndex].classid}/${schedule[deleteIndex].sectionid}/${passenger.passenger.id}`, {
           method: 'GET',
@@ -55,7 +55,7 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
         }
   
         const data = await response.json();
-        console.log(data)
+        
         const updatedSchedule = [...schedule];
         updatedSchedule.splice(deleteIndex, 1);
         setSchedule(updatedSchedule);
@@ -83,7 +83,7 @@ const ViewTimeSlot: React.FC<Props> = (passenger: Props) => {
   
         const data = await response.json();
         setSchedule(data);
-        console.log(data)
+        
       } catch (error) {
         console.error('Error fetching schedule:', error);
       }

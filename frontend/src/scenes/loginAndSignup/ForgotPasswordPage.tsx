@@ -18,7 +18,7 @@ const ForgotPasswordPage: React.FC = () => {
 
       axios.post('http://localhost:8000/api/send-otp', { email })
           .then((response) => {
-              console.log(response.data.message);
+              
               alert("If the email is registered with us, you will receive an OTP.");
               navigate('/otpverificationpage');
           })

@@ -35,7 +35,7 @@ const index = ({ selectedPage, setSelectedPage, passenger }: Props) => {
       passenger.userStatus = statusNum;
 
       const data = await response.json();
-      console.log('Success:', data);
+      
       // setShowModal(true);
       //handleStatusClick();
       onlineStatus(!offlineStatus)
@@ -60,9 +60,9 @@ const index = ({ selectedPage, setSelectedPage, passenger }: Props) => {
       }
 
       const data = await response.json();
-      console.log('Success:', data);
+      
       let rating = data.data.passenger.rating;
-      console.log(rating);
+      
       return rating;
 
     } catch (error) {

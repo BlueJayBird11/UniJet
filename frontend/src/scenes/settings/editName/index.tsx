@@ -13,8 +13,8 @@ const EditName = ({passenger}: Props) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const changeName = async () => {
-    console.log(passenger.id);
-    console.log({ firstName: name, lastName: lastName });
+    
+    
     try {
       const response = await fetch(`http://localhost:8000/api/v1/settings/name/${passenger.id}`, {
         method: 'PUT',
@@ -65,7 +65,7 @@ const EditName = ({passenger}: Props) => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(`New name: ${name}`);
+    
     changeName();
   };
 

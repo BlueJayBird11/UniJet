@@ -143,7 +143,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
             }
             const { data } = await response.json();
             setSectionList(data.section || []); // Use default empty array if data.subject is undefined
-            console.log(sectionList)
+            
           }
         } catch (error) {
           console.error('Error:', error);
@@ -179,7 +179,7 @@ const AddTimeSlot: React.FC<Props> = (passenger: Props) => {
           }
       
           const { data } = await response.json();
-          console.log('Passenger data:', data.slot);
+          
           setSelectedClass(data.slot)
         } 
       } catch (error) {

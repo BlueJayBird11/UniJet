@@ -48,7 +48,7 @@ const ChangePasswordPage: React.FC = () => {
                 }
           
                 const data = await response.json();
-                console.log('Success:', data);
+                
                 passed = true
                 // setShowModal(true);
           
@@ -58,7 +58,7 @@ const ChangePasswordPage: React.FC = () => {
               }
         }
         if (passed) { 
-            console.log("New password:", newPassword);
+            
             alert("Your password has been changed successfully.");
             navigate('/'); 
         }
