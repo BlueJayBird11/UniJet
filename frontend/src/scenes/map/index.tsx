@@ -177,16 +177,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
         pPhone: data.data.request.pPhone,
         dPhone: data.data.request.dPhone
       })
-      // var ridersCopy:RiderType[] = riders;
-      // 
-      // for (let i = 0; i < ridersCopy.length; i++) {
-      //   if (ridersCopy[i].id === pId)
-      //     {
-      //       ridersCopy.splice(i,1);
-      //     }
-      // }
-      // 
-      // setRiders(ridersCopy);
+
       setRiders([]);
       setShowAcceptedDriverModal(true);
       // Handle response or update UI as needed
@@ -594,25 +585,6 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
     };
   }, [showActiveRide]); // Run effect when isLookingForDriver changes
 
-  // useEffect(() => {
-  //   const fetchRoutes = () => {
-  //     setTimeout(() => {
-  //       if (onGoingTrip.confirmed)
-  //         {
-            
-  //           fetchRoute(onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
-  //           fetchRoute(onGoingTrip.driverLocation[0], onGoingTrip.driverLocation[1], onGoingTrip.passengerLocation[0], onGoingTrip.passengerLocation[1], setRouteToUser);
-  //         }
-  //     }, 3000);
-  //   };
-
-  //   // Set interval to fetch routes every 3 seconds
-  //   const intervalId = setInterval(fetchRoutes, 3000);
-
-  //   // Clean up interval on component unmount
-  //   return () => clearInterval(intervalId);
-  // }, [onGoingTrip.confirmed]); // Empty dependency array to run effect only once on mount
-
   const handleCancelRide = () => {
     if (isMounted.current) {
       setShowDriverOnTheWay(false);
@@ -810,16 +782,6 @@ const handleCancelRideFromArrivedModal = () => {
 
         {(onGoingTrip.tripId != 0 && routeToDestination) && (<Polyline positions={routeToDestination} weight={10} opacity={0.3} color="blue" />)}
         {(onGoingTrip.tripId != 0 && routeToUser) && (<Polyline positions={routeToUser} weight={10} opacity={0.3} color="red" />)}
-
-        {/* fetchRoute(position[0], position[1], onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0], setRouteToDestination);
-          fetchRoute(onGoingTrip.driverLocation[1], onGoingTrip.driverLocation[0], position[0], position[1], setRouteToUser); */}
-
-        {/* {(onGoingTrip.tripId != 0) && (<Polyline positions={[[onGoingTrip.passengerLocation[1], onGoingTrip.passengerLocation[0]],[onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0]]]} weight={10} opacity={0.3} color="blue" />)}
-        {(onGoingTrip.tripId != 0) && (<Polyline positions={[[onGoingTrip.driverLocation[1], onGoingTrip.driverLocation[0]],[onGoingTrip.passengerLocation[1], onGoingTrip.passengerLocation[0]]]} weight={10} opacity={0.3} color="red" />)} */}
-
-        {/* {(onGoingTrip.tripId != 0) && (<Polyline positions={fetchRoute([onGoingTrip.passengerLocation[1], onGoingTrip.passengerLocation[0],onGoingTrip.destinationChoords[1], onGoingTrip.destinationChoords[0]])} weight={10} opacity={0.3} color="blue" />)}
-        {(onGoingTrip.tripId != 0) && (<Polyline positions={fetchRoute([onGoingTrip.driverLocation[1], onGoingTrip.driverLocation[0],onGoingTrip.passengerLocation[1], onGoingTrip.passengerLocation[0]])} weight={10} opacity={0.3} color="red" />)} */}
-
         
         <ResetViewButton />
         {riders.map((rider: RiderType) => (
