@@ -10,7 +10,17 @@ import loadingGif from './car.gif';
 import { HoldDestination, OnGoingTrip, Passenger, RiderType } from '@/shared/types';
 import SearchBar from './SearchBar';
 import ScheduleModal from './ScheduleModal';
+import { SparklesIcon } from '@heroicons/react/20/solid';
 
+
+interface Slot {
+  id: number,
+  buildingname: string;
+  classname: string;
+  daysofweek: string;
+  starttime: string;
+  location: [number, number];
+}
 
 interface Props {
   passenger: Passenger;
@@ -74,6 +84,7 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
   const [tempDriverId, setTempDriverId] = useState(0);
   const [tempPassengerId, setTempPassengerId] = useState(0);
   const [riders, setRiders] = useState<RiderType[]>([]); // State to hold list of riders
+  const mapRef = useRef(null);
 
   const SetZoomControlPosition = () => {
     const map = useMap();
@@ -106,9 +117,113 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       
       const data = await response.json();
       
-      
+      console.log(data.data.passengers)
       
       setRiders(data.data.passengers);
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  // const SetViewButton = (tempPos: [number,number]) => {
+    
+  //   };
+
+  const getOptomizedRequests = async () => {
+    try {
+      console.log("getOp");
+
+      let schedule: Slot = {
+        id: 0,
+        buildingname: '',
+        classname: '',
+        daysofweek: '',
+        starttime: '',
+        location: [0,0]
+      }; // Initialize schedule as an empty array of Slot objects
+
+      console.log(passenger.id);
+      console.log(`http://localhost:8000/api/v1/requests/agenda/${passenger.id}`);
+
+      const response = await fetch(`http://localhost:8000/api/v1/requests/agenda/${passenger.id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            });
+            
+            if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+            }
+        
+            const {data} = await response.json();
+
+      console.log(data);
+
+      if (data === undefined)
+        {
+          console.log("undefined");
+          return;
+        }
+
+          
+      const coordinates: [number, number] = data.buildinglocation.split(',').map(parseFloat) as [number, number];
+      schedule = {
+        id: data.classid,
+        buildingname: data.buildingname,
+        classname: data.classname,
+        daysofweek: data.daysofweek,
+        starttime: data.starttime,
+        location: [coordinates[1], coordinates[0]]
+      } 
+
+      const responseClass = await fetch(`http://localhost:8000/api/v1/requests/class-fit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: passenger.id,
+          buildingName: data.buildingname
+        }), 
+      });
+
+      if (!responseClass.ok) {
+        throw new Error(`Error: ${responseClass.status}`);
+      }
+      
+      const dataClass = await responseClass.json();
+      console.log(dataClass)
+
+      const foundPassengers: RiderType[] = dataClass.data.passengers;
+
+      console.log(foundPassengers);
+
+      if(foundPassengers.length === 0)
+        {
+          console.log("No passengers");
+          return;
+        }
+      
+      setRiders([dataClass.data.passengers[0]]);
+      
+      // Zoom to foundPassengers[0].location
+      const firstPassengerLocation = foundPassengers[0].position;
+
+      // Assuming mapRef is a reference to your Leaflet map instance
+      // You can create a reference like this: const mapRef = useRef(null);
+      // And attach it to your LeafletMap component like this: <LeafletMap ref={mapRef} />
+      if (mapRef.current && firstPassengerLocation) {
+        const map = mapRef.current.leafletElement;
+      
+        // Assuming you want to zoom to a particular zoom level, for example, 10
+        const zoomLevel = 10;
+        console.log(firstPassengerLocation);
+      
+        map.setView([firstPassengerLocation[1], firstPassengerLocation[0]], zoomLevel);
+      }
+      
 
     } catch (error) {
       console.error('Error:', error);
@@ -328,7 +443,6 @@ const Map: React.FC<Props> = ({  passenger, driverId, holdDestination, setHoldDe
       else if (data.data.request.confirmed)
         {
           setTempDriverId(onGoingTrip.driverId);
-          
           
           setOnGoingTrip({
             tripId: data.data.request.tripId,
@@ -705,6 +819,8 @@ const handleCancelRideFromArrivedModal = () => {
       }
     };
 
+    
+
     return (
       <button
         onClick={resetView}
@@ -741,7 +857,7 @@ const handleCancelRideFromArrivedModal = () => {
   return (
 
     <div className="h-screen relative pb-[5.6rem]">
-      <MapContainer style={{ width: '100%', height: "100%" }} center={position} zoom={13} scrollWheelZoom={true} className="relative z-0">
+      <MapContainer ref={mapRef} style={{ width: '100%', height: "100%" }} center={position} zoom={13} scrollWheelZoom={true} className="relative z-0">
         <SetZoomControlPosition />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -798,6 +914,24 @@ const handleCancelRideFromArrivedModal = () => {
         {(onGoingTrip.tripId === 0 && driverId === 0) && (
           <ScheduleModal setHoldDestination={setHoldDestination} passenger={passenger}/>
         )}
+
+        {(driverId !== 0 && onGoingTrip.tripId === 0) && (  
+          <button
+            onClick={getRequests}
+            className='p-2 absolute z-[400] rounded-full right-4 bottom-8 text-primary-black hover:bg-settingsButtonsPressed bg-primary-red'
+          >
+            Find Passenger
+          </button>
+      )}
+
+      {(driverId !== 0 && onGoingTrip.tripId === 0) && (  
+          <button
+            onClick={getOptomizedRequests}
+            className='top-2 right-2 z-[900] h-12 w-12 absolute rounded-md bg-primary-green-500 p-1'
+          >
+            <SparklesIcon className="text-navBarIcons"/>
+          </button>
+      )}
 
       </MapContainer>
 
@@ -913,14 +1047,7 @@ const handleCancelRideFromArrivedModal = () => {
         <ReachedDestinationModal id={tempPassengerId} onRate={handleRatePassenger} pOrD={"passenger"}  />
       )}
 
-      {(driverId !== 0 && onGoingTrip.tripId === 0) && (  
-        <button
-          onClick={getRequests}
-          className='p-2 absolute z-[400] rounded-full right-4 top-4 text-primary-black hover:bg-settingsButtonsPressed bg-primary-red'
-        >
-          Find Passenger
-        </button>
-      )}
+      
 
     </div>
   );

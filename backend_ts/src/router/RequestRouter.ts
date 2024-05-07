@@ -107,14 +107,14 @@ class RequestRoutes extends BaseRoutes {
         console.log(result.rows[0].firstname);
 
         for (let i = 0; i < requests.length; i++) {
-          if(requests[i].data.id == req.body.passengerId)
+          if(requests[i].data.id === req.body.passengerId)
             {
               throw new Error("Cannot have more than 1 active request");
             }
         }
 
         for (let i = 0; i < requests.length; i++) {
-          if(onGoing[i].data.passengerId == req.body.passengerId)
+          if(onGoing[i].data.passengerId === req.body.passengerId)
             {
               throw new Error("Cannot have more than 1 active request");
             }
@@ -179,16 +179,19 @@ class RequestRoutes extends BaseRoutes {
         );
         // const trip = resultTrip.rows[0]; 
         // console.log(trip);
-
+        let rating = 0
         console.log("Rating: ");
-        console.log(ratingResult.rows[0].rating);
-
+        console.log(ratingResult);
+        if (ratingResult.rows[0] !== undefined) {
+          console.log(ratingResult.rows[0].rating);
+          rating = ratingResult.rows[0].rating;
+        }
         res.status(200).json({
           status: "success",
           accepted: requestAccepted,
           data: {
             request: tempRequest,
-            dRating: ratingResult.rows[0].rating
+            dRating: rating
           }
         });
       } catch (err) {
@@ -251,6 +254,27 @@ class RequestRoutes extends BaseRoutes {
         res.status(200).json({
           status: "success",
           results: tempRequests.length,
+          data: {
+            passengers: tempRequests,
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    this.router.post("/class-fit", async (req, res) => {
+      try {
+        var tempRequests: Array<RiderType> = [];
+        console.log(req.body);
+        for (let i = 0; i < requests.length; i++) {
+          if (requests[i].data.destination === req.body.buildingName) 
+            {
+              tempRequests.push(requests[i].data);
+            }
+        }
+        res.status(200).json({
+          status: "success",
           data: {
             passengers: tempRequests,
           },
@@ -509,6 +533,7 @@ class RequestRoutes extends BaseRoutes {
 
     this.router.get("/agenda/:passengerid", async (req, res) => {
       const passengerid = req.params.passengerid
+      console.log(req.params);
       try {
           var date: Date = new Date();
           const client = await pool.connect();
@@ -560,6 +585,8 @@ class RequestRoutes extends BaseRoutes {
                   classSoon.buildinglocation = results.rows[0].buildinglocation
             }
           }
+
+          console.log(classSoon);
 
           res.status(200).json(
             {data: classSoon}
