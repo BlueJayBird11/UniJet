@@ -22,7 +22,7 @@ class HistoryRoutes extends BaseRoutes {
                     ORDER BY passengers.id ASC, drivers.id ASC, trip.id ASC;`,
                     [id]);
 
-                console.log(results.rows);
+                // console.log(results.rows);
                 res.status(200).json({
                     status: "success",
                     results: results.rows.length,
@@ -49,7 +49,7 @@ class HistoryRoutes extends BaseRoutes {
                     WHERE public.registeredas.passengerid = $1`,
                     [id]);
 
-                console.log(results.rows);
+                // console.log(results.rows);
                 res.status(200).json({
                     status: "success",
                     results: results.rows.length,
@@ -85,7 +85,7 @@ class HistoryRoutes extends BaseRoutes {
                     WHERE history.passengerid = $1`,
                     [id]);
 
-                console.log(results.rows);
+                // console.log(results.rows);
                 res.status(200).json({
                     status: "success",
                     results: results.rows.length,
