@@ -860,7 +860,7 @@ const handleCancelRideFromArrivedModal = () => {
       {showAcceptedDriverModal && (
         <div style={{
           position: 'absolute',top: '20%',left: '50%',transform: 'translate(-50%, -50%)',backgroundColor: 'rgba(0, 0, 0, 0.85)',color: 'white',padding: '20px',borderRadius: '8px',zIndex: 10100,display: 'flex',alignItems: 'center',justifyContent: 'center',}}>
-          <p style={{ margin: 0, marginRight: '0px', fontWeight:'bold' }}>Waiting for comfirmation...</p>
+          <p style={{ margin: 0, marginRight: '0px', fontWeight:'bold' }}>Waiting for confirmation...</p>
         </div>
       )}
 
