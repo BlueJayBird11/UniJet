@@ -222,6 +222,7 @@ const SignupPage: React.FC = () => {
               required
               className="w-full p-2 border rounded"
             />
+            <label htmlFor="dob" className="block text-gray-700 text-sm font-bold mb-2">(Will be displayed to users as a means of communication)</label>
             <button type="submit" className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Sign Up</button>
           </form>
           <p className="text-center text-sm text-black mt-4">
