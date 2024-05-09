@@ -8,6 +8,8 @@ const requests: Array<{ data: RiderType, timeout: NodeJS.Timeout }> = [];
 // var onGoing: Array<OnGoingTrip> = [];
 const onGoing: Array<{ data: OnGoingTrip, timeout: NodeJS.Timeout }> = [];
 
+const offsetMilliseconds = 120 * 60 * 1000;
+
 var requestIdCount = 1;
 
 function addRequest(item: RiderType) {
@@ -48,6 +50,20 @@ function removeOnGoing(item: OnGoingTrip) {
   }
 }
 
+function extractMinutes(dateTimeString: string): number {
+  // Split the string by space to separate date and time
+  const [datePart, timePart] = dateTimeString.split(' ');
+
+  // Split the time part by colon to get hours, minutes, and seconds
+  const [time, timeZone] = timePart.split('-');
+  const [hours, minutes, seconds] = time.split(':').map(Number);
+
+  // Convert hours and minutes to minutes and add them together
+  const totalMinutes = hours * 60 + minutes;
+
+  return totalMinutes;
+}
+
 function localTime(date:Date):string{
   const day_mapping: { [key: string]: string } = {
     "0": "U",
@@ -64,7 +80,7 @@ function localTime(date:Date):string{
   return (day + ":" + String(Number(hours*60 + minutes)));
 }
 
-// '2024-02-24 08:20:01-05'
+// '2024-02-24 08:20:01-00'
 function timeForDB(date:Date):string{
   let hours=date.getHours();
   let minutes=date.getMinutes();
@@ -103,17 +119,18 @@ class RequestRoutes extends BaseRoutes {
           [req.body.email]
         );
 
-        console.log(result.rows[0]);
-        console.log(result.rows[0].firstname);
+        //console.log(result.rows[0]);
+        //console.log(result.rows[0].firstname);
 
         for (let i = 0; i < requests.length; i++) {
           if(requests[i].data.id == req.body.passengerId)
             {
+              // requests.splice(i,1);
               throw new Error("Cannot have more than 1 active request");
             }
         }
 
-        for (let i = 0; i < requests.length; i++) {
+        for (let i = 0; i < onGoing.length; i++) {
           if(onGoing[i].data.passengerId == req.body.passengerId)
             {
               throw new Error("Cannot have more than 1 active request");
@@ -129,8 +146,8 @@ class RequestRoutes extends BaseRoutes {
             destinationChoords: req.body.destinationChoords
           });
 
-        console.log(result.rows.length);
-        console.log(requests);
+        // console.log(result.rows.length);
+        // console.log(requests);
 
         res.status(200).json({
           status: "success",
@@ -142,6 +159,7 @@ class RequestRoutes extends BaseRoutes {
 
     this.router.post("/request-update", async (req, res) => {
       try {
+        let date = new Date();
         // console.log(req.body);
         var requestAccepted: boolean = false;
         var tempRequest: OnGoingTrip = 
@@ -156,8 +174,8 @@ class RequestRoutes extends BaseRoutes {
             driverLocation: [0, 0],
             destination: "",
             destinationChoords: [0,0],
-            startTime: getTime(new Date()),
-            rideDate: getDate(new Date()),
+            startTime: getTime(new Date(date.getTime() + offsetMilliseconds)),
+            rideDate: getDate(new Date(date.getTime() + offsetMilliseconds)),
             confirmed: false,
             cancelled: false,
             pPhone: "",
@@ -177,18 +195,20 @@ class RequestRoutes extends BaseRoutes {
           "SELECT pa.rating FROM drivers d JOIN registeredas ra ON d.id = ra.driverid JOIN passengers pa ON pa.id = ra.passengerid WHERE d.id = $1",
           [tempRequest.driverId]
         );
-        // const trip = resultTrip.rows[0]; 
-        // console.log(trip);
 
-        console.log("Rating: ");
-        console.log(ratingResult.rows[0].rating);
-
+        let rating = 0
+        // console.log("Rating: ");
+        // console.log(ratingResult);
+        if (ratingResult.rows[0] !== undefined) {
+          console.log(ratingResult.rows[0].rating);
+          rating = ratingResult.rows[0].rating;
+        }
         res.status(200).json({
           status: "success",
           accepted: requestAccepted,
           data: {
             request: tempRequest,
-            dRating: ratingResult.rows[0].rating
+            dRating: rating
           }
         });
       } catch (err) {
@@ -205,8 +225,8 @@ class RequestRoutes extends BaseRoutes {
           console.log(`${requests[i].data.id} == ${req.body.id}? ${requests[i].data.id == req.body.id}`)
           if(requests[i].data.id == req.body.id)
             {
+              console.log("REMOVE REQUEST: " + requests[i].data);
               requests.splice(i,1);
-              console.log("REMOVE THIS REQUEST");
               break;
             }
         }
@@ -263,8 +283,8 @@ class RequestRoutes extends BaseRoutes {
     this.router.post("/accept-request", async (req, res) => {
       try {
         // get date
-        var date: Date = new Date();
-
+        let date: Date = new Date();
+        let dateAdj: Date = new Date(date.getTime() + offsetMilliseconds);
         // get phone numbers
         const paPhoneResult = await pool.query(
           "SELECT phonenumber FROM passengers WHERE id = $1",
@@ -292,8 +312,8 @@ class RequestRoutes extends BaseRoutes {
           driverLocation: req.body.driverLocation,
           destination: req.body.destination,
           destinationChoords: req.body.destinationChoords,
-          startTime: timeForDB(date),
-          rideDate: getDate(date),
+          startTime: timeForDB(dateAdj),
+          rideDate: getDate(dateAdj),
           confirmed: false,
           cancelled: false,
           pPhone: pPhone,
@@ -415,24 +435,30 @@ class RequestRoutes extends BaseRoutes {
 
     this.router.post("/end-request", async (req, res) => {
       try {
+        let olddate: Date = new Date();
+        let date: Date = new Date(olddate.getTime() + offsetMilliseconds);
+        let amount: number = 0;
         // remove item from ongoing
         console.log(onGoing);
         for (let i = 0; i < onGoing.length; i++) {
           if(onGoing[i].data.tripId == req.body.tripId)
             {
+              const minutesStart = extractMinutes(onGoing[i].data.startTime);
+              const minutesEnd = extractMinutes(timeForDB(date));
+              amount = (minutesEnd - minutesStart) * 0.8;
               onGoing.splice(i,1);
             }
         }
         console.log("Removed item:");
         console.log(onGoing);
 
-        var date: Date = new Date();
+        
 
         // add to the trips table in the database
         const resultTrip = await pool.query(
           "INSERT INTO trip (startTime, endTime, startLoction, endLoction, rideDate, earnings) VALUES \
           ($1, $2, $3, $4, $5, $6) returning *",
-          [req.body.startTime, timeForDB(date), req.body.startLocation.toString(), req.body.startLocation.toString(), getDate(date), req.body.earnings]
+          [req.body.startTime, timeForDB(date), req.body.startLocation.toString(), req.body.startLocation.toString(), getDate(date), amount]
         );
         const trip = resultTrip.rows[0]; 
         console.log(trip);
@@ -510,7 +536,8 @@ class RequestRoutes extends BaseRoutes {
     this.router.get("/agenda/:passengerid", async (req, res) => {
       const passengerid = req.params.passengerid
       try {
-          var date: Date = new Date();
+          var olddate: Date = new Date();
+          var date: Date = new Date(olddate.getTime() + offsetMilliseconds);
           const client = await pool.connect();
           const query = `
               SELECT schedule 
