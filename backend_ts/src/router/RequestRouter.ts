@@ -540,7 +540,7 @@ class RequestRoutes extends BaseRoutes {
             let filteredSchedule = schedule.filter((str: any, index: string | number) => containsLocalTime[index]);
             localScheduleString = localScheduleString.filter((str: any, index: string | number) => containsLocalTime[index]);
             const isWithin20Minutes = (time1: number, time2: number) => {
-              return Math.abs(time1 - time2) <= 50; //20
+              return Math.abs(time1 - time2) <= 30;
             };
             let localTimeNum = Number(localTimeString.split(':')[1]);
             const filteredSchedule2  = localScheduleString.map((str: string) => {

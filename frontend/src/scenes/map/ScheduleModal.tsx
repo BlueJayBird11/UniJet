@@ -20,6 +20,7 @@ const ScheduleModal: React.FC<Props> = ({setHoldDestination, passenger}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [schedule, setSchedule] = useState<Slot[]>([]); // Initialize schedule as an empty array of Slot objects
   const navigate = useNavigate();
+  const transformTime = (timeString: string): string => (parseInt(timeString.slice(0, 2)) % 12 || 12) + timeString.slice(2, 5);
 
 //   
 
@@ -98,7 +99,7 @@ const ScheduleModal: React.FC<Props> = ({setHoldDestination, passenger}) => {
                 <h2 className="text-lg font-bold">Class Info: </h2>
                 <p>Class: {schedule[0].classname}</p>
                 <p>Location: {schedule[0].buildingname}</p>
-                <p>Time: {schedule[0].starttime}</p>
+                <p>Time: {transformTime(schedule[0].starttime)}</p>
                 <button className="bg-blue-500 rounded-lg p-2 text-white" onClick={() => requestRide(schedule[0].buildingname,schedule[0].location)}>Request Ride</button>
             </div>
           )
